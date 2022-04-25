@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
 import { SignInUpTypes } from "../../types/types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const SignIn = () => {
-  const [formState, setFormState] = useState<SignInUpTypes | {}>({})
+  const navigate = useNavigate();
+  const [formState, setFormState] = useState<SignInUpTypes | {}>({});
   const onSubmit = (e: SignInUpTypes) => {
     setFormState(e);
-    console.log(e);
-    
+    console.log(formState);
+    navigate("/home");
   };
 
   return (
@@ -71,7 +72,10 @@ export const SignIn = () => {
           </Button>
         </Form.Item>
       </Form>
-      <p className="SIDownTitle">Если ещё нет аккаунта, <br/><Link to='/signup'>зарегистрируйтесь</Link></p>
+      <p className="SIDownTitle">
+        Если ещё нет аккаунта, <br />
+        <Link to="/signup">зарегистрируйтесь</Link>
+      </p>
     </div>
   );
 };
