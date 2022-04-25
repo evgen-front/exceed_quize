@@ -1,19 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
-import { SignInUpTypes } from "../types/types";
+import { SignInUpTypes } from "../../types/types";
 import { Link } from "react-router-dom";
 
-export const SignIn = () => {
+export const SignUp = () => {
+  const [formState, setFormState] = useState<SignInUpTypes | {}>({})
   const onSubmit = (e: SignInUpTypes) => {
+    setFormState(e);
     console.log(e);
   };
 
   return (
     <div className="SIWrapper">
       <div className="SITitle">
-        <h1>Авторизация</h1>
-        <p>Введите свои данные, чтобы войти</p>
+        <h1>Регистрация</h1>
+        <p>Введите данные, чтобы зарегистрироваться</p>
       </div>
       <Form onFinish={onSubmit} layout="vertical">
         <Form.Item
@@ -62,13 +64,37 @@ export const SignIn = () => {
         >
           <Input.Password placeholder="Пароль" />
         </Form.Item>
+        <Form.Item
+          label="Подтвердите пароль"
+          name="confirmPassword"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Повторите введённый выше пароль",
+            },
+            ({ getFieldValue }) => ({
+              validator(_, value) {
+                if (!value || getFieldValue("password") === value) {
+                  return Promise.resolve();
+                }
+                return Promise.reject("Пароли не совпадают");
+              },
+            }),
+          ]}
+        >
+          <Input.Password placeholder="Подтвердите пароль" />
+        </Form.Item>
         <Form.Item>
           <Button block type="primary" htmlType="submit">
-            Войти
+            Зарегистрироваться
           </Button>
         </Form.Item>
       </Form>
-      <p className="SIDownTitle">Если ещё нет аккаунта, <br/><Link to='/signup'>зарегистрируйтесь</Link></p>
+      <p className="SIDownTitle">
+        Уже есть аккаунт, <br />
+        <Link to="/signin">авторизуйтесь</Link>
+      </p>
     </div>
   );
 };
