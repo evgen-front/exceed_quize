@@ -23,8 +23,10 @@ export const questionsMock = [
 
 export const testMock = [{
     id: 'test1',
-    title: 'test test name'
+    title: 'test test name',
+    published: true
 }, {
     id: 'test2',
-    title: 'test test name 2'
+    title: 'test test name 2',
+    published: true
 }]
