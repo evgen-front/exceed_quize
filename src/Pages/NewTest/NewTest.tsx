@@ -119,7 +119,8 @@ export const NewTest = () => {
         onOk={handleModalOK}
         onCancel={handleModalCancel}
       >
-        <div className="NTModalWrapper">
+
+         <div className="NTModalWrapper">
           <p>Новый вопрос</p>
           <div className="NTModal_Question">
             <p>Введите текст вопроса</p>
@@ -181,7 +182,7 @@ export const NewTest = () => {
               </Button>
             )}
           </div>
-        </div>
+        </div> 
       </Modal>
     </Main>
   );
