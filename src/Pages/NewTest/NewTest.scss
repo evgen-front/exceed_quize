@@ -1,0 +1,22 @@
+.NTWrapper{
+  padding: 10px;
+
+  .NTName{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .NTQuestionBlock{
+    .NTQuestionBlock_Items{
+      .NTButton_add{
+        margin-bottom: 10px;
+      }
+    }
+  }
+
+  .NTSaveButton {
+    width: 150px;
+  }
+}
+

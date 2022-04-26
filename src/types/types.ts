@@ -11,10 +11,8 @@ export interface Test {
   title: string;
 }
 export interface Question {
-  testId: string;
-  id: string;
-  number: number;
-  title: string;
+  id: number,
+  text: string
 }
 
 export interface Variant {
@@ -29,4 +27,9 @@ export interface Answer {
   questionId: string;
   createdBy?: string;
   image?: string;
+}
+
+export interface QuestionType {
+  id: number,
+  text: string
 }

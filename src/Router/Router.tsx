@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { Home } from "../Pages/Home/Home";
 import { Profile } from "../Pages/Profile/Profile";
+import { NewTest } from "../Pages/NewTest/NewTest";
 import { SignIn } from "../Pages/SignIn/SignIn";
 import { SignUp } from "../Pages/SignUp/SignUp";
 
@@ -11,7 +12,8 @@ export const Router = () => {
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Home />} />
       <Route path="/profile" element={<Profile />} />
+      <Route path="/test/new" element={<NewTest />} />
       <Route path="/" element={<Navigate to="/signin" />} />
     </Routes>
-  )
-}
+  );
+};
