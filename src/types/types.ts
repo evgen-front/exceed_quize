@@ -5,3 +5,8 @@ export interface SignInUpTypes {
   password: string,
   confirmPassword?: string
 }
+
+export interface QuestionType {
+  id: number,
+  text: string
+}
