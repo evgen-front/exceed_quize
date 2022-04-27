@@ -41,7 +41,7 @@ export const Profile = () => {
 
 
       <StartedTests />
-      <h2>Мои тесты с</h2>
+      <h2>Мои тесты</h2>
       <TestsList tests={userTests} />
 
 
