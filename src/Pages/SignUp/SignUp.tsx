@@ -1,9 +1,9 @@
-import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
 import { SignInUpTypes } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
+import { LoginView } from "../../Layouts/LoginView/LoginView";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -21,7 +21,8 @@ export const SignUp = () => {
   };
 
   return (
-    <div className="SIWrapper">
+    <LoginView>
+
       <div className="SITitle">
         <h1>Регистрация</h1>
         <p>Введите данные, чтобы зарегистрироваться</p>
@@ -104,6 +105,7 @@ export const SignUp = () => {
         Уже есть аккаунт, <br />
         <Link to="/signin">авторизуйтесь</Link>
       </p>
-    </div>
+
+    </LoginView>
   );
 };

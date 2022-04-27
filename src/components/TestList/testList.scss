@@ -1,0 +1,11 @@
+.testListWrapper{ 
+    display: flex;
+    flex-direction: column;
+    gap: 12px; 
+}
+
+.testListWrapper{
+    max-height: 165px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
