@@ -7,8 +7,9 @@ export interface SignInUpTypes {
 }
 
 export interface Test {
-  id: string;
-  title: string;
+  id?: string,
+  title: string,
+  published: boolean,
 }
 export interface Question {
   id: number,
@@ -23,13 +24,6 @@ export interface Variant {
 }
 
 export interface Answer {
-  id: string;
-  questionId: string;
-  createdBy?: string;
-  image?: string;
-}
-
-export interface QuestionType {
-  id: number,
-  text: string
+  text: string;
+  is_true: boolean;
 }

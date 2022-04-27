@@ -3,7 +3,7 @@ import { Button, Checkbox, Input, Modal } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useState } from "react";
 import { Main } from "../../Layouts/MainView/Main";
-import { QuestionType } from "../../types/types";
+import { Question } from "../../types/types";
 import "./NewTest.scss";
 
 export const NewTest = () => {
@@ -14,7 +14,7 @@ export const NewTest = () => {
   const [editAnswer, setEditAnswer] = useState<boolean>(false);
   const [answerTitle, setAnswerTitle] = useState<string>("");
   const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
-  const [listQuestion, setListQuestion] = useState<QuestionType[] | []>([]);
+  const [listQuestion, setListQuestion] = useState<Question[] | []>([]);
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -74,7 +74,7 @@ export const NewTest = () => {
           <Checkbox
             name="isTestPublic"
             onChange={handleTestPublic}
-            value={isTestPublic}
+            checked={isTestPublic}
           >
             Опубликован
           </Checkbox>
@@ -119,7 +119,6 @@ export const NewTest = () => {
         onOk={handleModalOK}
         onCancel={handleModalCancel}
       >
-
          <div className="NTModalWrapper">
           <p>Новый вопрос</p>
           <div className="NTModal_Question">
@@ -143,7 +142,7 @@ export const NewTest = () => {
                   <Checkbox
                     name="isRightAnswer"
                     onChange={handleRightAnswer}
-                    value={isRightAnswer}
+                    checked={isRightAnswer}
                   >
                     Правильный ответ
                   </Checkbox>

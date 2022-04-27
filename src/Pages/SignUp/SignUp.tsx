@@ -2,13 +2,22 @@ import React, { useState } from "react";
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
 import { SignInUpTypes } from "../../types/types";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthService } from "../../services/AuthService";
 
 export const SignUp = () => {
-  const [formState, setFormState] = useState<SignInUpTypes | {}>({})
+  const navigate = useNavigate();
   const onSubmit = (e: SignInUpTypes) => {
-    setFormState(e);
-    console.log(e);
+    AuthService.signup(e)
+      .then((result) => {
+        if (result.status === 200) {
+          navigate("/home");
+        }
+      })
+      .catch((error) => {
+        console.log(error, error.message);
+      });
+    console.log(e, "submited");
   };
 
   return (
