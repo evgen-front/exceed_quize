@@ -17,7 +17,7 @@ export const Profile = () => {
 
       <h2>Начатые тесты</h2>
       <TestsList tests={testMock} />
-      <h2>Мои тесты с</h2>
+      <h2>Мои тесты</h2>
       <TestsList tests={testMock} />
 
 

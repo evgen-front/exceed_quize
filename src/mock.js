@@ -22,19 +22,19 @@ export const questionsMock = [
 ]
 
 export const testMock = [{
-    id: 'test1',
+    id: 1,
     title: 'test test name',
     published: true
 }, {
-    id: 'test2',
+    id: 2,
     title: 'test test name 2',
     published: true
 }, {
-    id: 'test3',
+    id: 3,
     title: 'test test name 3',
     published: true
 }, {
-    id: 'test3',
+    id: 4,
     title: 'test test name 3',
     published: true
 }]

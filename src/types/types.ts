@@ -9,10 +9,18 @@ export interface SignInUpTypes {
   confirmPassword?: string;
 }
 
+export interface TestResponse {
+  id: number;  
+  title: string;
+  published: boolean;
+  modified_at: null | Date;
+  created_at: Date;
+  holder_id: number;
+}
+
 export interface Test {
-  id?: string, //!!!
   title: string,
-  published: boolean,
+  published: boolean
 }
 export interface Question {
   id?: number,
