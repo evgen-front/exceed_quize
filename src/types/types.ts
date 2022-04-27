@@ -9,8 +9,17 @@ export interface SignInUpTypes {
   confirmPassword?: string;
 }
 
+export interface TestResponse {
+  id: number;
+  title: string;
+  published: boolean;
+  modified_at: null | Date;
+  created_at: Date;
+  holder_id: number;
+}
+
 export interface Test {
-  id?: string; //!!!
+  id?: number; //!!!
   title: string;
   published: boolean;
 }
@@ -21,14 +30,6 @@ export interface User {
   is_active: boolean;
 }
 
-export interface TestResponse {
-  id: number;
-  title: string;
-  published: boolean;
-  modified_at: null | Date;
-  created_at: Date;
-  holder_id: number;
-}
 export interface Question {
   id?: number;
   text: string;
