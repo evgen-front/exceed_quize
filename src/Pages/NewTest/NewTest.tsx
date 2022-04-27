@@ -1,10 +1,10 @@
-import { PlusOutlined } from "@ant-design/icons";
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from "@ant-design/icons";
 import { Button, Checkbox, Input, Modal } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useEffect, useState } from "react";
 import { Main } from "../../Layouts/MainView/Main";
 import { NewTestService } from "../../services/NewTestService";
-import { Question, Test } from "../../types/types";
+import { Answer, Question, Test } from "../../types/types";
 import "./NewTest.scss";
 
 export const NewTest = () => {
@@ -15,9 +15,11 @@ export const NewTest = () => {
   const [questionTitle, setQuestionTitle] = useState<string>("");
   const [published, setPublished] = useState<boolean>(false);
   const [editAnswer, setEditAnswer] = useState<boolean>(false);
+  const [answerId, setAnswerId] = useState<string>("");
   const [answerTitle, setAnswerTitle] = useState<string>("");
   const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
   const [listQuestion, setListQuestion] = useState<Question[] | []>([]);
+  const [listAnswer, setListAnswer] = useState<Answer[] | []>([]);
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -25,10 +27,16 @@ export const NewTest = () => {
 
   const handleModalOK = () => {
     setIsModalVisible(false);
+    setQuestionId("");
+    setQuestionTitle("");
+    setAnswerTitle("");
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
+    setQuestionId("");
+    setQuestionTitle("");
+    setAnswerTitle("");
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -56,6 +64,16 @@ export const NewTest = () => {
   };
 
   const saveEditAnswer = () => {
+    let newAnswer: Answer;
+    isRightAnswer
+      ? (newAnswer = { text: answerTitle, is_true: isRightAnswer })
+      : (newAnswer = { text: answerTitle });
+    NewTestService.createNewAnswer(questionId, newAnswer)
+      .then((res) => setAnswerId(res.data.id))
+      .catch((err) => console.log(err));
+    setEditAnswer(false);
+    setAnswerTitle("");
+    setIsRightAnswer(false);
     setEditAnswer(false);
   };
 
@@ -68,12 +86,32 @@ export const NewTest = () => {
       title: testName,
       published,
     };
-    console.log("newTest", newTest);
 
     NewTestService.createTest(newTest)
       .then((res) => setTestId(res.data.id))
-      .catch((err) => console.log(err));
+      .catch((err) => console.log(err)); //!!!
   };
+
+  const createNewQuestion = () => {
+    const question: Question = { text: questionTitle };
+    NewTestService.createNewQuestion(testId, question)
+      .then((res) => {
+        setQuestionId(res.data.id);
+      })
+      .catch((err) => console.log(err)); //!!!
+  };
+
+  useEffect(() => {
+    NewTestService.getQuestions(testId)
+      .then((res) => setListQuestion(res.data))
+      .catch((err) => console.log(err)); //!!!
+  }, [questionId, testId]);
+
+  useEffect(() => {
+    NewTestService.getAnswers(questionId)
+      .then((res) => setListAnswer(res.data))
+      .catch((err) => console.log(err)); //!!!
+  }, [questionId, answerId]);
 
   return (
     <Main>
@@ -113,9 +151,12 @@ export const NewTest = () => {
             <div className="NTQuestionBlock_Items">
               {listQuestion.length ? (
                 listQuestion.map(({ id, text }) => (
-                  <div className="NTQuestionBlock_Items_Item">
+                  <div
+                    key={`questionItem_${id}`}
+                    className="NTQuestionBlock_Items_Item"
+                  >
                     <p>
-                      `${id}. ${text}`
+                      {id}. {text}
                     </p>
                   </div>
                 ))
@@ -143,11 +184,10 @@ export const NewTest = () => {
       >
         <div className="NTModalWrapper">
           <p>Создать новый вопрос...</p>
-
           {!questionId ? (
             <div className="NTModal_Question">
-              <p>Введите текст вопроса</p>
               <Input.TextArea
+                placeholder="Введите текст вопроса"
                 name="question_title"
                 onChange={handleQuestionTitle}
                 value={questionTitle}
@@ -157,15 +197,44 @@ export const NewTest = () => {
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={() => {}}
+                onClick={createNewQuestion}
               >
                 Сохранить
               </Button>
             </div>
           ) : (
             <div className="NTModal_Question">
+              <p className="NTQuestionBlock_TestName">
+                Вопрос: {questionTitle}
+              </p>
               <p>Добавьте изображение для вопроса</p>
-              <div>здесь будет загрузка изображения</div>
+              <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
+                здесь будет загрузка изображения
+              </div>
+              <div className="NTAnswerList">
+                {listAnswer.length ? (
+                  listAnswer.map(({ id, text, is_true }) => (
+                    <div key={`answerItem_${id}`} className="NTAnswerList_Item">
+                      <p>{text}</p>
+                      <div className="NTAnswerList_Item_IconBlock">
+                        <Checkbox
+                          name="isRightAnswer"
+                          onChange={handleRightAnswer}
+                          checked={is_true}
+                        ></Checkbox>
+                        <EditTwoTone
+                          onClick={() => console.log("clicked edit")}
+                        />
+                        <DeleteTwoTone
+                          onClick={() => console.log("clicked delete")}
+                        />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <p>В этом тесте ещё нет ни одного ответа</p>
+                )}
+              </div>
               {editAnswer ? (
                 <div className="NTModal_Question_AddAnswer">
                   <div className="input_block">
