@@ -29,3 +29,24 @@
   }
 }
 
+.NTModalWrapper{
+  .NTModal_Question{
+    &_AddAnswer{
+      border: 1px solid black;
+    }
+
+    .NTAnswerList{
+      &_Item{
+        display: flex;
+        justify-content: space-between;
+
+        &_IconBlock{
+          display: flex;
+          gap: 15px;
+          align-items: center;
+        }
+      }
+    }
+  }
+}
+
