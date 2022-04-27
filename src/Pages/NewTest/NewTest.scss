@@ -3,11 +3,20 @@
 
   .NTName{
     display: flex;
+    flex-direction: column;
     gap: 10px;
     align-items: center;
+
+    &_inputBlock{}
   }
 
   .NTQuestionBlock{
+
+    &_TestName{
+      text-align: center;
+      font-weight: 700;
+      font-size: 18px;
+    }
     .NTQuestionBlock_Items{
       .NTButton_add{
         margin-bottom: 10px;

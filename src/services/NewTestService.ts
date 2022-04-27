@@ -7,6 +7,4 @@ export class NewTestService {
   static async createTest (data: Test): Promise<AxiosResponse> {
     return $api.post('/tests', data)
   }
-
-  
 }
