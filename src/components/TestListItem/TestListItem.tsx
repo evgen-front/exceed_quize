@@ -1,12 +1,14 @@
-import { CaretRightFilled, EditOutlined, UserOutlined } from "@ant-design/icons";
+import { CaretRightFilled, EditOutlined, StarFilled, UserOutlined } from "@ant-design/icons";
 import { Test } from "../../types/types";
 import "./testListItem.scss";
 
+
 export const TestListItem = ({ test }: { test: Test }) => {
+
     return (
-        <div className="testListItem">
+        <div className='testListItem completed' >
             <div className="testListItem_header">
-                <div className="testListItem_title">{test.title}</div>
+                <div className="testListItem_title"><StarFilled /> {test.title}</div>
                 <div className="testListItem_buttons">
                     <CaretRightFilled />
                     <EditOutlined />
@@ -17,9 +19,9 @@ export const TestListItem = ({ test }: { test: Test }) => {
                     3 из 10 вопросов
                 </div>
                 <div className="testListItem_author">
-                <UserOutlined /> kir
+                    <UserOutlined /> kir
                 </div>
             </div>
-        </div>
+        </div >
     );
 };
