@@ -15,7 +15,9 @@ export const Profile = () => {
 
       <InfoBlock title="email@email.com" subtitle="user email" />
 
-      <h2>My tests</h2>
+      <h2>Начатые тесты</h2>
+      <TestsList tests={testMock} />
+      <h2>Мои тесты с</h2>
       <TestsList tests={testMock} />
 
 
