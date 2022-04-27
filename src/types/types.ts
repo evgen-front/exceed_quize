@@ -10,13 +10,28 @@ export interface SignInUpTypes {
 }
 
 export interface Test {
-  id?: string, //!!!
-  title: string,
-  published: boolean,
+  id?: string; //!!!
+  title: string;
+  published: boolean;
+}
+
+export interface User {
+  id: number;
+  username: string;
+  is_active: boolean;
+}
+
+export interface TestResponse {
+  id: number;
+  title: string;
+  published: boolean;
+  modified_at: null | Date;
+  created_at: Date;
+  holder_id: number;
 }
 export interface Question {
-  id?: number,
-  text: string
+  id?: number;
+  text: string;
 }
 
 export interface Variant {
