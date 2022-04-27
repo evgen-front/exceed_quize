@@ -6,19 +6,43 @@ import { TestsList } from "../../components/TestList/TestList";
 import "./Profile.scss";
 import { testMock } from "../../mock";
 import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
+import { useEffect, useState } from "react";
+import { TestService } from "../../services/TestService";
+import { useAtom } from 'jotai'
+import { userAtom } from "../../atoms/userAtom";
+import { useNavigate } from "react-router-dom";
+import { AuthService } from "../../services/AuthService";
+import { StartedTests } from "./modules/StartedTests/StartedTests";
 
 export const Profile = () => {
+  const [user, setUser] = useAtom(userAtom)
+  const [userTests, setUserTests] = useState([])
+  const _navigate = useNavigate()
+
+  const logout = () => {
+    AuthService.logout()
+    setUser(null)
+    _navigate('/')
+  }
+  useEffect(() => {
+    TestService.getUserTests().then(r => {
+      setUserTests(r.data)
+    }).catch(e => {
+      console.log(e.message, 'error to get user tests');
+
+    })
+  }, [])
   return (
     <Main>
-      <ProfileHeader />
-      <InfoBlock title="Anton Kiianov" subtitle="user name" />
+      <ProfileHeader onLogOut={logout} />
+      <InfoBlock title={user?.username} subtitle="user name" />
 
       <InfoBlock title="email@email.com" subtitle="user email" />
 
-      <h2>Начатые тесты</h2>
-      <TestsList tests={testMock} />
-      <h2>Мои тесты с</h2>
-      <TestsList tests={testMock} />
+
+      <StartedTests />
+      <h2>Мои тесты</h2>
+      <TestsList tests={userTests} />
 
 
     </Main >

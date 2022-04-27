@@ -1,6 +1,14 @@
 .homeWrapper {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
+  gap: 20px;
 
+  .home_userLogin {
+    font-size: 12px;
+    color: #777;
+  }
+
+  .home_testsBlock {
+    height: 70vh;
+  }
+}

@@ -1,7 +1,7 @@
 import './infoBlock.scss'
 
 interface InfoBlockProps {
-    title: string;
+    title?: string;
     subtitle: string
 }
 
