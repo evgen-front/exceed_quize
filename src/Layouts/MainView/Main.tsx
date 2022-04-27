@@ -1,12 +1,11 @@
-import { FC, ReactNode } from "react";
+import { FC } from "react";
 import { Navbar } from "../../components/Navbar/Navbar";
+import { ReactChildrenProps } from "../../types/types";
 import "./Main.scss";
 
-interface MainProps {
-  children?: ReactNode;
-}
 
-export const Main: FC<MainProps> = ({ children }) => {
+
+export const Main: FC<ReactChildrenProps> = ({ children }) => {
   return (
     <div className="mainWrapper">
       <div className="childrenBlock">{children}</div>

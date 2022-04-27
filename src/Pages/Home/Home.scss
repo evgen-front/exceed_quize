@@ -4,18 +4,3 @@
   justify-content: center;
 }
 
-.testsBlock{
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  &_item{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #000;
-
-    p{
-      margin-bottom: 0;
-    }
-  }
-}

@@ -1,5 +1,8 @@
-import React, { ReactChild } from "react";
+import React, { ReactChild, ReactNode } from "react";
 
+export interface ReactChildrenProps {
+  children?: ReactNode;
+}
 export interface SignInUpTypes {
   username: string;
   password: string;
@@ -7,13 +10,13 @@ export interface SignInUpTypes {
 }
 
 export interface Test {
-  id?: string,
-  title: string,
-  published: boolean,
+  id?: string;
+  title: string;
+  published: boolean;
 }
 export interface Question {
-  id: number,
-  text: string
+  id: number;
+  text: string;
 }
 
 export interface Variant {

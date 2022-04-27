@@ -1,15 +1,16 @@
 
 import { Main } from "../../Layouts/MainView/Main";
 import { InfoBlock } from "./modules/InfoBlock/InfoBlock";
-import { TestsList } from "../../components/TestsList/TestsList";
+import { TestsList } from "../../components/TestList/TestList";
 
 import "./Profile.scss";
 import { testMock } from "../../mock";
+import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
 
 export const Profile = () => {
   return (
     <Main>
-      <h1>Profile page</h1>
+      <ProfileHeader />
       <InfoBlock title="Anton Kiianov" subtitle="user name" />
 
       <InfoBlock title="email@email.com" subtitle="user email" />
