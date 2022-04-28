@@ -6,7 +6,7 @@ import { NewTestService } from "../../../services/NewTestService";
 import { Answer } from "../../../types/types";
 
 interface AddAnswerProps {
-  questionId: string;
+  questionId: number | null;
   setEditAnswer: Dispatch<SetStateAction<boolean>>;
   setAnswerId: Dispatch<SetStateAction<string>>;
 }

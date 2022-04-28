@@ -4,22 +4,22 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useEffect, useState } from "react";
 import { Main } from "../../Layouts/MainView/Main";
 import { NewTestService } from "../../services/NewTestService";
-import { Answer, Question, Test } from "../../types/types";
+import { Answer, Question, QuestionResponse, Test } from "../../types/types";
 import { AddAnswer } from "./AddAnswer/AddAnswer";
 import "./NewTest.scss";
 
 export const NewTest = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
-  const [testId, setTestId] = useState<string>("");
+  const [testId, setTestId] = useState<number | null>(null);
   const [testName, setTestName] = useState<string>("");
-  const [questionId, setQuestionId] = useState<string>("");
+  const [questionId, setQuestionId] = useState<number | null>(null);
   const [questionTitle, setQuestionTitle] = useState<string>("");
   const [published, setPublished] = useState<boolean>(false);
+  const [editQuestion, setEditQuestion] = useState<boolean>(false);
   const [editAnswer, setEditAnswer] = useState<boolean>(false);
   const [answerId, setAnswerId] = useState<string>("");
-  const [listQuestion, setListQuestion] = useState<Question[] | []>([]);
+  const [listQuestion, setListQuestion] = useState<QuestionResponse[] | []>([]);
   const [listAnswer, setListAnswer] = useState<Answer[] | []>([]);
-
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -27,16 +27,14 @@ export const NewTest = () => {
 
   const handleModalOK = () => {
     setIsModalVisible(false);
-    setQuestionId("");
+    setQuestionId(null);
     setQuestionTitle("");
-    // setAnswerTitle("");
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
-    setQuestionId("");
+    setQuestionId(null);
     setQuestionTitle("");
-    // setAnswerTitle("");
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -51,10 +49,14 @@ export const NewTest = () => {
     setPublished(e.target.checked);
   };
 
-  
-
   const openEditAnswer = () => {
     setEditAnswer(true);
+  };
+
+  const openEditModal = (id: number, text: string) => {
+    openModal();
+    setQuestionId(id);
+    setQuestionTitle(text);
   };
 
   const createNewTest = () => {
@@ -72,24 +74,43 @@ export const NewTest = () => {
     const question: Question = { text: questionTitle };
     NewTestService.createNewQuestion(testId, question)
       .then((res) => {
-        console.log(res.data.id);
-        setQuestionId(res.data.id);
+        setQuestionId(res?.data?.id);
       })
       .catch((err) => console.log(err)); //!!!
   };
 
-  
+  const deleteQuestion = (id: number) => {
+    NewTestService.deleteQuestion(testId, id)
+      .then(res => {
+        setQuestionId(9999999) //!!! если присвоить нал, не происходит рерэндэр
+      })
+      .catch((err) => console.log(err.message));
+  };
+
+  // const updateQuestion = (id: number, ordering: number, text: string) => {
+  //   const editedQuestion: Question = {
+  //     text: questionTitle,
+  //     ordering
+  //   }
+
+  //   NewTestService.updateQuestion(testId, id, editedQuestion)
+  //     // .then
+  // }
 
   useEffect(() => {
-    NewTestService.getQuestions(testId)
+    if (testId) {
+      NewTestService.getQuestions(testId)
       .then((res) => setListQuestion(res.data))
       .catch((err) => console.log(err)); //!!!
+    }
   }, [questionId, testId]);
 
   useEffect(() => {
-    NewTestService.getAnswers(questionId)
+    if (questionId) {
+      NewTestService.getAnswers(questionId)
       .then((res) => setListAnswer(res.data))
       .catch((err) => console.log(err)); //!!!
+    }
   }, [questionId, answerId]);
 
   return (
@@ -129,14 +150,18 @@ export const NewTest = () => {
             <p className="NTQuestionBlock_Title">Вопросы:</p>
             <div className="NTQuestionBlock_Items">
               {listQuestion.length ? (
-                listQuestion.map(({ id, text }) => (
+                listQuestion.map(({ id, ordering, text }) => (
                   <div
                     key={`questionItem_${id}`}
                     className="NTQuestionBlock_Items_Item"
                   >
                     <p>
-                      {id}. {text}
+                      {ordering}. {text}
                     </p>
+                    <EditTwoTone
+                      onClick={() => id && openEditModal(id, text)}
+                    />
+                    <DeleteTwoTone onClick={() => id && deleteQuestion(id)} />
                   </div>
                 ))
               ) : (
@@ -183,22 +208,34 @@ export const NewTest = () => {
             </div>
           ) : (
             <div className="NTModal_Question">
-              <p className="NTQuestionBlock_TestName">
-                Вопрос: {questionTitle}
-              </p>
+              <div
+                className="NTQuestionBlock"
+                style={{ display: "flex", justifyContent: "space-between" }}
+              >
+                <p className="NTQuestionBlock_TestName">
+                  Тeкст вопроса: {questionTitle}
+                </p>
+                <div className="NTQuestionBlock_Items_Item_IconBlock">
+                  <EditTwoTone onClick={() => console.log("clicked edit")} />
+                  <DeleteTwoTone
+                    onClick={() => console.log("clicked delete")}
+                  />
+                </div>
+              </div>
               <p>Добавьте изображение для вопроса</p>
               <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
                 здесь будет загрузка изображения
               </div>
               <div className="NTAnswerList">
+                <p className="NTQuestionBlock_TestName">Ответы:</p>
                 {listAnswer.length ? (
                   listAnswer.map(({ id, text, is_true }) => (
                     <div key={`answerItem_${id}`} className="NTAnswerList_Item">
-                      <p>{text}</p>
+                      <p>- {text}</p>
                       <div className="NTAnswerList_Item_IconBlock">
                         <Checkbox
                           name="isRightAnswer"
-                          onChange={()=>{}}
+                          onChange={() => {}}
                           checked={is_true}
                         ></Checkbox>
                         <EditTwoTone
