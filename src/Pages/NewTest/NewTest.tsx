@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Main } from "../../Layouts/MainView/Main";
 import { NewTestService } from "../../services/NewTestService";
 import { Answer, Question, Test } from "../../types/types";
+import { AddAnswer } from "./AddAnswer/AddAnswer";
 import "./NewTest.scss";
 
 export const NewTest = () => {
@@ -16,10 +17,9 @@ export const NewTest = () => {
   const [published, setPublished] = useState<boolean>(false);
   const [editAnswer, setEditAnswer] = useState<boolean>(false);
   const [answerId, setAnswerId] = useState<string>("");
-  const [answerTitle, setAnswerTitle] = useState<string>("");
-  const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
   const [listQuestion, setListQuestion] = useState<Question[] | []>([]);
   const [listAnswer, setListAnswer] = useState<Answer[] | []>([]);
+
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -29,14 +29,14 @@ export const NewTest = () => {
     setIsModalVisible(false);
     setQuestionId("");
     setQuestionTitle("");
-    setAnswerTitle("");
+    // setAnswerTitle("");
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setQuestionId("");
     setQuestionTitle("");
-    setAnswerTitle("");
+    // setAnswerTitle("");
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -51,34 +51,10 @@ export const NewTest = () => {
     setPublished(e.target.checked);
   };
 
-  const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAnswerTitle(e.target.value);
-  };
-
-  const handleRightAnswer = (e: CheckboxChangeEvent) => {
-    setIsRightAnswer(e.target.checked);
-  };
+  
 
   const openEditAnswer = () => {
     setEditAnswer(true);
-  };
-
-  const saveEditAnswer = () => {
-    let newAnswer: Answer;
-    isRightAnswer
-      ? (newAnswer = { text: answerTitle, is_true: isRightAnswer })
-      : (newAnswer = { text: answerTitle });
-    NewTestService.createNewAnswer(questionId, newAnswer)
-      .then((res) => setAnswerId(res.data.id))
-      .catch((err) => console.log(err));
-    setEditAnswer(false);
-    setAnswerTitle("");
-    setIsRightAnswer(false);
-    setEditAnswer(false);
-  };
-
-  const cancelEditAnswer = () => {
-    setEditAnswer(false);
   };
 
   const createNewTest = () => {
@@ -96,10 +72,13 @@ export const NewTest = () => {
     const question: Question = { text: questionTitle };
     NewTestService.createNewQuestion(testId, question)
       .then((res) => {
+        console.log(res.data.id);
         setQuestionId(res.data.id);
       })
       .catch((err) => console.log(err)); //!!!
   };
+
+  
 
   useEffect(() => {
     NewTestService.getQuestions(testId)
@@ -141,7 +120,7 @@ export const NewTest = () => {
               size={"middle"}
               onClick={createNewTest}
             >
-              Сохранить
+              Далее
             </Button>
           </div>
         ) : (
@@ -199,7 +178,7 @@ export const NewTest = () => {
                 size={"middle"}
                 onClick={createNewQuestion}
               >
-                Сохранить
+                Далее
               </Button>
             </div>
           ) : (
@@ -219,7 +198,7 @@ export const NewTest = () => {
                       <div className="NTAnswerList_Item_IconBlock">
                         <Checkbox
                           name="isRightAnswer"
-                          onChange={handleRightAnswer}
+                          onChange={()=>{}}
                           checked={is_true}
                         ></Checkbox>
                         <EditTwoTone
@@ -236,43 +215,11 @@ export const NewTest = () => {
                 )}
               </div>
               {editAnswer ? (
-                <div className="NTModal_Question_AddAnswer">
-                  <div className="input_block">
-                    <Input
-                      name="answerTitle"
-                      placeholder="Введите текст ответа"
-                      value={answerTitle}
-                      onChange={handleAnswerTitle}
-                    />
-                    <Checkbox
-                      name="isRightAnswer"
-                      onChange={handleRightAnswer}
-                      checked={isRightAnswer}
-                    >
-                      Правильный ответ
-                    </Checkbox>
-                  </div>
-                  <div className="button_block">
-                    <Button
-                      className="NTSaveButton"
-                      type="ghost"
-                      shape="round"
-                      size={"middle"}
-                      onClick={cancelEditAnswer}
-                    >
-                      Отмена
-                    </Button>
-                    <Button
-                      className="NTSaveButton"
-                      type="primary"
-                      shape="round"
-                      size={"middle"}
-                      onClick={saveEditAnswer}
-                    >
-                      Сохранить
-                    </Button>
-                  </div>
-                </div>
+                <AddAnswer
+                  questionId={questionId}
+                  setEditAnswer={setEditAnswer}
+                  setAnswerId={setAnswerId}
+                />
               ) : (
                 <Button
                   className="NTButton_add"

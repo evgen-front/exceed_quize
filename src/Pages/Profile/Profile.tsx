@@ -40,10 +40,9 @@ export const Profile = () => {
         <InfoBlock title="email@email.com" subtitle="user email" />
 
 
-        <StartedTests />
-        <h2>Мои тесты</h2>
-        <TestsList tests={userTests} />
-      </div>
+      <StartedTests />
+      <h2>Мои тесты</h2>
+      <TestsList tests={userTests} maxHeight={'165px'} />
 
 
     </Main >
