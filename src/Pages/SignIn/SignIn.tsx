@@ -1,26 +1,25 @@
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
-import { SignInUpTypes } from "../../types/types";
+import { SignInUp } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 import { LoginView } from "../../Layouts/LoginView/LoginView";
 import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
-import { useAtom } from 'jotai'
+import { useAtom } from "jotai";
+
 export const SignIn = () => {
-  const [, setUser] = useAtom(userAtom)
+  const [, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
-  const onSubmit = (e: SignInUpTypes) => {
+  const onSubmit = (e: SignInUp) => {
     AuthService.signin(e)
       .then((r) => {
         if (r.status === 200) {
-          UserService.getMe().then(r => {
-            let user = r.data
-            setUser(user)
-            if (user.is_active) {
-              navigate("/home");
-            }
-          })
+          UserService.getMe().then((r) => {
+            let user = r.data;
+            setUser(user);
+            navigate("/home");
+          });
         }
       })
       .catch((e) => {
@@ -30,7 +29,6 @@ export const SignIn = () => {
 
   return (
     <LoginView>
-
       <div className="SITitle">
         <h1>Авторизация</h1>
         <p>Введите свои данные, чтобы войти</p>
@@ -92,8 +90,6 @@ export const SignIn = () => {
         Если ещё нет аккаунта, <br />
         <Link to="/signup">зарегистрируйтесь</Link>
       </p>
-
     </LoginView>
-
   );
 };

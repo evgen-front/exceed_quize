@@ -3,8 +3,9 @@ import React, { ReactChild, ReactNode } from "react";
 export interface ReactChildrenProps {
   children?: ReactNode;
 }
-export interface SignInUpTypes {
+export interface SignInUp {
   username: string;
+  email?: string;
   password: string;
   confirmPassword?: string;
 }
