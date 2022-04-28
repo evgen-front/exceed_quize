@@ -1,4 +1,6 @@
 import { CaretRightFilled, EditOutlined, StarFilled, UserOutlined } from "@ant-design/icons";
+import { Button } from "antd";
+import { NavLink } from "react-router-dom";
 import { Test } from "../../types/types";
 import "./testListItem.scss";
 
@@ -10,7 +12,8 @@ export const TestListItem = ({ test }: { test: Test }) => {
             <div className="testListItem_header">
                 <div className="testListItem_title"><StarFilled /> {test.title}</div>
                 <div className="testListItem_buttons">
-                    <CaretRightFilled />
+                    <NavLink to={`/session/${test.id}`}> <CaretRightFilled /></NavLink>
+
                     <EditOutlined />
                 </div>
             </div>

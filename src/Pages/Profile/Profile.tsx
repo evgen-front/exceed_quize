@@ -34,10 +34,10 @@ export const Profile = () => {
   }, [])
   return (
     <Main>
-      <ProfileHeader onLogOut={logout} />
-      <InfoBlock title={user?.username} subtitle="user name" />
+      <div className="profileWrapper">  <ProfileHeader onLogOut={logout} />
+        <InfoBlock title={user?.username} subtitle="user name" />
 
-      <InfoBlock title="email@email.com" subtitle="user email" />
+        <InfoBlock title="email@email.com" subtitle="user email" />
 
 
       <StartedTests />

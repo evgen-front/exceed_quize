@@ -1,0 +1,49 @@
+.answer {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  &_text {
+    max-width: 40%;
+  }
+  &.selected {
+    box-shadow: 0 0 4px rgb(96, 179, 113);
+    transition: box-shadow 0.4s;
+  }
+}
+
+.selected_sign {
+  width: 23px;
+  height: 23px;
+  border-radius: 50%;
+  background: rgb(96, 179, 113);
+  box-shadow: 0 0 2px rgb(96, 179, 113);
+  opacity: 0;
+  transform: translateX(100px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.5s;
+  overflow: hidden;
+  &_icon {
+    color: #fff;
+    opacity: 0;
+    transition: all 0.5s;
+    transform: translateY(-30px) ;
+  }
+  &.show {
+    transition: transform 0.5s;
+    transform: translateX(0);
+    opacity: 1;
+    .selected_sign_icon {
+      opacity: 1;
+      transition: all 0.3s;
+      transition-delay: .3s;
+      transform: translateY(0px)  ;
+    }
+  }
+}
