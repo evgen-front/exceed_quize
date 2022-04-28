@@ -1,17 +1,18 @@
 import "antd/dist/antd.css";
 import { Form, Input, Button } from "antd";
-import { SignInUpTypes } from "../../types/types";
+import { SignInUp } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 import { LoginView } from "../../Layouts/LoginView/LoginView";
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const onSubmit = (e: SignInUpTypes) => {
+  const onSubmit = (e: SignInUp) => {
     AuthService.signup(e)
       .then((result) => {
         if (result.status === 200) {
-          navigate("/home");
+          alert('Пользователь успешно зарегистрирован')
+          navigate("/signin");
         }
       })
       .catch((error) => {
@@ -22,7 +23,6 @@ export const SignUp = () => {
 
   return (
     <LoginView>
-
       <div className="SITitle">
         <h1>Регистрация</h1>
         <p>Введите данные, чтобы зарегистрироваться</p>
@@ -52,6 +52,19 @@ export const SignUp = () => {
           ]}
         >
           <Input placeholder="Имя пользователя" />
+        </Form.Item>
+        <Form.Item
+          label="E-mail"
+          name="email"
+          hasFeedback
+          rules={[
+            {
+              required: true,
+              message: "Введите e-mail",
+            },
+          ]}
+        >
+          <Input placeholder="e-mail" />
         </Form.Item>
         <Form.Item
           label="Пароль"
@@ -105,7 +118,6 @@ export const SignUp = () => {
         Уже есть аккаунт, <br />
         <Link to="/signin">авторизуйтесь</Link>
       </p>
-
     </LoginView>
   );
 };
