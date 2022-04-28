@@ -96,6 +96,7 @@ export const NewTest = () => {
     const question: Question = { text: questionTitle };
     NewTestService.createNewQuestion(testId, question)
       .then((res) => {
+        console.log(res.data.id);
         setQuestionId(res.data.id);
       })
       .catch((err) => console.log(err)); //!!!

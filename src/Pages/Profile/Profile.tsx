@@ -42,7 +42,7 @@ export const Profile = () => {
 
       <StartedTests />
       <h2>Мои тесты</h2>
-      <TestsList tests={userTests} />
+      <TestsList tests={userTests} maxHeight={'165px'} />
 
 
     </Main >

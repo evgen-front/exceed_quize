@@ -4,7 +4,7 @@ import "./testList.scss";
 
 export const TestsList = ({
   tests,
-  maxHeight,
+  maxHeight='100%',
 }: {
   tests: Test[];
   maxHeight?: string;
