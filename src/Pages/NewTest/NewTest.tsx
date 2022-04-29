@@ -1,4 +1,10 @@
-import { DeleteTwoTone, EditTwoTone, PlusOutlined } from "@ant-design/icons";
+import {
+  CheckOutlined,
+  CloseOutlined,
+  DeleteTwoTone,
+  EditTwoTone,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { Button, Checkbox, Input, Modal } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useEffect, useState } from "react";
@@ -15,7 +21,8 @@ export const NewTest = () => {
   const [questionId, setQuestionId] = useState<number | null>(null);
   const [questionTitle, setQuestionTitle] = useState<string>("");
   const [published, setPublished] = useState<boolean>(false);
-  const [editQuestion, setEditQuestion] = useState<boolean>(false);
+  const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
+  const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
   const [editAnswer, setEditAnswer] = useState<boolean>(false);
   const [answerId, setAnswerId] = useState<string>("");
   const [listQuestion, setListQuestion] = useState<QuestionResponse[] | []>([]);
@@ -29,12 +36,14 @@ export const NewTest = () => {
     setIsModalVisible(false);
     setQuestionId(null);
     setQuestionTitle("");
+    setEditQuestionFlag(false);
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setQuestionId(null);
     setQuestionTitle("");
+    setEditQuestionFlag(false);
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -81,10 +90,29 @@ export const NewTest = () => {
 
   const deleteQuestion = (id: number) => {
     NewTestService.deleteQuestion(testId, id)
-      .then(res => {
-        setQuestionId(9999999) //!!! если присвоить нал, не происходит рерэндэр
+      .then((res) => {
+        setQuestionId(99999); //!!! если присвоить нал, не происходит рерэндэр
       })
       .catch((err) => console.log(err.message));
+  };
+
+  const startEditQuestion = () => {
+    setEditQuestionFlag(true);
+    const editQuestion = listQuestion.filter(
+      (elem) => elem.id === questionId
+    )[0];
+    setEditableQuestion(editQuestion);
+    console.log(questionId);
+    console.log(listQuestion);
+    console.log(editQuestion);
+  };
+
+  const updateQuestion = () => {
+    setEditQuestionFlag(false);
+  };
+
+  const undoEditQuestion = () => {
+    setEditQuestionFlag(false);
   };
 
   // const updateQuestion = (id: number, ordering: number, text: string) => {
@@ -100,16 +128,16 @@ export const NewTest = () => {
   useEffect(() => {
     if (testId) {
       NewTestService.getQuestions(testId)
-      .then((res) => setListQuestion(res.data))
-      .catch((err) => console.log(err)); //!!!
+        .then((res) => setListQuestion(res.data))
+        .catch((err) => console.log(err)); //!!!
     }
   }, [questionId, testId]);
 
   useEffect(() => {
     if (questionId) {
       NewTestService.getAnswers(questionId)
-      .then((res) => setListAnswer(res.data))
-      .catch((err) => console.log(err)); //!!!
+        .then((res) => setListAnswer(res.data))
+        .catch((err) => console.log(err)); //!!!
     }
   }, [questionId, answerId]);
 
@@ -158,10 +186,12 @@ export const NewTest = () => {
                     <p>
                       {ordering}. {text}
                     </p>
-                    <EditTwoTone
-                      onClick={() => id && openEditModal(id, text)}
-                    />
-                    <DeleteTwoTone onClick={() => id && deleteQuestion(id)} />
+                    <div className="NT_IconBlock">
+                      <EditTwoTone
+                        onClick={() => id && openEditModal(id, text)}
+                      />
+                      <DeleteTwoTone onClick={() => id && deleteQuestion(id)} />
+                    </div>
                   </div>
                 ))
               ) : (
@@ -208,20 +238,35 @@ export const NewTest = () => {
             </div>
           ) : (
             <div className="NTModal_Question">
-              <div
-                className="NTQuestionBlock"
-                style={{ display: "flex", justifyContent: "space-between" }}
-              >
-                <p className="NTQuestionBlock_TestName">
-                  Тeкст вопроса: {questionTitle}
-                </p>
-                <div className="NTQuestionBlock_Items_Item_IconBlock">
-                  <EditTwoTone onClick={() => console.log("clicked edit")} />
-                  <DeleteTwoTone
-                    onClick={() => console.log("clicked delete")}
-                  />
+              {editQuestionFlag ? (
+                <div className="NTModal_Question_EditBlock">
+                  <p className="NTModalQuestionEditBlock_TestName">
+                    Редактировать вопрос:
+                  </p>
+                  <div className="inputButtonWrap">
+                    <Input.TextArea
+                      name="editQuestionName"
+                      value={questionTitle}
+                      onChange={handleQuestionTitle}
+                    />
+                    <div className="NT_IconBlock">
+                      <CheckOutlined onClick={() => {}} />{" "}
+                      {/* ---------------------- */}
+                      <CloseOutlined onClick={() => {}} />
+                    </div>
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <div className="NTModal_Question_Block">
+                  <p className="NTModal_Question_Block_TestName">
+                    Вопрос: {questionTitle}
+                  </p>
+                  <div className="NT_IconBlock">
+                    <EditTwoTone onClick={startEditQuestion} />
+                    <DeleteTwoTone onClick={undoEditQuestion} />
+                  </div>
+                </div>
+              )}
               <p>Добавьте изображение для вопроса</p>
               <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
                 здесь будет загрузка изображения
@@ -232,7 +277,7 @@ export const NewTest = () => {
                   listAnswer.map(({ id, text, is_true }) => (
                     <div key={`answerItem_${id}`} className="NTAnswerList_Item">
                       <p>- {text}</p>
-                      <div className="NTAnswerList_Item_IconBlock">
+                      <div className="NT_IconBlock">
                         <Checkbox
                           name="isRightAnswer"
                           onChange={() => {}}

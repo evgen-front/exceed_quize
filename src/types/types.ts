@@ -32,6 +32,7 @@ export interface User {
 }
 
 export interface Question {
+  id?: number;
   text: string;
   ordering?: number
 }
