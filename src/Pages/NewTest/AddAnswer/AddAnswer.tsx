@@ -4,9 +4,10 @@ import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { Dispatch, SetStateAction, useState } from "react";
 import { NewTestService } from "../../../services/NewTestService";
 import { Answer } from "../../../types/types";
+import './AddAnswer.scss'
 
 interface AddAnswerProps {
-  questionId: string;
+  questionId: number | null;
   setEditAnswer: Dispatch<SetStateAction<boolean>>;
   setAnswerId: Dispatch<SetStateAction<string>>;
 }
@@ -46,22 +47,23 @@ export const AddAnswer = ({
 
   return (
     <div className="NTModal_Question_AddAnswer">
-      <div className="input_block">
-        <Input
-          name="answerTitle"
-          placeholder="Введите текст ответа"
-          value={answerTitle}
-          onChange={handleAnswerTitle}
-        />
+      <Input
+        name="answerTitle"
+        placeholder="Введите текст ответа"
+        value={answerTitle}
+        onChange={handleAnswerTitle}
+      />
+      <div className="button_block">
         <Checkbox
           name="isRightAnswer"
           onChange={handleRightAnswer}
           checked={isRightAnswer}
         ></Checkbox>
-      </div>
-      <div className="button_block">
-        <CheckOutlined style={{fontSize: '20px'}} onClick={saveEditAnswer} />
-        <CloseOutlined style={{fontSize: '20px'}} onClick={cancelEditAnswer} />
+        <CheckOutlined style={{ fontSize: "20px" }} onClick={saveEditAnswer} />
+        <CloseOutlined
+          style={{ fontSize: "20px" }}
+          onClick={cancelEditAnswer}
+        />
       </div>
     </div>
   );

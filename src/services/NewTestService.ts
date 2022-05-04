@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { $api } from "../api/api";
-import { Answer, Question, Test } from "../types/types";
+import { Answer, Question, QuestionResponse, Test } from "../types/types";
 
 
 export class NewTestService {
@@ -8,19 +8,27 @@ export class NewTestService {
     return $api.post('/tests/', data)
   }
 
-  static async getQuestions (test_id: string): Promise<AxiosResponse> {
+  static async getQuestions (test_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/tests/${test_id}/questions/`)
   }
 
-  static async createNewQuestion (test_id: string, data: Question): Promise<AxiosResponse> {
+  static async createNewQuestion (test_id: number | null, data: Question): Promise<AxiosResponse> {
     return $api.post(`/tests/${test_id}/questions/`, data)
   }
 
-  static async createNewAnswer (question_id: string, data: Answer): Promise<AxiosResponse> {
+  static async updateQuestion (test_id: number | null, question_id: number | null, data: Question): Promise<AxiosResponse> {
+    return $api.put(`/tests/${test_id}/questions/${question_id}/`, data)
+  }
+
+  static async deleteQuestion (test_id: number | null, question_id: number | null): Promise<AxiosResponse> {
+    return $api.delete(`/tests/${test_id}/questions/${question_id}/`)
+  }
+
+  static async createNewAnswer (question_id: number | null, data: Answer): Promise<AxiosResponse> {
     return $api.post(`/questions/${question_id}/answers/`, data)
   }
 
-  static async getAnswers (question_id: string): Promise<AxiosResponse> {
+  static async getAnswers (question_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/questions/${question_id}/answers/`)
   }
 }

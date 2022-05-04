@@ -1,24 +1,40 @@
-.NTWrapper{
+.NT_IconBlock {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  font-size: 20px;
+}
+
+.NTWrapper {
   padding: 10px;
 
-  .NTName{
+  .NTName {
     display: flex;
     flex-direction: column;
     gap: 10px;
     align-items: center;
 
-    &_inputBlock{}
+    &_inputBlock {
+    }
   }
 
-  .NTQuestionBlock{
+  .NTQuestionBlock {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
 
-    &_TestName{
+    &_TestName {
       text-align: center;
       font-weight: 700;
       font-size: 18px;
     }
-    .NTQuestionBlock_Items{
-      .NTButton_add{
+    .NTQuestionBlock_Items {
+      &_Item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .NTButton_add {
         margin-bottom: 10px;
       }
     }
@@ -29,18 +45,44 @@
   }
 }
 
-.NTModalWrapper{
-  .NTModal_Question{
-    &_AddAnswer{
-      border: 1px solid black;
+.NTModalWrapper {
+  .NTModal_Question {
+    &_Block {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 5px;
+      padding: 5px;
+      box-shadow: 0 0 12px #00000064;
+      margin: 10px 0 10px 0;
+
+      &_TestName {
+      }
     }
 
-    .NTAnswerList{
-      &_Item{
+    &_EditBlock {
+      .inputButtonWrap {
+        display: flex;
+        align-items: center;
+        flex-wrap: nowrap;
+        gap: 10px;
+      }
+    }
+    &_AddAnswer {
+      display: flex;
+    }
+
+    .NTAnswerList {
+      border-radius: 5px;
+      padding: 5px;
+      box-shadow: 0 0 12px #00000064;
+      margin: 10px 0 10px 0;
+
+      &_Item {
         display: flex;
         justify-content: space-between;
 
-        &_IconBlock{
+        &_IconBlock {
           display: flex;
           gap: 15px;
           align-items: center;
@@ -49,4 +91,3 @@
     }
   }
 }
-
