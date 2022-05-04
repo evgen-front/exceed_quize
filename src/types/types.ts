@@ -29,6 +29,7 @@ export interface User {
   id: number;
   username: string;
   is_active: boolean;
+  email: string;
 }
 
 export interface Question {
@@ -40,7 +41,7 @@ export interface Question {
 export interface QuestionResponse {
   id?: number;
   text: string;
-  ordering?: number
+  ordering?: number;
 }
 
 export interface Variant {
