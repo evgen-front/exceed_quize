@@ -33,8 +33,8 @@ export interface User {
 
 export interface Question {
   id?: number;
-  text: string;
-  ordering?: number
+  text?: string;
+  ordering?: number;
 }
 
 export interface QuestionResponse {

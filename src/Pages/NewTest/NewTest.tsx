@@ -91,7 +91,8 @@ export const NewTest = () => {
   const deleteQuestion = (id: number) => {
     NewTestService.deleteQuestion(testId, id)
       .then((res) => {
-        setQuestionId(99999); //!!! если присвоить нал, не происходит рерэндэр
+        setListQuestion([...listQuestion].filter(q=>q.id !== id))
+        setQuestionId(null);
       })
       .catch((err) => console.log(err.message));
   };
@@ -102,30 +103,29 @@ export const NewTest = () => {
       (elem) => elem.id === questionId
     )[0];
     setEditableQuestion(editQuestion);
-    console.log(questionId);
-    console.log(listQuestion);
-    console.log(editQuestion);
   };
 
   const updateQuestion = () => {
+    const {id, ordering}: Question = editableQuestion;
+    const editedQuestion: Question = {
+      text: questionTitle,
+      ordering,
+    };
+    id && NewTestService.updateQuestion(testId, id, editedQuestion)
+      .then(res => setQuestionTitle(res.data.text))
+      .catch(err => console.log(err.message))
     setEditQuestionFlag(false);
   };
 
   const undoEditQuestion = () => {
+    const {text}: Question = editableQuestion;
+    text && setQuestionTitle(text);
     setEditQuestionFlag(false);
   };
 
-  // const updateQuestion = (id: number, ordering: number, text: string) => {
-  //   const editedQuestion: Question = {
-  //     text: questionTitle,
-  //     ordering
-  //   }
-
-  //   NewTestService.updateQuestion(testId, id, editedQuestion)
-  //     // .then
-  // }
-
   useEffect(() => {
+    console.log(questionId,'questionId');
+    
     if (testId) {
       NewTestService.getQuestions(testId)
         .then((res) => setListQuestion(res.data))
@@ -250,9 +250,9 @@ export const NewTest = () => {
                       onChange={handleQuestionTitle}
                     />
                     <div className="NT_IconBlock">
-                      <CheckOutlined onClick={() => {}} />{" "}
+                      <CheckOutlined onClick={updateQuestion} />{" "}
                       {/* ---------------------- */}
-                      <CloseOutlined onClick={() => {}} />
+                      <CloseOutlined onClick={undoEditQuestion} />
                     </div>
                   </div>
                 </div>
@@ -263,7 +263,6 @@ export const NewTest = () => {
                   </p>
                   <div className="NT_IconBlock">
                     <EditTwoTone onClick={startEditQuestion} />
-                    <DeleteTwoTone onClick={undoEditQuestion} />
                   </div>
                 </div>
               )}
