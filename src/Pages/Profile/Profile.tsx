@@ -35,10 +35,9 @@ export const Profile = () => {
   return (
     <Main>
       <div className="profileWrapper">
-        {" "}
         <ProfileHeader onLogOut={logout} />
         <InfoBlock title={user?.username} subtitle="user name" />
-        <InfoBlock title="email@email.com" subtitle="user email" />
+        <InfoBlock title={user?.email} subtitle="user email" />
         <StartedTests />
         <h2>Мои тесты</h2>
         <TestsList tests={userTests} maxHeight={"165px"} />
