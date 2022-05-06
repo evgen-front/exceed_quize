@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Upload, message } from "antd";
+import { Upload, message, Button } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { NewTestService } from "../../../services/NewTestService";
 import "./UploadImage.scss";
@@ -50,7 +50,7 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Загрузка...</div>
+      <div style={{ marginTop: 8 }}>Загрузить картинку</div>
     </div>
   );
 
@@ -67,16 +67,8 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
           showDownloadIcon: false,
         }}
         withCredentials
-        multiple={false}
         action={`http://localhost/tests/${testId}/questions/${questionId}/images/`}
         beforeUpload={beforeUpload}
-        progress={{
-          strokeWidth: 3,
-          strokeColor: {
-            "0%": "#f0f",
-            "100%": "#ff0",
-          },
-        }}
         onChange={handleChange}
         onRemove={deleteImage}>
         {imageUrl ? (

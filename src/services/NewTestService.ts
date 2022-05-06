@@ -26,6 +26,13 @@ export class NewTestService {
     return $api.post(`/tests/${test_id}/questions/${question_id}/images`, data);
   }
 
+  static async getImage(
+    test_id: number | null,
+    question_id: number | null
+  ): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}/questions/${question_id}/images`);
+  }
+
   static async deleteImage(
     test_id: number | null,
     question_id: number | null
