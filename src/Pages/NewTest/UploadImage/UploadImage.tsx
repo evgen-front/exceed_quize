@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Upload, message, Button } from "antd";
+import { useState } from "react";
+import { Upload, message } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { NewTestService } from "../../../services/NewTestService";
 import "./UploadImage.scss";
@@ -12,6 +12,8 @@ interface UploadImageProps {
 export function UploadImage({ questionId, testId }: UploadImageProps) {
   const [loading, setLoading] = useState<boolean>(false);
   const [imageUrl, setImageUrl] = useState<string>("");
+
+  const baseUrl = `http://localhost/tests/${testId}/questions/${questionId}/images/`;
 
   const getBase64 = (img: Blob, callback: Function) => {
     const reader = new FileReader();
@@ -67,16 +69,12 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
           showDownloadIcon: false,
         }}
         withCredentials
-        action={`http://localhost/tests/${testId}/questions/${questionId}/images/`}
+        action={baseUrl}
         beforeUpload={beforeUpload}
         onChange={handleChange}
         onRemove={deleteImage}>
         {imageUrl ? (
-          <img
-            className="imagetest"
-            src={`http://localhost/tests/${testId}/questions/${questionId}/images/`}
-            alt="question"
-          />
+          <img className="imagetest" src={baseUrl} alt="question" />
         ) : (
           uploadButton
         )}
