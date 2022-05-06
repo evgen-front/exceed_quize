@@ -10,6 +10,7 @@ import { useEffect, useState } from "react";
 import { NewTestService } from "../../../services/NewTestService"; // !!! how can I to reduce a pass?
 import { Question, QuestionResponse } from "../../../types/types";
 import { AddAnswer } from "../AddAnswer/AddAnswer";
+import { UploadImage } from "../UploadImage/UploadImage";
 import "./AddQuestion.scss";
 
 export const AddQuestion = ({ testId }: { testId: number | null }) => {
@@ -110,8 +111,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             questionList.map(({ id, ordering, text }) => (
               <div
                 key={`questionItem_${id}`}
-                className="question_viewBlock_items_item"
-              >
+                className="question_viewBlock_items_item">
                 <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
                 </p>
@@ -130,8 +130,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             shape="round"
             icon={<PlusOutlined />}
             size={"middle"}
-            onClick={openModal}
-          >
+            onClick={openModal}>
             Добавить вопрос
           </Button>
         </div>
@@ -139,8 +138,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       <Modal
         visible={isModalVisible}
         onOk={handleModalOK}
-        onCancel={handleModalCancel}
-      >
+        onCancel={handleModalCancel}>
         <div className="questionModalWrapper">
           {!questionId ? (
             <div className="questionCreate">
@@ -157,8 +155,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={createNewQuestion}
-              >
+                onClick={createNewQuestion}>
                 Далее
               </Button>
             </div>
@@ -190,10 +187,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                   />
                 </div>
               )}
-              <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
-                <p>Добавьте изображение для вопроса</p>
-                <p>здесь будет загрузка изображения</p>
-              </div>
+              <UploadImage testId={testId} questionId={questionId} />
               <AddAnswer questionId={questionId} />
             </div>
           )}

@@ -57,8 +57,7 @@ export const NewTest = () => {
               type="primary"
               shape="round"
               size={"middle"}
-              onClick={createNewTest}
-            >
+              onClick={createNewTest}>
               Далее
             </Button>
           </div>

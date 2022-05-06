@@ -1,0 +1,15 @@
+
+.upload_image {
+    display: flex;
+    flex-direction: column;
+    justify-content:center ;
+    align-items: center;
+    text-align: center;
+   min-width: 100px;
+   min-height: 100px;
+}
+
+.imagetest {
+    max-width: 50px;
+    max-height: 50px;
+}
