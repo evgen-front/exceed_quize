@@ -11,10 +11,14 @@ import "./Home.scss";
 export const Home = () => {
   const [testList, setTestList] = useState<Test[] | []>([]);
 
-  useEffect(() => {
+  const fetchAllTests = () => {
     HomeService.getAllTests()
       .then((res) => setTestList(res.data))
       .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    fetchAllTests();
   }, []);
   return (
     <Main>
@@ -34,7 +38,7 @@ export const Home = () => {
         </Link>
         <div className="home_testsBlock">
           <h2>Доступные тесты</h2>
-          <TestsList tests={testList} />
+          <TestsList refetch={fetchAllTests} tests={testList} />
         </div>
       </div>
     </Main>
