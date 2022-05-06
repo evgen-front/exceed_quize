@@ -8,6 +8,10 @@ export class NewTestService {
     return $api.post('/tests/', data)
   }
 
+  static async getTest (test_id: number): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}`)
+  }
+
   static async getQuestions (test_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/tests/${test_id}/questions/`)
   }
