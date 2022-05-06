@@ -1,6 +1,7 @@
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a pass?
 import { NewTestService } from "../../services/NewTestService";
 import { Test } from "../../types/types";
@@ -8,6 +9,7 @@ import { AddQuestion } from "./AddQuestion/AddQuestion";
 import "./NewTest.scss";
 
 export const NewTest = () => {
+  const { id } = useParams();
   const [testId, setTestId] = useState<number | null>(null);
   const [testName, setTestName] = useState<string>("");
   const [testPublished, setTestPublished] = useState<boolean>(false);
@@ -27,14 +29,30 @@ export const NewTest = () => {
     };
 
     NewTestService.createTest(newTest)
-      .then((res) => setTestId(res.data.id))
+      .then((res) => {
+        setTestId(res.data.id);
+      })
       .catch((err) => console.log(err)); //!!!
   };
+
+  useEffect(() => {
+    if (id) {
+      const test_id: number = +id;
+      NewTestService.getTest(test_id)
+        .then((res) => {
+          setTestId(res.data.id);
+          setTestName(res.data.title);
+        })
+        .catch((err) => console.log(err.message));
+    }
+  }, []);
 
   return (
     <Main>
       <div className="NTWrapper">
-        <p className="NTWrapper_title">Создать новый тест...</p>
+        <p className="NTWrapper_title">
+          {id ? "Редактировать тест..." : "Создать новый тест..."}
+        </p>
         {!testId ? (
           <div className="NT_createTest">
             <div className="NT_createTest_inputBlock">

@@ -26,6 +26,10 @@ export class NewTestService {
     return $api.post(`/tests/${test_id}/questions/${question_id}/images`, data);
   }
 
+  static async getTest (test_id: number): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}`)
+  }
+
   static async getImage(
     test_id: number | null,
     question_id: number | null

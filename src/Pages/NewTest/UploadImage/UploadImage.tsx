@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Upload, message } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import { NewTestService } from "../../../services/NewTestService";
@@ -56,6 +56,12 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
     </div>
   );
 
+  useEffect(() => {
+    NewTestService.getImage(testId, questionId)
+      .then((res) => setImageUrl(res.data))
+      .catch((err) => console.log(err.message));
+  }, []);
+
   return (
     <div className="upload_wrapper">
       <Upload
@@ -72,7 +78,8 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
         action={baseUrl}
         beforeUpload={beforeUpload}
         onChange={handleChange}
-        onRemove={deleteImage}>
+        onRemove={deleteImage}
+      >
         {imageUrl ? (
           <img className="imagetest" src={baseUrl} alt="question" />
         ) : (

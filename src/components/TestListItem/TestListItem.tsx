@@ -35,8 +35,9 @@ export const TestListItem = ({
             {" "}
             <CaretRightFilled />
           </NavLink>
-
-          <EditOutlined />
+          <NavLink to={`/test/edit/${test.id}`}>
+            <EditOutlined />
+          </NavLink>
           <DeleteOutlined onClick={deleteTest} />
         </div>
       </div>
