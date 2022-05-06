@@ -68,8 +68,8 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                 key={`answerItem_${id}`}
                 className="answer_viewBlock_list_item"
               >
-                <p>- {text}</p>
-                <div className="answer_iconBlock">
+                <p className="answer_viewBlock_list_item_description">- {text}</p>
+                <div className="answer_viewBlock_list_item_iconBlock">
                   <Checkbox
                     name="isRightAnswer"
                     onChange={handleRightAnswer}
@@ -89,27 +89,26 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       </div>
       <div className="answer_addAnswerBlock">
         {addAnswerFlag ? (
-          <>
+          <div className="answer_addAnswerBlock_editMode">
             <Input
+              className="answer_addAnswerBlock_editMode_input"
               name="answerTitle"
               placeholder="Введите текст ответа"
               value={answerTitle}
               onChange={handleAnswerTitle}
             />
-            <div className="button_block">
+            <div className="answer_addAnswerBlock_editMode_buttonBlock">
               <CheckOutlined
-                style={{ fontSize: "20px" }}
                 onClick={saveEditAnswer}
               />
               <CloseOutlined
-                style={{ fontSize: "20px" }}
                 onClick={addAnswerFlagFalse}
               />
             </div>
-          </>
+          </div>
         ) : (
           <Button
-            className="NTButton_add"
+            className="answer_addAnswerBlock_addButton"
             type="primary"
             shape="round"
             icon={<PlusOutlined />}

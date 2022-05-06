@@ -110,12 +110,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             questionList.map(({ id, ordering, text }) => (
               <div
                 key={`questionItem_${id}`}
-                className="NTQuestionBlock_Items_Item"
+                className="question_viewBlock_items_item"
               >
-                <p>
+                <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
                 </p>
-                <div className="NT_IconBlock">
+                <div className="question_viewBlock_items_item_iconBlock">
                   <EditTwoTone onClick={() => id && openEditModal(id, text)} />
                   <DeleteTwoTone onClick={() => id && deleteQuestion(id)} />
                 </div>
@@ -125,7 +125,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             <p>В этом тесте ещё нет ни одного вопроса</p>
           )}
           <Button
-            className="NTButton_add"
+            className="question_viewBlock_items_addButton"
             type="primary"
             shape="round"
             icon={<PlusOutlined />}
@@ -141,18 +141,19 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
         onOk={handleModalOK}
         onCancel={handleModalCancel}
       >
-        <div className="NTModalWrapper">
+        <div className="questionModalWrapper">
           {!questionId ? (
-            <div className="NTModal_Question">
-              <p>Создать новый вопрос...</p>
+            <div className="questionCreate">
+              <p className="questionCreate_title">Создать новый вопрос...</p>
               <Input.TextArea
+                className="questionCreate_textArea"
                 placeholder="Введите текст вопроса"
                 name="question_title"
                 onChange={handleQuestionTitle}
                 value={questionTitle}
               />
               <Button
-                className="NTSaveButton"
+                className="questionCreate_nextButton"
                 type="primary"
                 shape="round"
                 size={"middle"}
@@ -162,35 +163,36 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               </Button>
             </div>
           ) : (
-            <div className="NTModal_Question">
-              <p>Редактировать вопрос...</p>
+            <div className="questionEdit">
+              <p className="questionEdit_title">Редактировать вопрос...</p>
               {editQuestionFlag ? (
-                <div className="NTModal_Question_EditBlock">
-                  <div className="inputButtonWrap">
+                <div className="questionEdit_editBlock">
+                  <div className="questionEdit_editBlock_inputButtonWrap">
                     <Input.TextArea
                       name="editQuestionName"
                       value={questionTitle}
                       onChange={handleQuestionTitle}
                     />
-                    <div className="NT_IconBlock">
+                    <div className="questionEdit_editBlock_inputButtonWrap_iconBlock">
                       <CheckOutlined onClick={updateQuestion} />
                       <CloseOutlined onClick={undoEditQuestion} />
                     </div>
                   </div>
                 </div>
               ) : (
-                <div className="NTModal_Question_Block">
-                  <p className="NTModal_Question_Block_TestName">
+                <div className="questionEdit_mainBlock">
+                  <p className="questionEdit_mainBlock_questionName">
                     Вопрос: {questionTitle}
                   </p>
-                  <div className="NT_IconBlock">
-                    <EditTwoTone onClick={startEditQuestion} />
-                  </div>
+                  <EditTwoTone
+                    className="questionEdit_mainBlock_editIcon"
+                    onClick={startEditQuestion}
+                  />
                 </div>
               )}
-              <p>Добавьте изображение для вопроса</p>
               <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
-                здесь будет загрузка изображения
+                <p>Добавьте изображение для вопроса</p>
+                <p>здесь будет загрузка изображения</p>
               </div>
               <AddAnswer questionId={questionId} />
             </div>
