@@ -4,16 +4,18 @@ import "./testList.scss";
 
 export const TestsList = ({
   tests,
-  maxHeight='100%',
+  maxHeight = "100%",
+  refetch,
 }: {
   tests: Test[];
   maxHeight?: string;
+  refetch?: () => void;
 }) => {
   return (
     <div className="testListWrapper" style={{ maxHeight }}>
       {tests &&
         tests.map((test, index) => (
-          <TestListItem key={`test_${index}`} test={test} />
+          refetch && <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
         ))}
     </div>
   );
