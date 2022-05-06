@@ -1,93 +1,35 @@
-.NT_IconBlock {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-  font-size: 20px;
-}
-
 .NTWrapper {
   padding: 10px;
 
-  .NTName {
+  .NTWrapper_title{
+    font-size: 20px;
+    text-align: center;
+  }
+
+  .NT_createTest{
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
     align-items: center;
 
-    &_inputBlock {
+    &_inputBlock{
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      gap: 10px;
     }
   }
 
-  .NTQuestionBlock {
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
+  .NT_questionWrapper{
+    border: 1px solid #000;
+    border-radius: 10px;
+    padding: 10px;
+    height: 100%;
 
-    &_TestName {
+    &_testName{
       text-align: center;
-      font-weight: 700;
-      font-size: 18px;
-    }
-    .NTQuestionBlock_Items {
-      &_Item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .NTButton_add {
-        margin-bottom: 10px;
-      }
-    }
-  }
-
-  .NTSaveButton {
-    width: 150px;
-  }
-}
-
-.NTModalWrapper {
-  .NTModal_Question {
-    &_Block {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 0 0 12px #00000064;
-      margin: 10px 0 10px 0;
-
-      &_TestName {
-      }
-    }
-
-    &_EditBlock {
-      .inputButtonWrap {
-        display: flex;
-        align-items: center;
-        flex-wrap: nowrap;
-        gap: 10px;
-      }
-    }
-    &_AddAnswer {
-      display: flex;
-    }
-
-    .NTAnswerList {
-      border-radius: 5px;
-      padding: 5px;
-      box-shadow: 0 0 12px #00000064;
-      margin: 10px 0 10px 0;
-
-      &_Item {
-        display: flex;
-        justify-content: space-between;
-
-        &_IconBlock {
-          display: flex;
-          gap: 15px;
-          align-items: center;
-        }
-      }
+      font-size: 15px;
+      font-weight: bold;
     }
   }
 }

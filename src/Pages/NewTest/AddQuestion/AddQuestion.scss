@@ -1,0 +1,84 @@
+p {
+  margin-bottom: 0;
+  padding: 0;
+}
+
+.question_viewBlock {
+  &_title {
+    margin-bottom: 0;
+  }
+
+  &_items {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    &_item {
+      display: flex;
+      justify-content: space-between;
+
+      &_description {
+        font-size: 20px;
+        margin-bottom: 0;
+      }
+      &_iconBlock {
+        gap: 20px;
+        display: flex;
+        font-size: 30px;
+      }
+    }
+    &_addButton {
+      align-self: center;
+    }
+  }
+}
+
+.questionModalWrapper {
+  .questionCreate {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    &_nextButton {
+      align-self: flex-end;
+    }
+  }
+
+  .questionEdit {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    &_editBlock {
+      display: flex;
+      flex-wrap: nowrap;
+
+      &_inputButtonWrap {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+
+        &_iconBlock {
+          display: flex;
+          gap: 20px;
+          font-size: 30px;
+        }
+      }
+    }
+
+    &_mainBlock {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      &_questionName {
+        font-size: 20px;
+        margin-bottom: 0;
+      }
+
+      &_editIcon {
+        font-size: 30px;
+      }
+    }
+  }
+}

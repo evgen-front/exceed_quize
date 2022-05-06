@@ -1,4 +1,3 @@
-
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useState } from "react";
@@ -35,10 +34,10 @@ export const NewTest = () => {
   return (
     <Main>
       <div className="NTWrapper">
-        <p>Создать новый тест...</p>
+        <p className="NTWrapper_title">Создать новый тест...</p>
         {!testId ? (
-          <div className="NTName">
-            <div className="NTName_inputBlock">
+          <div className="NT_createTest">
+            <div className="NT_createTest_inputBlock">
               <Input
                 name="title"
                 placeholder="Введите название теста"
@@ -64,8 +63,8 @@ export const NewTest = () => {
             </Button>
           </div>
         ) : (
-          <div className="NTWrapper">
-            <p className="NT_TestName">{testName}</p>
+          <div className="NT_questionWrapper">
+            <p className="NT_questionWrapper_testName">{testName}</p>
             <AddQuestion testId={testId} />
           </div>
         )}
