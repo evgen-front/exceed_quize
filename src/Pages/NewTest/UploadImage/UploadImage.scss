@@ -1,0 +1,24 @@
+.upload_wrapper {
+    display: flex;
+    justify-content: center;
+    align-items:center;
+// width: 150px;
+//    height: 200px;
+}
+.upload_image {
+    // width: 350px;
+    // height: 350px;
+    // border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+    justify-content:center ;
+    align-items: center;
+    text-align: center;
+   min-width: 100px;
+   min-height: 100px;
+}
+
+.imagetest {
+    max-width: 50px;
+    max-height: 50px;
+}

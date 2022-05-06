@@ -13,6 +13,7 @@ import { NewTestService } from "../../services/NewTestService";
 import { Answer, Question, QuestionResponse, Test } from "../../types/types";
 import { AddAnswer } from "./AddAnswer/AddAnswer";
 import "./NewTest.scss";
+import { UploadImage } from "./UploadImage/UploadImage";
 
 export const NewTest = () => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -91,7 +92,7 @@ export const NewTest = () => {
   const deleteQuestion = (id: number) => {
     NewTestService.deleteQuestion(testId, id)
       .then((res) => {
-        setListQuestion([...listQuestion].filter(q=>q.id !== id))
+        setListQuestion([...listQuestion].filter((q) => q.id !== id));
         setQuestionId(null);
       })
       .catch((err) => console.log(err.message));
@@ -106,26 +107,27 @@ export const NewTest = () => {
   };
 
   const updateQuestion = () => {
-    const {id, ordering}: Question = editableQuestion;
+    const { id, ordering }: Question = editableQuestion;
     const editedQuestion: Question = {
       text: questionTitle,
       ordering,
     };
-    id && NewTestService.updateQuestion(testId, id, editedQuestion)
-      .then(res => setQuestionTitle(res.data.text))
-      .catch(err => console.log(err.message))
+    id &&
+      NewTestService.updateQuestion(testId, id, editedQuestion)
+        .then((res) => setQuestionTitle(res.data.text))
+        .catch((err) => console.log(err.message));
     setEditQuestionFlag(false);
   };
 
   const undoEditQuestion = () => {
-    const {text}: Question = editableQuestion;
+    const { text }: Question = editableQuestion;
     text && setQuestionTitle(text);
     setEditQuestionFlag(false);
   };
 
   useEffect(() => {
-    console.log(questionId,'questionId');
-    
+    console.log(questionId, "questionId");
+
     if (testId) {
       NewTestService.getQuestions(testId)
         .then((res) => setListQuestion(res.data))
@@ -157,8 +159,7 @@ export const NewTest = () => {
               <Checkbox
                 name="published"
                 onChange={handleTestPublic}
-                checked={published}
-              >
+                checked={published}>
                 Опубликован
               </Checkbox>
             </div>
@@ -167,8 +168,7 @@ export const NewTest = () => {
               type="primary"
               shape="round"
               size={"middle"}
-              onClick={createNewTest}
-            >
+              onClick={createNewTest}>
               Далее
             </Button>
           </div>
@@ -181,8 +181,7 @@ export const NewTest = () => {
                 listQuestion.map(({ id, ordering, text }) => (
                   <div
                     key={`questionItem_${id}`}
-                    className="NTQuestionBlock_Items_Item"
-                  >
+                    className="NTQuestionBlock_Items_Item">
                     <p>
                       {ordering}. {text}
                     </p>
@@ -203,8 +202,7 @@ export const NewTest = () => {
                 shape="round"
                 icon={<PlusOutlined />}
                 size={"middle"}
-                onClick={openModal}
-              >
+                onClick={openModal}>
                 Добавить вопрос
               </Button>
             </div>
@@ -214,8 +212,7 @@ export const NewTest = () => {
       <Modal
         visible={isModalVisible}
         onOk={handleModalOK}
-        onCancel={handleModalCancel}
-      >
+        onCancel={handleModalCancel}>
         <div className="NTModalWrapper">
           <p>Создать новый вопрос...</p>
           {!questionId ? (
@@ -231,8 +228,7 @@ export const NewTest = () => {
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={createNewQuestion}
-              >
+                onClick={createNewQuestion}>
                 Далее
               </Button>
             </div>
@@ -267,9 +263,8 @@ export const NewTest = () => {
                 </div>
               )}
               <p>Добавьте изображение для вопроса</p>
-              <div style={{ border: "1px solid red", paddingBottom: "10px" }}>
-                здесь будет загрузка изображения
-              </div>
+
+              <UploadImage questionId={questionId} testId={testId} />
               <div className="NTAnswerList">
                 <p className="NTQuestionBlock_TestName">Ответы:</p>
                 {listAnswer.length ? (
@@ -280,8 +275,7 @@ export const NewTest = () => {
                         <Checkbox
                           name="isRightAnswer"
                           onChange={() => {}}
-                          checked={is_true}
-                        ></Checkbox>
+                          checked={is_true}></Checkbox>
                         <EditTwoTone
                           onClick={() => console.log("clicked edit")}
                         />
@@ -308,8 +302,7 @@ export const NewTest = () => {
                   shape="round"
                   icon={<PlusOutlined />}
                   size={"middle"}
-                  onClick={openEditAnswer}
-                >
+                  onClick={openEditAnswer}>
                   Добавить ответ
                 </Button>
               )}
