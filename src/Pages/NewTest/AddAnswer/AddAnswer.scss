@@ -1,9 +1,47 @@
-.NTModal_Question_AddAnswer {
-  gap: 10px;
-  .button_block {
+.answerWrap {
+  .answer_viewBlock {
+    margin-bottom: 20px;
+    &_title {
+    }
+    &_list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+
+      &_item {
+        display: flex;
+        justify-content: space-between;
+
+        &_description {
+          font-size: 20px;
+          margin-bottom: 0;
+        }
+
+        &_iconBlock {
+          display: flex;
+          gap: 20px;
+          font-size: 30px;
+          align-items: center;
+        }
+      }
+    }
+  }
+
+  .answer_addAnswerBlock {
     display: flex;
-    gap: 15px;
-    align-items: center;
-    font-size: 20px;
+    &_editMode {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      &_input {
+      }
+      &_buttonBlock {
+        display: flex;
+        gap: 20px;
+        font-size: 30px;
+      }
+    }
+    &_addButton {
+    }
   }
 }

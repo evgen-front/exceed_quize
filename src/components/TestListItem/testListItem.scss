@@ -23,7 +23,9 @@
     }
     &_buttons{
       display: flex;
-      gap: 12px; 
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
     }
 
     &_progress, &_author{
