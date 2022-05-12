@@ -37,7 +37,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const openEditModal = (id: number, text: string) => {
     openModal();
     setQuestionId(id);
-    handleChange('questionName', text);
+    handleChange("questionName", text);
   };
 
   const handleModalOK = () => {
@@ -75,7 +75,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
     };
     id &&
       NewTestService.updateQuestion(testId, id, editedQuestion)
-        .then((res) => handleChange('questionName', res.data.text))
+        .then((res) => handleChange("questionName", res.data.text))
         .catch((err) => console.log(err.message));
     setEditQuestionFlag(false);
   };
@@ -99,14 +99,14 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const undoEditQuestion = () => {
     const { text }: Question = editableQuestion;
-    text && handleChange('questionName', text);
+    text && handleChange("questionName", text);
     setEditQuestionFlag(false);
   };
 
   //@ts-ignore
   const { formState, handleChange, handleSubmit, errors, reset } = useForm({
     validations,
-    onSubmit: createNewQuestion,
+    onSubmit: editQuestionFlag ? updateQuestion : createNewQuestion,
   });
 
   console.log(formState);
@@ -194,13 +194,20 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               {editQuestionFlag ? (
                 <div className="questionEdit_editBlock">
                   <div className="questionEdit_editBlock_inputButtonWrap">
-                    <Input.TextArea
-                      name="editQuestionName"
-                      value={formState.questionName}
-                      onChange={handleQuestionTitle}
-                    />
+                    <div className="questionEdit_editBlock_inputButtonWrap_inputBlock">
+                      <Input.TextArea
+                        name="editQuestionName"
+                        value={formState.questionName}
+                        onChange={handleQuestionTitle}
+                      />
+                      {errors?.questionName && (
+                        <p className="questionEdit_editBlock_inputButtonWrap_inputBlock_error">
+                          {errors?.questionName}
+                        </p>
+                      )}
+                    </div>
                     <div className="questionEdit_editBlock_inputButtonWrap_iconBlock">
-                      <CheckOutlined onClick={updateQuestion} />
+                      <CheckOutlined onClick={handleSubmit} />
                       <CloseOutlined onClick={undoEditQuestion} />
                     </div>
                   </div>
