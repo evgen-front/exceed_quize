@@ -29,11 +29,9 @@ export interface UseFormProps {
 }
 
 interface Errors {
-  firstName?: string,
-  lastName?: string,
-  officeId?: string,
-  email?: string,
-  password?: string,
+  testName?: string,
+  questionName?: string,
+  answerName?: string
 }
 
 //@ts-ignore
@@ -44,6 +42,15 @@ export const useForm: FC<UseFormProps> = (props) => {
   const handleChange = (name: string, value: string) => {
     setFormState({ ...formState, [name]: value })
   };
+
+  const reset = (obj: object) => {
+    if (!obj) {
+      setFormState({});
+      return;
+    }
+
+    setFormState({...formState, ...obj})
+  }
 
   const handleSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -99,6 +106,7 @@ export const useForm: FC<UseFormProps> = (props) => {
     formState,
     handleChange,
     handleSubmit,
-    errors
+    errors,
+    reset
   }
 };

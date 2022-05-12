@@ -27,7 +27,6 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [questionList, setQuestionList] = useState<QuestionResponse[]>([]);
   const [questionId, setQuestionId] = useState<number | null>(null);
-  const [questionTitle, setQuestionTitle] = useState<string>("");
   const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
   const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
 
@@ -38,30 +37,29 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const openEditModal = (id: number, text: string) => {
     openModal();
     setQuestionId(id);
-    setQuestionTitle(text);
+    handleChange('questionName', text);
   };
 
   const handleModalOK = () => {
     setIsModalVisible(false);
     setQuestionId(null);
-    setQuestionTitle("");
+    reset();
     setEditQuestionFlag(false);
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setQuestionId(null);
-    setQuestionTitle("");
+    reset();
     setEditQuestionFlag(false);
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuestionTitle(e.target.value);
     handleChange("questionName", e.target.value);
   };
 
   const createNewQuestion = () => {
-    const question: Question = { text: questionTitle };
+    const question: Question = { text: formState.questionName };
     NewTestService.createNewQuestion(testId, question)
       .then((res) => {
         setQuestionId(res?.data?.id);
@@ -72,12 +70,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const updateQuestion = () => {
     const { id, ordering }: Question = editableQuestion;
     const editedQuestion: Question = {
-      text: questionTitle,
+      text: formState.questionName,
       ordering,
     };
     id &&
       NewTestService.updateQuestion(testId, id, editedQuestion)
-        .then((res) => setQuestionTitle(res.data.text))
+        .then((res) => handleChange('questionName', res.data.text))
         .catch((err) => console.log(err.message));
     setEditQuestionFlag(false);
   };
@@ -101,15 +99,17 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const undoEditQuestion = () => {
     const { text }: Question = editableQuestion;
-    text && setQuestionTitle(text);
+    text && handleChange('questionName', text);
     setEditQuestionFlag(false);
   };
 
   //@ts-ignore
-  const { formState, handleChange, handleSubmit, errors } = useForm({
+  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
     validations,
     onSubmit: createNewQuestion,
   });
+
+  console.log(formState);
 
   useEffect(() => {
     if (testId) {
@@ -169,7 +169,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                   placeholder="Введите текст вопроса"
                   name="question_title"
                   onChange={handleQuestionTitle}
-                  value={questionTitle}
+                  value={formState.questionName}
                 />
                 {errors?.questionName && (
                   <p className="questionCreate_inputBlock_error">
@@ -196,7 +196,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                   <div className="questionEdit_editBlock_inputButtonWrap">
                     <Input.TextArea
                       name="editQuestionName"
-                      value={questionTitle}
+                      value={formState.questionName}
                       onChange={handleQuestionTitle}
                     />
                     <div className="questionEdit_editBlock_inputButtonWrap_iconBlock">
@@ -208,7 +208,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               ) : (
                 <div className="questionEdit_mainBlock">
                   <p className="questionEdit_mainBlock_questionName">
-                    Вопрос: {questionTitle}
+                    Вопрос: {formState.questionName}
                   </p>
                   <EditTwoTone
                     className="questionEdit_mainBlock_editIcon"

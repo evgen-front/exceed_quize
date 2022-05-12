@@ -47,7 +47,7 @@ export const NewTest = () => {
   };
 
   //@ts-ignore
-  const { formState, handleChange, handleSubmit, errors } = useForm({
+  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
     validations,
     onSubmit: createNewTest,
   });
