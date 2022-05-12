@@ -7,7 +7,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
-import { Validations } from "../../../hooks/useForm";
+import { useForm, Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; // !!! how can I to reduce a pass?
 import { Question, QuestionResponse } from "../../../types/types";
 import { AddAnswer } from "../AddAnswer/AddAnswer";
@@ -18,10 +18,10 @@ const validations: Validations = {
   questionName: {
     required: {
       value: true,
-      message: 'Настя, а текст вопроса кто будет писать?'
-    }
-  }
-}
+      message: "Введите текст вопроса",
+    },
+  },
+};
 
 export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
@@ -57,6 +57,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setQuestionTitle(e.target.value);
+    handleChange("questionName", e.target.value);
   };
 
   const createNewQuestion = () => {
@@ -104,6 +105,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
     setEditQuestionFlag(false);
   };
 
+  //@ts-ignore
+  const { formState, handleChange, handleSubmit, errors } = useForm({
+    validations,
+    onSubmit: createNewQuestion,
+  });
+
   useEffect(() => {
     if (testId) {
       NewTestService.getQuestions(testId)
@@ -121,7 +128,8 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             questionList.map(({ id, ordering, text }) => (
               <div
                 key={`questionItem_${id}`}
-                className="question_viewBlock_items_item">
+                className="question_viewBlock_items_item"
+              >
                 <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
                 </p>
@@ -140,7 +148,8 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             shape="round"
             icon={<PlusOutlined />}
             size={"middle"}
-            onClick={openModal}>
+            onClick={openModal}
+          >
             Добавить вопрос
           </Button>
         </div>
@@ -148,24 +157,34 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       <Modal
         visible={isModalVisible}
         onOk={handleModalOK}
-        onCancel={handleModalCancel}>
+        onCancel={handleModalCancel}
+      >
         <div className="questionModalWrapper">
           {!questionId ? (
             <div className="questionCreate">
               <p className="questionCreate_title">Создать новый вопрос...</p>
-              <Input.TextArea
-                className="questionCreate_textArea"
-                placeholder="Введите текст вопроса"
-                name="question_title"
-                onChange={handleQuestionTitle}
-                value={questionTitle}
-              />
+              <div className="questionCreate_inputBlock">
+                <Input.TextArea
+                  className="questionCreate_inputBlock_textArea"
+                  placeholder="Введите текст вопроса"
+                  name="question_title"
+                  onChange={handleQuestionTitle}
+                  value={questionTitle}
+                />
+                {errors?.questionName && (
+                  <p className="questionCreate_inputBlock_error">
+                    {errors?.questionName}
+                  </p>
+                )}
+              </div>
+
               <Button
                 className="questionCreate_nextButton"
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={createNewQuestion}>
+                onClick={handleSubmit}
+              >
                 Далее
               </Button>
             </div>

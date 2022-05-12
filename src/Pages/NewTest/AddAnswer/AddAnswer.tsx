@@ -22,7 +22,7 @@ const validations: Validations = {
   },
 };
 
-export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
+export const AddAnswer = ({ questionId }: { questionId: number | null }) => {  
   const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
   const [answerId, setAnswerId] = useState<string>("");
   const [answerList, setAnswerList] = useState<Answer[]>([]);

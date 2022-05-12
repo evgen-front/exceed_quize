@@ -39,6 +39,15 @@ p {
     flex-direction: column;
     gap: 15px;
 
+    &_inputBlock {
+      display: flex;
+      flex-direction: column;
+      &_error {
+        color: red;
+        margin-bottom: 0;
+      }
+    }
+
     &_nextButton {
       align-self: flex-end;
     }
