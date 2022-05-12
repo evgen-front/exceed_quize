@@ -14,10 +14,15 @@ import "./AddAnswer.scss";
 
 export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   const [answerTitle, setAnswerTitle] = useState<string>("");
-  const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
-  const [answerId, setAnswerId] = useState<string>("");
+  const [answerId, setAnswerId] = useState<number | null>(null);
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
+
+  const getAnswers = (): void => {
+    NewTestService.getAnswers(questionId)
+      .then((res) => setAnswerList(res.data))
+      .catch((err) => console.log(err)); //!!!
+  };
 
   const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAnswerTitle(e.target.value);
@@ -31,8 +36,17 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
     setAddAnswerFlag(false);
   };
 
-  const handleRightAnswer = (e: CheckboxChangeEvent) => {
-    setIsRightAnswer(e.target.checked);
+  const handleRightAnswer = (
+    e: CheckboxChangeEvent,
+    id: number,
+    text: string
+  ) => {
+    NewTestService.updateAnswer(questionId, id, {
+      text,
+      is_true: e.target.checked,
+    })
+      .then((res) => getAnswers())
+      .catch((err) => console.log(err.message));
   };
 
   const saveEditAnswer = () => {
@@ -44,17 +58,7 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   };
 
   useEffect(() => {
-    if (questionId) {
-      NewTestService.getAnswers(questionId)
-        .then((res) => {
-          setAnswerList(res.data);
-          // const editQuestion = listQuestion.filter(
-          //   (elem) => elem.id === questionId
-          // )[0];
-          // setEditableQuestion(editQuestion);
-        })
-        .catch((err) => console.log(err)); //!!!
-    }
+    questionId && getAnswers();
   }, [questionId, answerId]);
 
   return (
@@ -68,12 +72,14 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                 key={`answerItem_${id}`}
                 className="answer_viewBlock_list_item"
               >
-                <p className="answer_viewBlock_list_item_description">- {text}</p>
+                <p className="answer_viewBlock_list_item_description">
+                  - {text}
+                </p>
                 <div className="answer_viewBlock_list_item_iconBlock">
                   <Checkbox
                     name="isRightAnswer"
-                    onChange={handleRightAnswer}
-                    checked={isRightAnswer}
+                    onChange={(e) => id && handleRightAnswer(e, id, text)}
+                    checked={is_true}
                   ></Checkbox>
                   <EditTwoTone onClick={() => console.log("clicked edit")} />
                   <DeleteTwoTone
@@ -98,12 +104,8 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
               onChange={handleAnswerTitle}
             />
             <div className="answer_addAnswerBlock_editMode_buttonBlock">
-              <CheckOutlined
-                onClick={saveEditAnswer}
-              />
-              <CloseOutlined
-                onClick={addAnswerFlagFalse}
-              />
+              <CheckOutlined onClick={saveEditAnswer} />
+              <CloseOutlined onClick={addAnswerFlagFalse} />
             </div>
           </div>
         ) : (
