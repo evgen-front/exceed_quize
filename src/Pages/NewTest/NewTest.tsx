@@ -2,11 +2,21 @@ import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useForm, Validations } from "../../hooks/useForm";
 import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a pass?
 import { NewTestService } from "../../services/NewTestService";
 import { Test } from "../../types/types";
 import { AddQuestion } from "./AddQuestion/AddQuestion";
 import "./NewTest.scss";
+
+const validations: Validations = {
+  testName: {
+    required: {
+      value: true,
+      message: "Введите название теста",
+    },
+  },
+};
 
 export const NewTest = () => {
   const { id } = useParams();
@@ -16,6 +26,7 @@ export const NewTest = () => {
 
   const handleTestName = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTestName(e.target.value);
+    handleChange("testName", e.target.value);
   };
 
   const handleTestPublic = (e: CheckboxChangeEvent) => {
@@ -34,6 +45,12 @@ export const NewTest = () => {
       })
       .catch((err) => console.log(err)); //!!!
   };
+
+  //@ts-ignore
+  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
+    validations,
+    onSubmit: createNewTest,
+  });
 
   useEffect(() => {
     if (id) {
@@ -62,6 +79,11 @@ export const NewTest = () => {
                 value={testName}
                 onChange={handleTestName}
               />
+              {errors?.testName && (
+                <p className="NT_createTest_inputBlock_error">
+                  {errors?.testName}
+                </p>
+              )}
               <Checkbox
                 name="testPublished"
                 onChange={handleTestPublic}

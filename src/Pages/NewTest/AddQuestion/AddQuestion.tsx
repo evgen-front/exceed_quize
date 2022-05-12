@@ -7,17 +7,26 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { useForm, Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; // !!! how can I to reduce a pass?
 import { Question, QuestionResponse } from "../../../types/types";
 import { AddAnswer } from "../AddAnswer/AddAnswer";
 import { UploadImage } from "../UploadImage/UploadImage";
 import "./AddQuestion.scss";
 
+const validations: Validations = {
+  questionName: {
+    required: {
+      value: true,
+      message: "Введите текст вопроса",
+    },
+  },
+};
+
 export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [questionList, setQuestionList] = useState<QuestionResponse[]>([]);
   const [questionId, setQuestionId] = useState<number | null>(null);
-  const [questionTitle, setQuestionTitle] = useState<string>("");
   const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
   const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
 
@@ -28,29 +37,29 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const openEditModal = (id: number, text: string) => {
     openModal();
     setQuestionId(id);
-    setQuestionTitle(text);
+    handleChange("questionName", text);
   };
 
   const handleModalOK = () => {
     setIsModalVisible(false);
     setQuestionId(null);
-    setQuestionTitle("");
+    reset();
     setEditQuestionFlag(false);
   };
 
   const handleModalCancel = () => {
     setIsModalVisible(false);
     setQuestionId(null);
-    setQuestionTitle("");
+    reset();
     setEditQuestionFlag(false);
   };
 
   const handleQuestionTitle = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuestionTitle(e.target.value);
+    handleChange("questionName", e.target.value);
   };
 
   const createNewQuestion = () => {
-    const question: Question = { text: questionTitle };
+    const question: Question = { text: formState.questionName };
     NewTestService.createNewQuestion(testId, question)
       .then((res) => {
         setQuestionId(res?.data?.id);
@@ -61,12 +70,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const updateQuestion = () => {
     const { id, ordering }: Question = editableQuestion;
     const editedQuestion: Question = {
-      text: questionTitle,
+      text: formState.questionName,
       ordering,
     };
     id &&
       NewTestService.updateQuestion(testId, id, editedQuestion)
-        .then((res) => setQuestionTitle(res.data.text))
+        .then((res) => handleChange("questionName", res.data.text))
         .catch((err) => console.log(err.message));
     setEditQuestionFlag(false);
   };
@@ -90,9 +99,17 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const undoEditQuestion = () => {
     const { text }: Question = editableQuestion;
-    text && setQuestionTitle(text);
+    text && handleChange("questionName", text);
     setEditQuestionFlag(false);
   };
+
+  //@ts-ignore
+  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
+    validations,
+    onSubmit: editQuestionFlag ? updateQuestion : createNewQuestion,
+  });
+
+  console.log(formState);
 
   useEffect(() => {
     if (testId) {
@@ -111,7 +128,8 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             questionList.map(({ id, ordering, text }) => (
               <div
                 key={`questionItem_${id}`}
-                className="question_viewBlock_items_item">
+                className="question_viewBlock_items_item"
+              >
                 <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
                 </p>
@@ -130,7 +148,8 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             shape="round"
             icon={<PlusOutlined />}
             size={"middle"}
-            onClick={openModal}>
+            onClick={openModal}
+          >
             Добавить вопрос
           </Button>
         </div>
@@ -138,24 +157,34 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       <Modal
         visible={isModalVisible}
         onOk={handleModalOK}
-        onCancel={handleModalCancel}>
+        onCancel={handleModalCancel}
+      >
         <div className="questionModalWrapper">
           {!questionId ? (
             <div className="questionCreate">
               <p className="questionCreate_title">Создать новый вопрос...</p>
-              <Input.TextArea
-                className="questionCreate_textArea"
-                placeholder="Введите текст вопроса"
-                name="question_title"
-                onChange={handleQuestionTitle}
-                value={questionTitle}
-              />
+              <div className="questionCreate_inputBlock">
+                <Input.TextArea
+                  className="questionCreate_inputBlock_textArea"
+                  placeholder="Введите текст вопроса"
+                  name="question_title"
+                  onChange={handleQuestionTitle}
+                  value={formState.questionName}
+                />
+                {errors?.questionName && (
+                  <p className="questionCreate_inputBlock_error">
+                    {errors?.questionName}
+                  </p>
+                )}
+              </div>
+
               <Button
                 className="questionCreate_nextButton"
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={createNewQuestion}>
+                onClick={handleSubmit}
+              >
                 Далее
               </Button>
             </div>
@@ -165,13 +194,20 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               {editQuestionFlag ? (
                 <div className="questionEdit_editBlock">
                   <div className="questionEdit_editBlock_inputButtonWrap">
-                    <Input.TextArea
-                      name="editQuestionName"
-                      value={questionTitle}
-                      onChange={handleQuestionTitle}
-                    />
+                    <div className="questionEdit_editBlock_inputButtonWrap_inputBlock">
+                      <Input.TextArea
+                        name="editQuestionName"
+                        value={formState.questionName}
+                        onChange={handleQuestionTitle}
+                      />
+                      {errors?.questionName && (
+                        <p className="questionEdit_editBlock_inputButtonWrap_inputBlock_error">
+                          {errors?.questionName}
+                        </p>
+                      )}
+                    </div>
                     <div className="questionEdit_editBlock_inputButtonWrap_iconBlock">
-                      <CheckOutlined onClick={updateQuestion} />
+                      <CheckOutlined onClick={handleSubmit} />
                       <CloseOutlined onClick={undoEditQuestion} />
                     </div>
                   </div>
@@ -179,7 +215,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               ) : (
                 <div className="questionEdit_mainBlock">
                   <p className="questionEdit_mainBlock_questionName">
-                    Вопрос: {questionTitle}
+                    Вопрос: {formState.questionName}
                   </p>
                   <EditTwoTone
                     className="questionEdit_mainBlock_editIcon"

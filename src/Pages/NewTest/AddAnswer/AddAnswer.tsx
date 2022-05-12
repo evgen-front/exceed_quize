@@ -8,13 +8,22 @@ import {
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
+import { useForm, UseFormProps, Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; //!!!
 import { Answer } from "../../../types/types"; //!!!
 import "./AddAnswer.scss";
 
-export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
-  const [answerTitle, setAnswerTitle] = useState<string>("");
-  const [answerId, setAnswerId] = useState<number | null>(null);
+const validations: Validations = {
+  answerName: {
+    required: {
+      value: true,
+      message: "Введите текст ответа",
+    },
+  },
+};
+
+export const AddAnswer = ({ questionId }: { questionId: number | null }) => {  
+  const [answerId, setAnswerId] = useState<string>("");
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
 
@@ -24,9 +33,9 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       .catch((err) => console.log(err)); //!!!
   };
 
-  const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAnswerTitle(e.target.value);
-  };
+  // const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAnswerTitle(e.target.value);
+  // };
 
   const addAnswerFlagTrue = () => {
     setAddAnswerFlag(true);
@@ -50,12 +59,19 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   };
 
   const saveEditAnswer = () => {
-    NewTestService.createNewAnswer(questionId, { text: answerTitle })
+    const { answerName } = formState;
+    NewTestService.createNewAnswer(questionId, { text: answerName })
       .then((res) => setAnswerId(res.data.id))
       .catch((err) => console.log(err));
     setAddAnswerFlag(false);
-    setAnswerTitle("");
+    handleChange("answerName", "");
   };
+
+  //@ts-ignore
+  const { formState, handleChange, handleSubmit, errors } = useForm({
+    validations,
+    onSubmit: saveEditAnswer,
+  });
 
   useEffect(() => {
     questionId && getAnswers();
@@ -96,15 +112,21 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       <div className="answer_addAnswerBlock">
         {addAnswerFlag ? (
           <div className="answer_addAnswerBlock_editMode">
-            <Input
-              className="answer_addAnswerBlock_editMode_input"
-              name="answerTitle"
-              placeholder="Введите текст ответа"
-              value={answerTitle}
-              onChange={handleAnswerTitle}
-            />
+            <div className="answer_addAnswerBlock_editMode_inputBlock">
+              <Input
+                className="answer_addAnswerBlock_editMode_inputBlock_input"
+                name="answerName"
+                placeholder="Введите текст ответа"
+                onChange={(e) => handleChange("answerName", e.target.value)}
+              />
+              {errors?.answerName && (
+                <p className="answer_addAnswerBlock_editMode_inputBlock_error">
+                  {errors?.answerName}
+                </p>
+              )}
+            </div>
             <div className="answer_addAnswerBlock_editMode_buttonBlock">
-              <CheckOutlined onClick={saveEditAnswer} />
+              <CheckOutlined onClick={handleSubmit} />
               <CloseOutlined onClick={addAnswerFlagFalse} />
             </div>
           </div>

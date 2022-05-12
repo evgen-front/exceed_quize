@@ -39,6 +39,15 @@ p {
     flex-direction: column;
     gap: 15px;
 
+    &_inputBlock {
+      display: flex;
+      flex-direction: column;
+      &_error {
+        color: red;
+        margin-bottom: 0;
+      }
+    }
+
     &_nextButton {
       align-self: flex-end;
     }
@@ -56,7 +65,16 @@ p {
       &_inputButtonWrap {
         display: flex;
         gap: 20px;
-        align-items: center;
+        align-items: flex-start;
+
+        &_inputBlock {
+          display: flex;
+          flex-direction: column;
+          &_error {
+            color: red;
+            margin-bottom: 0;
+          }
+        }
 
         &_iconBlock {
           display: flex;
