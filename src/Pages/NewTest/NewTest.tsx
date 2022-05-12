@@ -2,11 +2,21 @@ import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Validations } from "../../hooks/useForm";
 import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a pass?
 import { NewTestService } from "../../services/NewTestService";
 import { Test } from "../../types/types";
 import { AddQuestion } from "./AddQuestion/AddQuestion";
 import "./NewTest.scss";
+
+const validations: Validations = {
+  testName: {
+    required: {
+      value: true,
+      message: 'Настя, введи название теста'
+    }
+  }
+}
 
 export const NewTest = () => {
   const { id } = useParams();

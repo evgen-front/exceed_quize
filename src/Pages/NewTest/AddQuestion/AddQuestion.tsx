@@ -7,11 +7,21 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Modal } from "antd";
 import { useEffect, useState } from "react";
+import { Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; // !!! how can I to reduce a pass?
 import { Question, QuestionResponse } from "../../../types/types";
 import { AddAnswer } from "../AddAnswer/AddAnswer";
 import { UploadImage } from "../UploadImage/UploadImage";
 import "./AddQuestion.scss";
+
+const validations: Validations = {
+  questionName: {
+    required: {
+      value: true,
+      message: 'Настя, а текст вопроса кто будет писать?'
+    }
+  }
+}
 
 export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
