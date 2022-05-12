@@ -7,6 +7,10 @@ export class NewTestService {
     return $api.post("/tests/", data);
   }
 
+  static async getTest (test_id: number): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}`)
+  }
+
   static async getQuestions(test_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/tests/${test_id}/questions/`);
   }
@@ -16,32 +20,6 @@ export class NewTestService {
     data: Question
   ): Promise<AxiosResponse> {
     return $api.post(`/tests/${test_id}/questions/`, data);
-  }
-
-  static async createImage(
-    test_id: number | null,
-    question_id: number | null,
-    data: Blob | undefined
-  ): Promise<AxiosResponse> {
-    return $api.post(`/tests/${test_id}/questions/${question_id}/images`, data);
-  }
-
-  static async getTest (test_id: number): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}`)
-  }
-
-  static async getImage(
-    test_id: number | null,
-    question_id: number | null
-  ): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}/questions/${question_id}/images`);
-  }
-
-  static async deleteImage(
-    test_id: number | null,
-    question_id: number | null
-  ): Promise<AxiosResponse> {
-    return $api.delete(`/tests/${test_id}/questions/${question_id}/images`);
   }
 
   static async updateQuestion(
@@ -59,6 +37,28 @@ export class NewTestService {
     return $api.delete(`/tests/${test_id}/questions/${question_id}/`);
   }
 
+  static async createImage(
+    test_id: number | null,
+    question_id: number | null,
+    data: Blob | undefined
+  ): Promise<AxiosResponse> {
+    return $api.post(`/tests/${test_id}/questions/${question_id}/images`, data);
+  }
+
+  static async getImage(
+    test_id: number | null,
+    question_id: number | null
+  ): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}/questions/${question_id}/images`);
+  }
+
+  static async deleteImage(
+    test_id: number | null,
+    question_id: number | null
+  ): Promise<AxiosResponse> {
+    return $api.delete(`/tests/${test_id}/questions/${question_id}/images`);
+  }
+
   static async createNewAnswer(
     question_id: number | null,
     data: Answer
@@ -68,5 +68,13 @@ export class NewTestService {
 
   static async getAnswers(question_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/questions/${question_id}/answers/`);
+  }
+
+  static async updateAnswer(
+    question_id: number | null,
+    answer_id: number | null,
+    data: Answer
+  ): Promise<AxiosResponse> {
+    return $api.put(`/questions/${question_id}/answers/${answer_id}/`, data);
   }
 }

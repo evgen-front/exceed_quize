@@ -97,7 +97,7 @@ export const NewTest = () => {
               type="primary"
               shape="round"
               size={"middle"}
-              onClick={handleSubmit}
+              onClick={createNewTest}
             >
               Далее
             </Button>

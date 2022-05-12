@@ -23,10 +23,19 @@ const validations: Validations = {
 };
 
 export const AddAnswer = ({ questionId }: { questionId: number | null }) => {  
-  const [isRightAnswer, setIsRightAnswer] = useState<boolean>(false);
   const [answerId, setAnswerId] = useState<string>("");
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
+
+  const getAnswers = (): void => {
+    NewTestService.getAnswers(questionId)
+      .then((res) => setAnswerList(res.data))
+      .catch((err) => console.log(err)); //!!!
+  };
+
+  // const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setAnswerTitle(e.target.value);
+  // };
 
   const addAnswerFlagTrue = () => {
     setAddAnswerFlag(true);
@@ -36,8 +45,17 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
     setAddAnswerFlag(false);
   };
 
-  const handleRightAnswer = (e: CheckboxChangeEvent) => {
-    setIsRightAnswer(e.target.checked);
+  const handleRightAnswer = (
+    e: CheckboxChangeEvent,
+    id: number,
+    text: string
+  ) => {
+    NewTestService.updateAnswer(questionId, id, {
+      text,
+      is_true: e.target.checked,
+    })
+      .then((res) => getAnswers())
+      .catch((err) => console.log(err.message));
   };
 
   const saveEditAnswer = () => {
@@ -56,17 +74,7 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   });
 
   useEffect(() => {
-    if (questionId) {
-      NewTestService.getAnswers(questionId)
-        .then((res) => {
-          setAnswerList(res.data);
-          // const editQuestion = listQuestion.filter(
-          //   (elem) => elem.id === questionId
-          // )[0];
-          // setEditableQuestion(editQuestion);
-        })
-        .catch((err) => console.log(err)); //!!!
-    }
+    questionId && getAnswers();
   }, [questionId, answerId]);
 
   return (
@@ -86,8 +94,8 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                 <div className="answer_viewBlock_list_item_iconBlock">
                   <Checkbox
                     name="isRightAnswer"
-                    onChange={handleRightAnswer}
-                    checked={isRightAnswer}
+                    onChange={(e) => id && handleRightAnswer(e, id, text)}
+                    checked={is_true}
                   ></Checkbox>
                   <EditTwoTone onClick={() => console.log("clicked edit")} />
                   <DeleteTwoTone
