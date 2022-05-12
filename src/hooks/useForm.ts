@@ -28,16 +28,10 @@ export interface UseFormProps {
   handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-interface Errors {
-  testName?: string,
-  questionName?: string,
-  answerName?: string
-}
-
 //@ts-ignore
 export const useForm: FC<UseFormProps> = (props) => {
   const [formState, setFormState] = useState<FormState>(props?.initialState || {});
-  const [errors, setErrors] = useState<Errors>({});
+  const [errors, setErrors] = useState<FormState>({});
 
   const handleChange = (name: string, value: string) => {
     setFormState({ ...formState, [name]: value })

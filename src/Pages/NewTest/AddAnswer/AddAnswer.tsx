@@ -8,10 +8,11 @@ import {
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
-import { useForm, UseFormProps, Validations } from "../../../hooks/useForm";
+import { useForm, Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; //!!!
 import { Answer } from "../../../types/types"; //!!!
 import "./AddAnswer.scss";
+import { EditBlock } from "./EditBlock/EditBlock";
 
 const validations: Validations = {
   answerName: {
@@ -22,10 +23,11 @@ const validations: Validations = {
   },
 };
 
-export const AddAnswer = ({ questionId }: { questionId: number | null }) => {  
+export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   const [answerId, setAnswerId] = useState<string>("");
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
+  const [editAnswerFlag, setEditAnswerFlag] = useState<boolean>(false);
 
   const getAnswers = (): void => {
     NewTestService.getAnswers(questionId)
@@ -111,25 +113,12 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       </div>
       <div className="answer_addAnswerBlock">
         {addAnswerFlag ? (
-          <div className="answer_addAnswerBlock_editMode">
-            <div className="answer_addAnswerBlock_editMode_inputBlock">
-              <Input
-                className="answer_addAnswerBlock_editMode_inputBlock_input"
-                name="answerName"
-                placeholder="Введите текст ответа"
-                onChange={(e) => handleChange("answerName", e.target.value)}
-              />
-              {errors?.answerName && (
-                <p className="answer_addAnswerBlock_editMode_inputBlock_error">
-                  {errors?.answerName}
-                </p>
-              )}
-            </div>
-            <div className="answer_addAnswerBlock_editMode_buttonBlock">
-              <CheckOutlined onClick={handleSubmit} />
-              <CloseOutlined onClick={addAnswerFlagFalse} />
-            </div>
-          </div>
+          <EditBlock
+            errors={errors}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            addAnswerFlagFalse={addAnswerFlagFalse}
+          />
         ) : (
           <Button
             className="answer_addAnswerBlock_addButton"
