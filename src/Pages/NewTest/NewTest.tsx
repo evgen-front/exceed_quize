@@ -21,7 +21,7 @@ const validations: Validations = {
 export const NewTest = () => {
   const { id } = useParams();
   const [testId, setTestId] = useState<number | null>(null);
-  // const [testName, setTestName] = useState<string>("");
+  const [testName, setTestName] = useState<string>("");
   const [testPublished, setTestPublished] = useState<boolean>(false);
 
   const handleTestPublic = (e: CheckboxChangeEvent) => {
