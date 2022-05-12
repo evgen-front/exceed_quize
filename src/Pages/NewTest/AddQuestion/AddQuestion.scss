@@ -65,7 +65,7 @@ p {
       &_inputButtonWrap {
         display: flex;
         gap: 20px;
-        align-items: center;
+        align-items: flex-start;
 
         &_inputBlock {
           display: flex;
