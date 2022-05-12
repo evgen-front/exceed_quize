@@ -24,18 +24,13 @@ export const NewTest = () => {
   const [testName, setTestName] = useState<string>("");
   const [testPublished, setTestPublished] = useState<boolean>(false);
 
-  const handleTestName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTestName(e.target.value);
-    handleChange("testName", e.target.value);
-  };
-
   const handleTestPublic = (e: CheckboxChangeEvent) => {
     setTestPublished(e.target.checked);
   };
 
   const createNewTest = () => {
     const newTest: Test = {
-      title: testName,
+      title: formState.testName,
       published: testPublished,
     };
 
@@ -47,7 +42,7 @@ export const NewTest = () => {
   };
 
   //@ts-ignore
-  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
+  const { formState, handleChange, handleSubmit, errors } = useForm({
     validations,
     onSubmit: createNewTest,
   });
@@ -58,7 +53,7 @@ export const NewTest = () => {
       NewTestService.getTest(test_id)
         .then((res) => {
           setTestId(res.data.id);
-          setTestName(res.data.title);
+          handleChange('testName', res.data.title);
         })
         .catch((err) => console.log(err.message));
     }
@@ -76,8 +71,8 @@ export const NewTest = () => {
               <Input
                 name="title"
                 placeholder="Введите название теста"
-                value={testName}
-                onChange={handleTestName}
+                value={formState.testName}
+                onChange={(e) => handleChange("testName", e.target.value)}
               />
               {errors?.testName && (
                 <p className="NT_createTest_inputBlock_error">
@@ -97,14 +92,14 @@ export const NewTest = () => {
               type="primary"
               shape="round"
               size={"middle"}
-              onClick={createNewTest}
+              onClick={handleSubmit}
             >
               Далее
             </Button>
           </div>
         ) : (
           <div className="NT_questionWrapper">
-            <p className="NT_questionWrapper_testName">{testName}</p>
+            <p className="NT_questionWrapper_testName">{formState.testName}</p>
             <AddQuestion testId={testId} />
           </div>
         )}
