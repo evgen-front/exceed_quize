@@ -1,6 +1,6 @@
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useForm, Validations } from "../../hooks/useForm";
 import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a pass?
@@ -21,7 +21,6 @@ const validations: Validations = {
 export const NewTest = () => {
   const { id } = useParams();
   const [testId, setTestId] = useState<number | null>(null);
-  const [testName, setTestName] = useState<string>("");
   const [testPublished, setTestPublished] = useState<boolean>(false);
 
   const handleTestPublic = (e: CheckboxChangeEvent) => {

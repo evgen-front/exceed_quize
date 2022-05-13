@@ -1,17 +1,16 @@
 import {
-  CheckOutlined,
-  CloseOutlined,
   DeleteTwoTone,
   EditTwoTone,
   PlusOutlined,
 } from "@ant-design/icons";
-import { Button, Checkbox, Input } from "antd";
+import { Button, Checkbox } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
-import { useForm, UseFormProps, Validations } from "../../../hooks/useForm";
+import { useForm, Validations } from "../../../hooks/useForm";
 import { NewTestService } from "../../../services/NewTestService"; //!!!
 import { Answer } from "../../../types/types"; //!!!
 import "./AddAnswer.scss";
+import { EditBlock } from "./EditBlock/EditBlock";
 
 const validations: Validations = {
   answerName: {
@@ -22,10 +21,18 @@ const validations: Validations = {
   },
 };
 
-export const AddAnswer = ({ questionId }: { questionId: number | null }) => {  
+interface UpdateAnswerProps {
+  questionId: number | null;
+  id: number | null;
+  text: string;
+  e?: CheckboxChangeEvent;
+}
+
+export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   const [answerId, setAnswerId] = useState<string>("");
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
+  const [editAnswerId, setEditAnswerId] = useState<number | null>(null);
 
   const getAnswers = (): void => {
     NewTestService.getAnswers(questionId)
@@ -33,9 +40,17 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       .catch((err) => console.log(err)); //!!!
   };
 
-  // const handleAnswerTitle = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setAnswerTitle(e.target.value);
-  // };
+  const updateAnswer = ({
+    questionId,
+    id,
+    text,
+    e,
+  }: UpdateAnswerProps): void => {
+    const data = e ? { text, is_true: e?.target.checked } : { text };
+    NewTestService.updateAnswer(questionId, id, data)
+      .then((res) => getAnswers())
+      .catch((err) => console.log(err.message));
+  };
 
   const addAnswerFlagTrue = () => {
     setAddAnswerFlag(true);
@@ -43,34 +58,37 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
 
   const addAnswerFlagFalse = () => {
     setAddAnswerFlag(false);
-  };
-
-  const handleRightAnswer = (
-    e: CheckboxChangeEvent,
-    id: number,
-    text: string
-  ) => {
-    NewTestService.updateAnswer(questionId, id, {
-      text,
-      is_true: e.target.checked,
-    })
-      .then((res) => getAnswers())
-      .catch((err) => console.log(err.message));
-  };
-
-  const saveEditAnswer = () => {
-    const { answerName } = formState;
-    NewTestService.createNewAnswer(questionId, { text: answerName })
-      .then((res) => setAnswerId(res.data.id))
-      .catch((err) => console.log(err));
-    setAddAnswerFlag(false);
-    handleChange("answerName", "");
+    setEditAnswerId(null);
   };
 
   //@ts-ignore
-  const { formState, handleChange, handleSubmit, errors } = useForm({
+  const handleRightAnswer = (
+    e: CheckboxChangeEvent,
+    id: number | null = editAnswerId,
+    text: string = formState.answerName
+  ): void => {
+    updateAnswer({ questionId, id, text, e });
+    setEditAnswerId(null);
+  };
+
+  const addAnswer = () => {
+    NewTestService.createNewAnswer(questionId, { text: formState.answerName })
+      .then((res) => setAnswerId(res.data.id))
+      .catch((err) => console.log(err));
+    setAddAnswerFlag(false);
+    setEditAnswerId(null);
+    reset();
+  };
+
+  const startEditAnswer = (id: number, text: string) => {
+    setEditAnswerId(id);
+    handleChange("answerName", text);
+  };
+
+  //@ts-ignore
+  const { formState, handleChange, handleSubmit, errors, reset } = useForm({
     validations,
-    onSubmit: saveEditAnswer,
+    onSubmit: editAnswerId ? handleRightAnswer : addAnswer,
   });
 
   useEffect(() => {
@@ -88,20 +106,34 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                 key={`answerItem_${id}`}
                 className="answer_viewBlock_list_item"
               >
-                <p className="answer_viewBlock_list_item_description">
-                  - {text}
-                </p>
-                <div className="answer_viewBlock_list_item_iconBlock">
-                  <Checkbox
-                    name="isRightAnswer"
-                    onChange={(e) => id && handleRightAnswer(e, id, text)}
-                    checked={is_true}
-                  ></Checkbox>
-                  <EditTwoTone onClick={() => console.log("clicked edit")} />
-                  <DeleteTwoTone
-                    onClick={() => console.log("clicked delete")}
+                {editAnswerId === id ? (
+                  <EditBlock
+                    answerName={formState.answerName}
+                    errors={errors}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    addAnswerFlagFalse={addAnswerFlagFalse}
                   />
-                </div>
+                ) : (
+                  <>
+                    <p className="answer_viewBlock_list_item_description">
+                      - {text}
+                    </p>
+                    <div className="answer_viewBlock_list_item_iconBlock">
+                      <Checkbox
+                        name="isRightAnswer"
+                        onChange={(e) => id && handleRightAnswer(e, id, text)}
+                        checked={is_true}
+                      ></Checkbox>
+                      <EditTwoTone
+                        onClick={() => id && startEditAnswer(id, text)}
+                      />
+                      <DeleteTwoTone
+                        onClick={() => console.log("clicked delete")}
+                      />
+                    </div>
+                  </>
+                )}
               </div>
             ))
           ) : (
@@ -111,25 +143,13 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
       </div>
       <div className="answer_addAnswerBlock">
         {addAnswerFlag ? (
-          <div className="answer_addAnswerBlock_editMode">
-            <div className="answer_addAnswerBlock_editMode_inputBlock">
-              <Input
-                className="answer_addAnswerBlock_editMode_inputBlock_input"
-                name="answerName"
-                placeholder="Введите текст ответа"
-                onChange={(e) => handleChange("answerName", e.target.value)}
-              />
-              {errors?.answerName && (
-                <p className="answer_addAnswerBlock_editMode_inputBlock_error">
-                  {errors?.answerName}
-                </p>
-              )}
-            </div>
-            <div className="answer_addAnswerBlock_editMode_buttonBlock">
-              <CheckOutlined onClick={handleSubmit} />
-              <CloseOutlined onClick={addAnswerFlagFalse} />
-            </div>
-          </div>
+          <EditBlock
+            answerName={formState.answerName}
+            errors={errors}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            addAnswerFlagFalse={addAnswerFlagFalse}
+          />
         ) : (
           <Button
             className="answer_addAnswerBlock_addButton"
