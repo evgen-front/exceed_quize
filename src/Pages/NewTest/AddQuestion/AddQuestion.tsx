@@ -114,7 +114,13 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   useEffect(() => {
     if (testId) {
       NewTestService.getQuestions(testId)
-        .then((res) => setQuestionList(res.data))
+        .then((res) => {
+          console.log(res.data);
+          //@ts-ignore
+          const sortQuestion = res.data.sort((a: Question, b: Question) => a && b && (a.ordering > b.ordering ? 1 : a.ordering < b.ordering ? -1 : 0));
+          console.log(sortQuestion);
+          setQuestionList(res.data);
+        })
         .catch((err) => console.log(err)); //!!!
     }
   }, [questionId, testId]);
