@@ -80,6 +80,12 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
     reset();
   };
 
+  const deleteAnswer = (id: number) => {
+    NewTestService.deleteAnswer(questionId, id)
+      .then(res => getAnswers())
+      .catch(err => console.log(err.message))
+  }
+
   const startEditAnswer = (id: number, text: string) => {
     setEditAnswerId(id);
     handleChange("answerName", text);
@@ -129,7 +135,7 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                         onClick={() => id && startEditAnswer(id, text)}
                       />
                       <DeleteTwoTone
-                        onClick={() => console.log("clicked delete")}
+                        onClick={() => id && deleteAnswer(id)}
                       />
                     </div>
                   </>
