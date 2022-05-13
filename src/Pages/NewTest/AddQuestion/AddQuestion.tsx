@@ -30,6 +30,15 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
   const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
 
+  const getQuestions = (testId: number | null) => {
+    NewTestService.getQuestions(testId)
+        .then((res) => {
+          console.log(res.data);
+          setQuestionList(res.data);
+        })
+        .catch((err) => console.log(err)); //!!!
+  }
+
   const openModal = () => {
     setIsModalVisible(true);
   };
