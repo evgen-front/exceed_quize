@@ -32,9 +32,15 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const getQuestions = (testId: number | null) => {
     NewTestService.getQuestions(testId)
-        .then((res) => setQuestionList(res.data))
-        .catch((err) => console.log(err)); //!!!
-  }
+      .then((res) => {
+        res.data.sort((a: Question, b: Question) =>
+          //@ts-ignore
+          a.ordering > b.ordering ? 1 : a.ordering < b.ordering ? -1 : 0
+        );
+        setQuestionList(res.data);
+      })
+      .catch((err) => console.log(err)); //!!!
+  };
 
   const openModal = () => {
     setIsModalVisible(true);
