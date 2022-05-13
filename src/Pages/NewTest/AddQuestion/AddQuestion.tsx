@@ -30,6 +30,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
   const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
 
+  const getQuestions = (testId: number | null) => {
+    NewTestService.getQuestions(testId)
+        .then((res) => setQuestionList(res.data))
+        .catch((err) => console.log(err)); //!!!
+  }
+
   const openModal = () => {
     setIsModalVisible(true);
   };
@@ -83,7 +89,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const deleteQuestion = (id: number) => {
     NewTestService.deleteQuestion(testId, id)
       .then((res) => {
-        setQuestionList([...questionList].filter((q) => q.id !== id));
+        getQuestions(testId);
         setQuestionId(null);
       })
       .catch((err) => console.log(err.message));
@@ -109,13 +115,9 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
     onSubmit: editQuestionFlag ? updateQuestion : createNewQuestion,
   });
 
-  console.log(formState);
-
   useEffect(() => {
     if (testId) {
-      NewTestService.getQuestions(testId)
-        .then((res) => setQuestionList(res.data))
-        .catch((err) => console.log(err)); //!!!
+      getQuestions(testId);
     }
   }, [questionId, testId]);
 
