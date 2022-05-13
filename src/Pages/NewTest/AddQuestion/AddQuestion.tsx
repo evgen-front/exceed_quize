@@ -32,12 +32,15 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const getQuestions = (testId: number | null) => {
     NewTestService.getQuestions(testId)
-        .then((res) => {
-          console.log(res.data);
-          setQuestionList(res.data);
-        })
-        .catch((err) => console.log(err)); //!!!
-  }
+      .then((res) => {
+        res.data.sort((a: Question, b: Question) =>
+          //@ts-ignore
+          a.ordering > b.ordering ? 1 : a.ordering < b.ordering ? -1 : 0
+        );
+        setQuestionList(res.data);
+      })
+      .catch((err) => console.log(err)); //!!!
+  };
 
   const openModal = () => {
     setIsModalVisible(true);
@@ -92,7 +95,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
   const deleteQuestion = (id: number) => {
     NewTestService.deleteQuestion(testId, id)
       .then((res) => {
-        setQuestionList([...questionList].filter((q) => q.id !== id));
+        getQuestions(testId);
         setQuestionId(null);
       })
       .catch((err) => console.log(err.message));
@@ -118,19 +121,9 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
     onSubmit: editQuestionFlag ? updateQuestion : createNewQuestion,
   });
 
-  console.log(formState);
-
   useEffect(() => {
     if (testId) {
-      NewTestService.getQuestions(testId)
-        .then((res) => {
-          console.log(res.data);
-          //@ts-ignore
-          const sortQuestion = res.data.sort((a: Question, b: Question) => a && b && (a.ordering > b.ordering ? 1 : a.ordering < b.ordering ? -1 : 0));
-          console.log(sortQuestion);
-          setQuestionList(res.data);
-        })
-        .catch((err) => console.log(err)); //!!!
+      getQuestions(testId);
     }
   }, [questionId, testId]);
 
