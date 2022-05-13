@@ -1,3 +1,4 @@
+import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { FC, useState } from "react";
 
 export interface FormState {
@@ -22,7 +23,7 @@ export interface Validations {
 export interface UseFormProps {
   initialState?: FormState,
   validations?: Validations,
-  onSubmit?: () => void,
+  onSubmit?: (() => void) | ((e: CheckboxChangeEvent, id: number, text: string) => void),
   formState: FormState,
   handleChange: (name: string, value: string) => void,
   handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void
@@ -92,6 +93,7 @@ export const useForm: FC<UseFormProps> = (props) => {
     setErrors({});
 
     if (props?.onSubmit) {
+      //@ts-ignore
       props.onSubmit();
     }
   }

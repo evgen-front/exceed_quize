@@ -1,10 +1,11 @@
 import { CheckOutlined, CloseOutlined } from "@ant-design/icons";
 import Input from "antd/lib/input/Input";
 import { FC } from "react";
-import { FormState, useForm } from "../../../../hooks/useForm";
+import { FormState } from "../../../../hooks/useForm";
 import "./EditBlock.scss";
 
 interface EditBlockProps {
+  answerName: string;
   errors: FormState;
   handleChange: (name: string, value: string) => void;
   handleSubmit: () => void;
@@ -12,6 +13,7 @@ interface EditBlockProps {
 }
 
 export const EditBlock: FC<EditBlockProps> = ({
+  answerName,
   errors,
   handleChange,
   handleSubmit,
@@ -25,6 +27,7 @@ export const EditBlock: FC<EditBlockProps> = ({
           name="answerName"
           placeholder="Введите текст ответа"
           onChange={(e) => handleChange("answerName", e.target.value)}
+          value={answerName}
         />
         {errors?.answerName && (
           <p className="answer_addAnswerBlock_editMode_inputBlock_error">
