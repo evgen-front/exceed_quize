@@ -77,4 +77,11 @@ export class NewTestService {
   ): Promise<AxiosResponse> {
     return $api.put(`/questions/${question_id}/answers/${answer_id}/`, data);
   }
+
+  static async deleteAnswer(
+    question_id: number | null,
+    answer_id: number | null
+  ): Promise<AxiosResponse> {
+    return $api.delete(`/questions/${question_id}/answers/${answer_id}`);
+  }
 }
