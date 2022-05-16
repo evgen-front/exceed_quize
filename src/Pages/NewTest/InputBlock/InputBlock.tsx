@@ -1,6 +1,7 @@
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { FC } from "react";
+import { useParams } from "react-router-dom";
 import { FormState } from "../../../hooks/useForm";
 import "./InputBlock.scss";
 
@@ -10,7 +11,8 @@ interface InputBlockProps {
   handleTestPublic: (e: CheckboxChangeEvent) => void,
   handleSubmit: () => void;
   errors: FormState,
-  testPublished: boolean
+  testPublished: boolean,
+  // testEditFlag?: boolean
 }
 
 export const InputBlock: FC<InputBlockProps> = ({
@@ -19,8 +21,11 @@ export const InputBlock: FC<InputBlockProps> = ({
   handleTestPublic,
   handleSubmit,
   errors,
-  testPublished
+  testPublished,
+  // testEditFlag
 }) => {
+  const { id } = useParams();
+
   return (
     <div className="NT_createTest">
       <div className="NT_createTest_inputBlock">
@@ -48,7 +53,7 @@ export const InputBlock: FC<InputBlockProps> = ({
         size={"middle"}
         onClick={handleSubmit}
       >
-        Далее
+        {id ? 'Сохранить' : 'Далее'}
       </Button>
     </div>
   );

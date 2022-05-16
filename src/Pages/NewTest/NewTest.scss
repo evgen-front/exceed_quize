@@ -12,10 +12,24 @@
     padding: 10px;
     height: 100%;
 
-    &_testName {
-      text-align: center;
-      font-size: 15px;
-      font-weight: bold;
+    &_testNameBlock{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      
+      &_testName {
+        text-align: center;
+        font-size: 30px;
+        font-weight: bold;
+        margin-bottom: 0;
+      }
+
+      &_editButton{
+        font-size: 30px;
+      }
     }
+
+    
   }
 }

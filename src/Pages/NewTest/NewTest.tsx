@@ -1,3 +1,4 @@
+import { EditTwoTone } from "@ant-design/icons";
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
@@ -23,6 +24,11 @@ export const NewTest = () => {
   const { id } = useParams();
   const [testId, setTestId] = useState<number | null>(null);
   const [testPublished, setTestPublished] = useState<boolean>(false);
+  const [testEditFlag, setTestEditFlag] = useState<boolean>(false);
+
+  const handleStartEdit = () => {
+    setTestEditFlag(true);
+  };
 
   const handleTestPublic = (e: CheckboxChangeEvent) => {
     setTestPublished(e.target.checked);
@@ -41,10 +47,24 @@ export const NewTest = () => {
       .catch((err) => console.log(err)); //!!!
   };
 
+  const updateTest = () => {
+    const updateTest: Test = {
+      title: formState.testName,
+      published: testPublished,
+    };
+
+    NewTestService.updateTest(testId, updateTest)
+      .then((res) => {
+        handleChange("testName", res.data.title);
+        setTestEditFlag(false);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   //@ts-ignore
   const { formState, handleChange, handleSubmit, errors } = useForm({
     validations,
-    onSubmit: createNewTest,
+    onSubmit: testEditFlag ? updateTest : createNewTest,
   });
 
   useEffect(() => {
@@ -67,6 +87,7 @@ export const NewTest = () => {
         </p>
         {!testId ? (
           <InputBlock
+            // testEditFlag={testEditFlag}// why undefined?
             testName={formState.testName}
             handleChange={handleChange}
             handleTestPublic={handleTestPublic}
@@ -76,7 +97,26 @@ export const NewTest = () => {
           />
         ) : (
           <div className="NT_questionWrapper">
-            <p className="NT_questionWrapper_testName">{formState.testName}</p>
+            {testEditFlag ? (
+              <InputBlock
+                testName={formState.testName}
+                handleChange={handleChange}
+                handleTestPublic={handleTestPublic}
+                handleSubmit={handleSubmit}
+                errors={errors}
+                testPublished={testPublished}
+              />
+            ) : (
+              <div className="NT_questionWrapper_testNameBlock">
+                <p className="NT_questionWrapper_testNameBlock_testName">
+                  {formState.testName}
+                </p>
+                <EditTwoTone
+                  className="NT_questionWrapper_testNameBlock_editButton"
+                  onClick={() => handleStartEdit()}
+                />
+              </div>
+            )}
             <AddQuestion testId={testId} />
           </div>
         )}
