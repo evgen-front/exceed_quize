@@ -11,6 +11,13 @@ export class NewTestService {
     return $api.get(`/tests/${test_id}`)
   }
 
+  static async updateTest(
+    test_id: number | null,
+    data: Question
+  ): Promise<AxiosResponse> {
+    return $api.put(`/tests/${test_id}/`, data);
+  }
+
   static async getQuestions(test_id: number | null): Promise<AxiosResponse> {
     return $api.get(`/tests/${test_id}/questions/`);
   }

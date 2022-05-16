@@ -1,3 +1,4 @@
+import { EditTwoTone } from "@ant-design/icons";
 import { Button, Checkbox, Input } from "antd";
 import { CheckboxChangeEvent } from "antd/lib/checkbox";
 import { useEffect, useState } from "react";
@@ -7,6 +8,7 @@ import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a
 import { NewTestService } from "../../services/NewTestService";
 import { Test } from "../../types/types";
 import { AddQuestion } from "./AddQuestion/AddQuestion";
+import { InputBlock } from "./InputBlock/InputBlock";
 import "./NewTest.scss";
 
 const validations: Validations = {
@@ -22,6 +24,11 @@ export const NewTest = () => {
   const { id } = useParams();
   const [testId, setTestId] = useState<number | null>(null);
   const [testPublished, setTestPublished] = useState<boolean>(false);
+  const [testEditFlag, setTestEditFlag] = useState<boolean>(false);
+
+  const handleStartEdit = () => {
+    setTestEditFlag(true);
+  };
 
   const handleTestPublic = (e: CheckboxChangeEvent) => {
     setTestPublished(e.target.checked);
@@ -40,10 +47,24 @@ export const NewTest = () => {
       .catch((err) => console.log(err)); //!!!
   };
 
+  const updateTest = () => {
+    const updateTest: Test = {
+      title: formState.testName,
+      published: testPublished,
+    };
+
+    NewTestService.updateTest(testId, updateTest)
+      .then((res) => {
+        handleChange("testName", res.data.title);
+        setTestEditFlag(false);
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   //@ts-ignore
   const { formState, handleChange, handleSubmit, errors } = useForm({
     validations,
-    onSubmit: createNewTest,
+    onSubmit: testEditFlag ? updateTest : createNewTest,
   });
 
   useEffect(() => {
@@ -52,7 +73,7 @@ export const NewTest = () => {
       NewTestService.getTest(test_id)
         .then((res) => {
           setTestId(res.data.id);
-          handleChange('testName', res.data.title);
+          handleChange("testName", res.data.title);
         })
         .catch((err) => console.log(err.message));
     }
@@ -65,40 +86,37 @@ export const NewTest = () => {
           {id ? "Редактировать тест..." : "Создать новый тест..."}
         </p>
         {!testId ? (
-          <div className="NT_createTest">
-            <div className="NT_createTest_inputBlock">
-              <Input
-                name="title"
-                placeholder="Введите название теста"
-                value={formState.testName}
-                onChange={(e) => handleChange("testName", e.target.value)}
-              />
-              {errors?.testName && (
-                <p className="NT_createTest_inputBlock_error">
-                  {errors?.testName}
-                </p>
-              )}
-              <Checkbox
-                name="testPublished"
-                onChange={handleTestPublic}
-                checked={testPublished}
-              >
-                Опубликован
-              </Checkbox>
-            </div>
-            <Button
-              className="NTSaveButton"
-              type="primary"
-              shape="round"
-              size={"middle"}
-              onClick={handleSubmit}
-            >
-              Далее
-            </Button>
-          </div>
+          <InputBlock
+            // testEditFlag={testEditFlag}// why undefined?
+            testName={formState.testName}
+            handleChange={handleChange}
+            handleTestPublic={handleTestPublic}
+            handleSubmit={handleSubmit}
+            errors={errors}
+            testPublished={testPublished}
+          />
         ) : (
           <div className="NT_questionWrapper">
-            <p className="NT_questionWrapper_testName">{formState.testName}</p>
+            {testEditFlag ? (
+              <InputBlock
+                testName={formState.testName}
+                handleChange={handleChange}
+                handleTestPublic={handleTestPublic}
+                handleSubmit={handleSubmit}
+                errors={errors}
+                testPublished={testPublished}
+              />
+            ) : (
+              <div className="NT_questionWrapper_testNameBlock">
+                <p className="NT_questionWrapper_testNameBlock_testName">
+                  {formState.testName}
+                </p>
+                <EditTwoTone
+                  className="NT_questionWrapper_testNameBlock_editButton"
+                  onClick={() => handleStartEdit()}
+                />
+              </div>
+            )}
             <AddQuestion testId={testId} />
           </div>
         )}
