@@ -5,10 +5,12 @@ import { NewTest } from "../Pages/NewTest/NewTest";
 import { SignIn } from "../Pages/SignIn/SignIn";
 import { SignUp } from "../Pages/SignUp/SignUp";
 import { Session } from "../Pages/Session/Session";
+import { ChatPage } from "../Pages/Chat/ChatPage";
 
 export const Router = () => {
   return (
     <Routes>
+      <Route path="/chat" element={<ChatPage />} />
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
       <Route path="/home" element={<Home />} />
