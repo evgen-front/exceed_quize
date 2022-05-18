@@ -23,7 +23,7 @@ export interface Validations {
 export interface UseFormProps {
   initialState?: FormState,
   validations?: Validations,
-  onSubmit?: (() => void) | ((e: CheckboxChangeEvent, id: number, text: string) => void),
+  onSubmit?: ((newOrdering: number) => void) | ((e: CheckboxChangeEvent, id: number, text: string) => void),
   formState: FormState,
   handleChange: (name: string, value: string) => void,
   handleSubmit: (event: React.ChangeEvent<HTMLInputElement>) => void

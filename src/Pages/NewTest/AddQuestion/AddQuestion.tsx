@@ -79,15 +79,19 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       .catch((err) => console.log(err)); //!!!
   };
 
-  const updateQuestion = () => {
+  const updateQuestion = (newOrdering: number) => {
+    console.log(formState);
     const { id, ordering }: Question = editableQuestion;
     const editedQuestion: Question = {
       text: formState.questionName,
-      ordering,
+      ordering: newOrdering ? newOrdering : ordering,
     };
     id &&
       NewTestService.updateQuestion(testId, id, editedQuestion)
-        .then((res) => handleChange("questionName", res.data.text))
+        .then((res) => {
+          // handleChange("questionName", res.data.text);
+          getQuestions(testId);
+        })
         .catch((err) => console.log(err.message));
     setEditQuestionFlag(false);
   };
@@ -97,6 +101,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       .then((res) => {
         getQuestions(testId);
         setQuestionId(null);
+        handleChange("questionName", "");
       })
       .catch((err) => console.log(err.message));
   };
@@ -121,6 +126,32 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
     onSubmit: editQuestionFlag ? updateQuestion : createNewQuestion,
   });
 
+  const dragStartHandler = (
+    e: React.DragEvent<HTMLDivElement>,
+    question: Question
+  ) => {
+    console.log("drag", question);
+    setEditableQuestion(question);
+  };
+
+  // const dragEndHandler = (e: React.DragEvent<HTMLDivElement>) => {
+  // }
+
+  const dragOverHandler = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
+
+  const dropHandler = (
+    e: React.DragEvent<HTMLDivElement>,
+    question: Question
+  ) => {
+    console.log(formState);
+    e.preventDefault();
+    const { ordering } = question;
+    console.log("drop", question);
+    ordering && updateQuestion(ordering);
+  };
+
   useEffect(() => {
     if (testId) {
       getQuestions(testId);
@@ -137,6 +168,12 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
               <div
                 key={`questionItem_${id}`}
                 className="question_viewBlock_items_item"
+                draggable={true}
+                onDragStart={(e) => dragStartHandler(e, { id, ordering, text })}
+                // onDragLeave={e => dragEndHandler(e)}
+                // onDragEnd={e => dragEndHandler(e)}
+                onDragOver={(e) => dragOverHandler(e)}
+                onDrop={(e) => dropHandler(e, { id, ordering, text })}
               >
                 <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
