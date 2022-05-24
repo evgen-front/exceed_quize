@@ -18,10 +18,10 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
   useEffect(() => {
     if (testId && questionId) {
       NewTestService.getImage(testId, questionId)
-        .then((res) =>
+        .then(() =>
           setFileList([
             {
-              uid: "-1",
+              uid: questionId.toString(),
               name: "",
               status: "done",
               url: baseUrl,
@@ -63,7 +63,7 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
         listType="picture-card"
         fileList={fileList}
         withCredentials
-        name="files"
+        name="file"
         accept="image/png, image/jpeg, image/jpg, image/gif"
         onRemove={deleteImage}
         onChange={handleChange}>
