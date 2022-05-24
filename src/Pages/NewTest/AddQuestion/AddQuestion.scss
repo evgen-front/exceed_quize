@@ -97,6 +97,11 @@ p {
       &_editIcon {
         font-size: 30px;
       }
+      &_upload {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 }

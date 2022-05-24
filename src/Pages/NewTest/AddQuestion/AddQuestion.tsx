@@ -173,8 +173,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                 // onDragLeave={e => dragEndHandler(e)}
                 // onDragEnd={e => dragEndHandler(e)}
                 onDragOver={(e) => dragOverHandler(e)}
-                onDrop={(e) => dropHandler(e, { id, ordering, text })}
-              >
+                onDrop={(e) => dropHandler(e, { id, ordering, text })}>
                 <p className="question_viewBlock_items_item_description">
                   {ordering}. {text}
                 </p>
@@ -193,8 +192,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
             shape="round"
             icon={<PlusOutlined />}
             size={"middle"}
-            onClick={openModal}
-          >
+            onClick={openModal}>
             Добавить вопрос
           </Button>
         </div>
@@ -202,8 +200,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       <Modal
         visible={isModalVisible}
         onOk={handleModalOK}
-        onCancel={handleModalCancel}
-      >
+        onCancel={handleModalCancel}>
         <div className="questionModalWrapper">
           {!questionId ? (
             <div className="questionCreate">
@@ -228,8 +225,7 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                 type="primary"
                 shape="round"
                 size={"middle"}
-                onClick={handleSubmit}
-              >
+                onClick={handleSubmit}>
                 Далее
               </Button>
             </div>
@@ -268,7 +264,9 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                   />
                 </div>
               )}
-              <UploadImage testId={testId} questionId={questionId} />
+              <div className="questionEdit_mainBlock_upload">
+                <UploadImage testId={testId} questionId={questionId} />
+              </div>
               <AddAnswer questionId={questionId} />
             </div>
           )}
