@@ -7,9 +7,11 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
 import { useAtom } from "jotai";
+import { useState } from "react";
 
 export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
+  const [err, setErr] = useState<any>(null);
   const navigate = useNavigate();
   const onSubmit = (e: SignInUp) => {
     AuthService.signin(e)
@@ -23,7 +25,8 @@ export const SignIn = () => {
         }
       })
       .catch((e) => {
-        console.error(e, e?.message);
+        console.log(e);
+        setErr(e);
       });
   };
 
@@ -90,6 +93,12 @@ export const SignIn = () => {
         Если ещё нет аккаунта, <br />
         <Link to="/signup">зарегистрируйтесь</Link>
       </p>
+      {err && (
+        <p>
+          <span>{err?.message}</span>
+          <span>{err?.status}</span>
+        </p>
+      )}
     </LoginView>
   );
 };

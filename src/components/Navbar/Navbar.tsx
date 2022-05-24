@@ -1,5 +1,4 @@
 import { HomeFilled, HomeOutlined, SkinFilled, SkinOutlined } from "@ant-design/icons";
-import { Button } from "antd";
 import { NavLink } from "react-router-dom";
 
 import "./Navbar.scss";
