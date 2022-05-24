@@ -85,7 +85,10 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
       .catch((err) => console.log(err)); //!!!
   };
 
-  const updateQuestion = (newOrdering: number, editQuestion: Question = editableQuestion) => {
+  const updateQuestion = (
+    newOrdering: number,
+    editQuestion: Question = editableQuestion
+  ) => {
     const { id, ordering }: Question = editQuestion;
     const editedQuestion: Question = {
       text: formState.questionName,
@@ -132,11 +135,13 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
 
   const onDragEnd = (result: DropResult) => {
     const { source, destination } = result;
-    const [editableQuestion] = questionList.filter(item => source.index === item.ordering);
+    const [editableQuestion] = questionList.filter(
+      (item) => source.index === item.ordering
+    );
     setEditableQuestion(editableQuestion);
-    
+
     if (destination) {
-      const newOrdering = +destination.index
+      const newOrdering = +destination.index;
       updateQuestion(newOrdering, editableQuestion);
     }
   };
@@ -243,7 +248,6 @@ export const AddQuestion = ({ testId }: { testId: number | null }) => {
                     </p>
                   )}
                 </div>
-
                 <Button
                   className="questionCreate_nextButton"
                   type="primary"
