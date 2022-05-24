@@ -7,8 +7,8 @@ export class NewTestService {
     return $api.post("/tests/", data);
   }
 
-  static async getTest (test_id: number): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}`)
+  static async getTest(test_id: number): Promise<AxiosResponse> {
+    return $api.get(`/tests/${test_id}`);
   }
 
   static async updateTest(
@@ -49,7 +49,13 @@ export class NewTestService {
     question_id: number | null,
     data: Blob | undefined
   ): Promise<AxiosResponse> {
-    return $api.post(`/tests/${test_id}/questions/${question_id}/images`, data);
+    return $api.post(
+      `/tests/${test_id}/questions/${question_id}/images`,
+      data,
+      {
+        headers: { "Content-Type": "multipart/form-data" },
+      }
+    );
   }
 
   static async getImage(
