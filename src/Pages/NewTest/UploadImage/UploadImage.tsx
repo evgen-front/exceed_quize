@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
-import { Upload, message } from "antd";
-import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Upload } from "antd";
+import { PlusOutlined } from "@ant-design/icons";
+import type { UploadFile } from "antd/es/upload/interface";
+import type { UploadProps } from "antd/es/upload";
 import { NewTestService } from "../../../services/NewTestService";
-import "./UploadImage.scss";
 
 interface UploadImageProps {
   questionId: number | null;
@@ -10,81 +11,63 @@ interface UploadImageProps {
 }
 
 export function UploadImage({ questionId, testId }: UploadImageProps) {
-  const [loading, setLoading] = useState<boolean>(false);
-  const [imageUrl, setImageUrl] = useState<string>("");
-
   const baseUrl = `http://localhost/tests/${testId}/questions/${questionId}/images/`;
 
-  const getBase64 = (img: Blob, callback: Function) => {
-    const reader = new FileReader();
-    reader.addEventListener("load", () => callback(reader.result));
-    reader.readAsDataURL(img);
-  };
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const beforeUpload = (file: File) => {
-    const isLt5M = file.size / 1024 / 1024 < 5;
-    if (!isLt5M) {
-      message.error("Размер картинки должен быть до 5MB!");
+  useEffect(() => {
+    if (testId && questionId) {
+      NewTestService.getImage(testId, questionId)
+        .then((res) =>
+          setFileList([
+            {
+              uid: "-1",
+              name: "",
+              status: "done",
+              url: baseUrl,
+              thumbUrl: baseUrl,
+            },
+          ])
+        )
+        .catch((err) => setFileList([]));
     }
-    return isLt5M;
+  }, [testId, questionId]);
+
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+    setFileList(newFileList);
   };
 
   const deleteImage = () => {
-    setImageUrl("");
     NewTestService.deleteImage(testId, questionId).catch((err) =>
       console.log(err)
     );
   };
 
-  const handleChange = (info: any) => {
-    if (info.file.status === "uploading") {
-      setLoading(true);
-      return;
-    }
-    if (info.file.status === "done") {
-      getBase64(info.file.originFileObj, (imageUrl: any) =>
-        setImageUrl(imageUrl)
-      );
-      setLoading(false);
-    }
-  };
-
   const uploadButton = (
     <div>
-      {loading ? <LoadingOutlined /> : <PlusOutlined />}
-      <div style={{ marginTop: 8 }}>Загрузить картинку</div>
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          flexDirection: "column",
+        }}>
+        <PlusOutlined />
+        Загрузить картинку
+      </div>
     </div>
   );
-
-  useEffect(() => {
-    NewTestService.getImage(testId, questionId)
-      .then((res) => setImageUrl(res.data))
-      .catch((err) => console.log(err.message));
-  }, []);
-
   return (
-    <div className="upload_wrapper">
+    <div>
       <Upload
+        action={baseUrl}
+        listType="picture-card"
+        fileList={fileList}
+        withCredentials
         name="files"
         accept="image/png, image/jpeg, image/jpg, image/gif"
-        listType="picture"
-        className="upload_image"
-        showUploadList={{
-          showPreviewIcon: false,
-          showRemoveIcon: true,
-          showDownloadIcon: false,
-        }}
-        withCredentials
-        action={baseUrl}
-        beforeUpload={beforeUpload}
-        onChange={handleChange}
         onRemove={deleteImage}
-      >
-        {imageUrl ? (
-          <img className="imagetest" src={baseUrl} alt="question" />
-        ) : (
-          uploadButton
-        )}
+        onChange={handleChange}>
+        {fileList.length >= 1 ? null : uploadButton}
       </Upload>
     </div>
   );
