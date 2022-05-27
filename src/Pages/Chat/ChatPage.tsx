@@ -1,15 +1,28 @@
 import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-// const socket = io('http://localhost:8080');
+// const socket = io("ws://localhost/ws/1/");
+
+// const socket = new WebSocket("ws://localhost/ws/1/")
 
 export const ChatPage = () => {
-  const connectSocket = () => {
-    io("http://localhost:8080");
-  };
+  const [activeSession, setActiveSession] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState<string>("");
+
   return (
     <div>
-      <button onClick={connectSocket}>Connect</button>
+      {activeSession ? (
+        <div>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <button onClick={() => {}}>Send message</button>
+        </div>
+      ) : (
+        <button onClick={() => {}}>Connect</button>
+      )}
     </div>
   );
 };
