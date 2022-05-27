@@ -7,6 +7,7 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
 import { useAtom } from "jotai";
+import { useEffect } from "react";
 
 export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
@@ -26,6 +27,11 @@ export const SignIn = () => {
         console.error(e, e?.message);
       });
   };
+
+
+  useEffect(() => {
+    AuthService.getCSRF()
+  }, [])
 
   return (
     <LoginView>

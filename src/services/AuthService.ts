@@ -14,4 +14,8 @@ export class AuthService {
   static async logout(): Promise<void> {
     return $api.delete('/logout')
   }
+
+  static async getCSRF(): Promise<AxiosResponse> {
+    return $api.get('/get-csrf')
+  }
 }

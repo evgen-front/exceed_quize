@@ -7,8 +7,8 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const onSubmit = (e: SignInUp) => {
-    AuthService.signup(e)
+  const onSubmit = ({username, password, email}: SignInUp) => {
+    AuthService.signup({username, password, email})
       .then((result) => {
         if (result.status === 200) {
           alert('Пользователь успешно зарегистрирован')
@@ -18,7 +18,6 @@ export const SignUp = () => {
       .catch((error) => {
         console.log(error, error.message);
       });
-    console.log(e, "submited");
   };
 
   return (
