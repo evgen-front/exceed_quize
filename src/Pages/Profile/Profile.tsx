@@ -3,7 +3,6 @@ import { InfoBlock } from "./modules/InfoBlock/InfoBlock";
 import { TestsList } from "../../components/TestList/TestList";
 
 import "./Profile.scss";
-import { testMock } from "../../mock";
 import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
 import { useEffect, useState } from "react";
 import { TestService } from "../../services/TestService";
