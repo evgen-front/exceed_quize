@@ -7,17 +7,16 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
 import { useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
-  const [err, setErr] = useState<any>(null);
   const navigate = useNavigate();
   const onSubmit = (e: SignInUp) => {
     AuthService.signin(e)
       .then((r) => {
         if (r.status === 200) {
-          alert('Successful authorization')
+          alert("Successful authorization");
           UserService.getMe().then((r) => {
             let user = r.data;
             setUser(user);
@@ -105,12 +104,6 @@ export const SignIn = () => {
         Если ещё нет аккаунта, <br />
         <Link to="/signup">зарегистрируйтесь</Link>
       </p>
-      {err && (
-        <p>
-          <span>{err?.message}</span>
-          <span>{err?.status}</span>
-        </p>
-      )}
     </LoginView>
   );
 };
