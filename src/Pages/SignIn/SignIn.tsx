@@ -7,7 +7,7 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
 import { useAtom } from "jotai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
@@ -17,6 +17,7 @@ export const SignIn = () => {
     AuthService.signin(e)
       .then((r) => {
         if (r.status === 200) {
+          alert('Successful authorization')
           UserService.getMe().then((r) => {
             let user = r.data;
             setUser(user);
@@ -25,10 +26,21 @@ export const SignIn = () => {
         }
       })
       .catch((e) => {
-        console.log(e);
-        setErr(e);
+        console.log(e.response);
+        switch (e.response.status) {
+          case 403:
+            alert("Unknown error");
+            break;
+          case 401:
+            alert("Unauthorized. Incorrect login or password");
+            break;
+        }
       });
   };
+
+  useEffect(() => {
+    AuthService.getCSRF();
+  }, []);
 
   return (
     <LoginView>

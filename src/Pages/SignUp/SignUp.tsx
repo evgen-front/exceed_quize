@@ -7,18 +7,28 @@ import { LoginView } from "../../Layouts/LoginView/LoginView";
 
 export const SignUp = () => {
   const navigate = useNavigate();
-  const onSubmit = (e: SignInUp) => {
-    AuthService.signup(e)
+  const onSubmit = ({ username, password, email }: SignInUp) => {
+    AuthService.signup({ username, password, email })
       .then((result) => {
-        if (result.status === 200) {
-          alert('Пользователь успешно зарегистрирован')
+        console.log(result);
+
+        if (result.status === 201) {
+          alert("Пользователь успешно зарегистрирован");
           navigate("/signin");
         }
       })
       .catch((error) => {
-        console.log(error, error.message);
+        console.log(error.response); //!!!
+
+        switch (error.response.status) {
+          case 422:
+            alert("Incorrect email");
+            break;
+          case 400:
+            alert("User already registered");
+            break;
+        }
       });
-    console.log(e, "submited");
   };
 
   return (
