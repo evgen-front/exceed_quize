@@ -1,10 +1,17 @@
+import { SocketAddress } from "net";
 import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-// const socket = io("ws://localhost/ws/1/");
+const socket = io("ws://localhost:8000/chat");
 
-// const socket = new WebSocket("ws://localhost/ws/1/")
-
+//@ts-ignore
+socket.on("connect", () => {
+  console.log("connection", socket.id);
+  //@ts-ignore
+  setInterval(() => {
+    socket.emit("chat_message", "efdgdfgeres");
+  }, 2000);
+});
 export const ChatPage = () => {
   const [activeSession, setActiveSession] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>("");
