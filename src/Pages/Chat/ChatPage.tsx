@@ -2,33 +2,78 @@ import { SocketAddress } from "net";
 import { FC, useEffect, useRef, useState } from "react";
 import io from "socket.io-client";
 
-const socket = io("ws://localhost:8000/chat");
+let socket: any = null;
 
-//@ts-ignore
-socket.on("connect", () => {
-  console.log("connection", socket.id);
-  //@ts-ignore
-  setInterval(() => {
-    socket.emit("chat_message", "efdgdfgeres");
-  }, 2000);
-});
 export const ChatPage = () => {
-  const [activeSession, setActiveSession] = useState<boolean>(false);
+  const [activeSession, setActiveSession] = useState<string>("");
   const [inputValue, setInputValue] = useState<string>("");
+  // const [userName, setUserName] = useState<string>("");
+  const [messages, setMessages] = useState<string[]>([]);
+
+  socket &&
+    socket.on("chat_message", (data: string) => {
+      setMessages([...messages, data]);
+    });
+
+  const connect = () => {
+    socket = io("ws://localhost:8000/chat");
+
+    //@ts-ignore
+    socket.on("connect", () => {
+      setActiveSession(socket.id);
+      alert("Подключение установлено");
+    });
+  };
+
+  const sendMessage = () => {
+    socket.emit("chat_message", inputValue);
+    setInputValue("");
+  };
 
   return (
     <div>
       {activeSession ? (
-        <div>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-          />
-          <button onClick={() => {}}>Send message</button>
-        </div>
+        <>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "20px",
+            }}
+          >
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+            />
+            <button onClick={sendMessage}>Send message</button>
+          </div>
+          <div>
+            {messages.map((item) => (
+              <div
+                style={{
+                  padding: "5px",
+                  border: "1px solid #000",
+                  borderRadius: "10px",
+                  marginBottom: "10px",
+                  width: "100%",
+                }}
+              >
+                {item}
+              </div>
+            ))}
+          </div>
+        </>
       ) : (
-        <button onClick={() => {}}>Connect</button>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          {/* <input
+            type="text"
+            value={userName}
+            onChange={(e) => setUserName(e.target.value)}
+          /> */}
+          <button onClick={connect}>Connect</button>
+        </div>
       )}
     </div>
   );
