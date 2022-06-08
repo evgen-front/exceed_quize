@@ -5,7 +5,7 @@ import { NewTest } from "../Pages/NewTest/NewTest";
 import { SignIn } from "../Pages/SignIn/SignIn";
 import { SignUp } from "../Pages/SignUp/SignUp";
 import { Session } from "../Pages/Session/Session";
-import { PrivateRoute } from "../HOC/PrivateRoute";
+import { PrivateRoute } from "../hocs/PrivateRoute";
 
 export const Router = () => {
   return (
