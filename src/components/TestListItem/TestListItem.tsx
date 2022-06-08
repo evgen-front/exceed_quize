@@ -10,8 +10,14 @@ import { HomeService } from "../../services/HomeService";
 import { Test } from "../../types/types";
 import "./testListItem.scss";
 import { Modal } from "antd";
+import { FC } from "react";
 
-export const TestListItem = ({ test, refetch }: { test: Test; refetch: () => void }) => {
+interface TestListItemProps {
+  test: Test;
+  refetch: () => void;
+}
+
+export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
   const { confirm } = Modal;
 
   const showDeleteConfirm = () => {
