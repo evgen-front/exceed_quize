@@ -9,20 +9,36 @@ import { NavLink } from "react-router-dom";
 import { HomeService } from "../../services/HomeService";
 import { Test } from "../../types/types";
 import "./testListItem.scss";
+import { Modal } from "antd";
+import { FC } from "react";
 
-export const TestListItem = ({
-  test,
-  refetch,
-}: {
+interface TestListItemProps {
   test: Test;
   refetch: () => void;
-}) => {
+}
+
+export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
+  const { confirm } = Modal;
+
+  const showDeleteConfirm = () => {
+    confirm({
+      title: "Подтвердить удаление теста?",
+      okText: "Подтвердить",
+      okType: "danger",
+      cancelText: "Отменить",
+      onOk() {
+        deleteTest();
+      },
+    });
+  };
+
   const deleteTest = () => {
     test.id &&
       HomeService.deleteTest(test.id)
-        .then((res) => refetch())
+        .then(() => refetch())
         .catch((err) => console.log(err.message));
   };
+
   return (
     <div className="testListItem completed">
       <div className="testListItem_header">
@@ -31,13 +47,12 @@ export const TestListItem = ({
         </div>
         <div className="testListItem_buttons">
           <NavLink to={`/session/${test.id}`}>
-            {" "}
             <CaretRightFilled />
           </NavLink>
           <NavLink to={`/test/edit/${test.id}`}>
             <EditOutlined />
           </NavLink>
-          <DeleteOutlined onClick={deleteTest} />
+          <DeleteOutlined onClick={showDeleteConfirm} />
         </div>
       </div>
       <div className="testListItem_bottom">
