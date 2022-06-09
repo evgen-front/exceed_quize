@@ -36,7 +36,7 @@ export const Home = () => {
             Создать новый тест
           </Button>
         </Link>
-        <div className="home_testsBlock">
+        <div className='home_testsBlock'>
           <h2>Доступные тесты</h2>
           <TestsList refetch={fetchAllTests} tests={testList} />
         </div>

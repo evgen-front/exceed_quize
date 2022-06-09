@@ -1,6 +1,6 @@
-import { Main } from "../../Layouts/MainView/Main";
-import { InfoBlock } from "./modules/InfoBlock/InfoBlock";
-import { TestsList } from "../../components/TestList/TestList";
+import { Main } from '../../Layouts/MainView/Main';
+import { InfoBlock } from './modules/InfoBlock/InfoBlock';
+import { TestsList } from '../../components/TestList/TestList';
 
 import "./Profile.scss";
 import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
@@ -29,18 +29,18 @@ export const Profile = () => {
         setUserTests(r.data);
       })
       .catch((e) => {
-        console.log(e.message, "error to get user tests");
+        console.log(e.message, 'error to get user tests');
       });
   }, []);
   return (
     <Main>
-      <div className="profileWrapper">
+      <div className='profileWrapper'>
         <ProfileHeader onLogOut={logout} />
-        <InfoBlock title={user?.username} subtitle="user name" />
-        <InfoBlock title={user?.email} subtitle="user email" />
+        <InfoBlock title={user?.username} subtitle='user name' />
+        <InfoBlock title={user?.email} subtitle='user email' />
         <StartedTests />
         <h2>Мои тесты</h2>
-        <TestsList tests={userTests} maxHeight={"165px"} />
+        <TestsList tests={userTests} maxHeight={'165px'} />
       </div>
     </Main>
   );

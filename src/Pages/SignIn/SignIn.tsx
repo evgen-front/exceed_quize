@@ -17,7 +17,7 @@ export const SignIn = () => {
     AuthService.signin(e)
       .then((r) => {
         if (r.status === 200) {
-          alert("Successful authorization");
+          alert('Successful authorization');
           UserService.getMe().then((r) => {
             let user = r.data;
             setUser(user);
@@ -29,10 +29,10 @@ export const SignIn = () => {
         console.log(e.response);
         switch (e.response.status) {
           case 403:
-            alert("Unknown error");
+            alert('Unknown error');
             break;
           case 401:
-            alert("Unauthorized. Incorrect login or password");
+            alert('Unauthorized. Incorrect login or password');
             break;
         }
       });
@@ -44,62 +44,62 @@ export const SignIn = () => {
 
   return (
     <LoginView>
-      <div className="SITitle">
+      <div className='SITitle'>
         <h1>Авторизация</h1>
         <p>Введите свои данные, чтобы войти</p>
       </div>
-      <Form onFinish={onSubmit} layout="vertical">
+      <Form onFinish={onSubmit} layout='vertical'>
         <Form.Item
-          label="Имя пользователя"
-          name="username"
+          label='Имя пользователя'
+          name='username'
           hasFeedback
           rules={[
             {
               required: true,
-              message: "Введите имя пользователя",
+              message: 'Введите имя пользователя',
             },
             {
               whitespace: true,
-              message: "Не начинайте с пробелов",
+              message: 'Не начинайте с пробелов',
             },
             {
               pattern: /^[a-zA-Zа-яА-Я\s]+$/,
-              message: "Только русские или латинские буквы",
+              message: 'Только русские или латинские буквы',
             },
             {
               min: 2,
-              message: "Минимум 2 символа",
+              message: 'Минимум 2 символа',
             },
           ]}>
           <Input placeholder="Имя пользователя" />
         </Form.Item>
         <Form.Item
-          label="Пароль"
-          name="password"
+          label='Пароль'
+          name='password'
           hasFeedback
           rules={[
             {
               required: true,
-              message: "Введите пароль",
+              message: 'Введите пароль',
             },
             {
               whitespace: true,
-              message: "Не начинайте с пробелов",
+              message: 'Не начинайте с пробелов',
             },
             {
               pattern: /^(?=.*\d)[a-zA-Z\d]{6,25}$/,
-              message: "Минимум 6 символов, латинские буквы и минимум 1 цифра",
+              message: 'Минимум 6 символов, латинские буквы и минимум 1 цифра',
             },
           ]}>
           <Input.Password placeholder="Пароль" />
         </Form.Item>
         <Form.Item>
-          <Button block type="primary" htmlType="submit">
+          <Button block type='primary' htmlType='submit'>
             Войти
           </Button>
         </Form.Item>
       </Form>
-      <p className="SIDownTitle">
+      <p className='SIDownTitle'>
         Если ещё нет аккаунта, <br />
         <Link to={SIGNUP}>зарегистрируйтесь</Link>
       </p>
