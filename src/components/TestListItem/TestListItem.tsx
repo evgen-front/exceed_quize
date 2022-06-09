@@ -11,6 +11,7 @@ import { Test } from "../../types/types";
 import "./testListItem.scss";
 import { Modal } from "antd";
 import { FC } from "react";
+import { getSessionPath, getTestEditPath } from "../../Router/routes";
 
 interface TestListItemProps {
   test: Test;
@@ -46,10 +47,10 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
           <StarFilled /> {test.title}
         </div>
         <div className="testListItem_buttons">
-          <NavLink to={`/session/${test.id}`}>
+          <NavLink to={getSessionPath(test.id)}>
             <CaretRightFilled />
           </NavLink>
-          <NavLink to={`/test/edit/${test.id}`}>
+          <NavLink to={getTestEditPath(test.id)}>
             <EditOutlined />
           </NavLink>
           <DeleteOutlined onClick={showDeleteConfirm} />
