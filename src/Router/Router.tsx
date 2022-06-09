@@ -1,20 +1,20 @@
-import { Navigate, Route, Routes } from "react-router-dom";
-import { Home } from "../Pages/Home/Home";
-import { Profile } from "../Pages/Profile/Profile";
-import { NewTest } from "../Pages/NewTest/NewTest";
-import { SignIn } from "../Pages/SignIn/SignIn";
-import { SignUp } from "../Pages/SignUp/SignUp";
-import { Session } from "../Pages/Session/Session";
-import { PrivateRoute } from "../hocs/PrivateRoute";
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { Home } from '../Pages/Home/Home';
+import { Profile } from '../Pages/Profile/Profile';
+import { NewTest } from '../Pages/NewTest/NewTest';
+import { SignIn } from '../Pages/SignIn/SignIn';
+import { SignUp } from '../Pages/SignUp/SignUp';
+import { Session } from '../Pages/Session/Session';
+import { PrivateRoute } from '../hocs/PrivateRoute';
 
 export const Router = () => {
   return (
     <Routes>
-      <Route path="/signin" element={<SignIn />} />
-      <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<Navigate to="/signin" />} />
+      <Route path='/signin' element={<SignIn />} />
+      <Route path='/signup' element={<SignUp />} />
+      <Route path='/' element={<Navigate to='/signin' />} />
       <Route
-        path="/home"
+        path='/home'
         element={
           <PrivateRoute>
             <Home />
@@ -22,7 +22,7 @@ export const Router = () => {
         }
       />
       <Route
-        path="/profile"
+        path='/profile'
         element={
           <PrivateRoute>
             <Profile />
@@ -30,7 +30,7 @@ export const Router = () => {
         }
       />
       <Route
-        path="/test/new"
+        path='/test/new'
         element={
           <PrivateRoute>
             <NewTest />
@@ -38,7 +38,7 @@ export const Router = () => {
         }
       />
       <Route
-        path="/test/edit/:id"
+        path='/test/edit/:id'
         element={
           <PrivateRoute>
             <NewTest />
@@ -46,7 +46,7 @@ export const Router = () => {
         }
       />
       <Route
-        path="/session/:id"
+        path='/session/:id'
         element={
           <PrivateRoute>
             <Session />
