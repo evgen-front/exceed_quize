@@ -8,6 +8,7 @@ import { UserService } from "../../services/UserService";
 import { userAtom } from "../../atoms/userAtom";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
+import { HOME, SIGNUP } from "../../Router/routes";
 
 export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
@@ -20,7 +21,7 @@ export const SignIn = () => {
           UserService.getMe().then((r) => {
             let user = r.data;
             setUser(user);
-            navigate("/home");
+            navigate(HOME);
           });
         }
       })
@@ -69,8 +70,7 @@ export const SignIn = () => {
               min: 2,
               message: "Минимум 2 символа",
             },
-          ]}
-        >
+          ]}>
           <Input placeholder="Имя пользователя" />
         </Form.Item>
         <Form.Item
@@ -90,8 +90,7 @@ export const SignIn = () => {
               pattern: /^(?=.*\d)[a-zA-Z\d]{6,25}$/,
               message: "Минимум 6 символов, латинские буквы и минимум 1 цифра",
             },
-          ]}
-        >
+          ]}>
           <Input.Password placeholder="Пароль" />
         </Form.Item>
         <Form.Item>
@@ -102,7 +101,7 @@ export const SignIn = () => {
       </Form>
       <p className="SIDownTitle">
         Если ещё нет аккаунта, <br />
-        <Link to="/signup">зарегистрируйтесь</Link>
+        <Link to={SIGNUP}>зарегистрируйтесь</Link>
       </p>
     </LoginView>
   );

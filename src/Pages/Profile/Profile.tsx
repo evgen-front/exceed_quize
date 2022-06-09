@@ -11,6 +11,7 @@ import { userAtom } from "../../atoms/userAtom";
 import { useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 import { StartedTests } from "./modules/StartedTests/StartedTests";
+import { HOME } from "../../Router/routes";
 
 export const Profile = () => {
   const [user, setUser] = useAtom(userAtom);
@@ -20,7 +21,7 @@ export const Profile = () => {
   const logout = () => {
     AuthService.logout();
     setUser(null);
-    _navigate("/");
+    _navigate(HOME);
   };
   useEffect(() => {
     TestService.getUserTests()

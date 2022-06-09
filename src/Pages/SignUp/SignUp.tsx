@@ -4,6 +4,7 @@ import { SignInUp } from "../../types/types";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthService } from "../../services/AuthService";
 import { LoginView } from "../../Layouts/LoginView/LoginView";
+import { SINGIN } from "../../Router/routes";
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ export const SignUp = () => {
 
         if (result.status === 201) {
           alert("Пользователь успешно зарегистрирован");
-          navigate("/signin");
+          navigate(SINGIN);
         }
       })
       .catch((error) => {
@@ -59,8 +60,7 @@ export const SignUp = () => {
               min: 2,
               message: "Минимум 2 символа",
             },
-          ]}
-        >
+          ]}>
           <Input placeholder="Имя пользователя" />
         </Form.Item>
         <Form.Item
@@ -72,8 +72,7 @@ export const SignUp = () => {
               required: true,
               message: "Введите e-mail",
             },
-          ]}
-        >
+          ]}>
           <Input placeholder="e-mail" />
         </Form.Item>
         <Form.Item
@@ -93,8 +92,7 @@ export const SignUp = () => {
               pattern: /^(?=.*\d)[a-zA-Z\d]{6,25}$/,
               message: "Минимум 6 символов, латинские буквы и минимум 1 цифра",
             },
-          ]}
-        >
+          ]}>
           <Input.Password placeholder="Пароль" />
         </Form.Item>
         <Form.Item
@@ -114,8 +112,7 @@ export const SignUp = () => {
                 return Promise.reject("Пароли не совпадают");
               },
             }),
-          ]}
-        >
+          ]}>
           <Input.Password placeholder="Подтвердите пароль" />
         </Form.Item>
         <Form.Item>
@@ -126,7 +123,7 @@ export const SignUp = () => {
       </Form>
       <p className="SIDownTitle">
         Уже есть аккаунт, <br />
-        <Link to="/signin">авторизуйтесь</Link>
+        <Link to={SINGIN}>авторизуйтесь</Link>
       </p>
     </LoginView>
   );
