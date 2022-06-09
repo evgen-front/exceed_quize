@@ -1,20 +1,10 @@
 import { useAtom } from "jotai";
 import { FC } from "react";
-import { useLocation, Navigate } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { userAtom } from "../atoms/userAtom";
 
-interface PrivateRouteProps {
-  children: JSX.Element;
-}
-
-export const PrivateRoute: FC<PrivateRouteProps> = ({ children }) => {
+export const PrivateRoute: FC = () => {
   const [user] = useAtom(userAtom);
 
-  const location = useLocation();
-
-  if (!user) {
-    return <Navigate to="/signin" state={{ from: location }} />;
-  }
-
-  return children;
+  return user ? <Outlet /> : <Navigate to="/signin" replace />;
 };

@@ -12,47 +12,14 @@ export const Router = () => {
     <Routes>
       <Route path="/signin" element={<SignIn />} />
       <Route path="/signup" element={<SignUp />} />
-      <Route path="/" element={<Navigate to="/signin" />} />
-      <Route
-        path="/home"
-        element={
-          <PrivateRoute>
-            <Home />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/profile"
-        element={
-          <PrivateRoute>
-            <Profile />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/test/new"
-        element={
-          <PrivateRoute>
-            <NewTest />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/test/edit/:id"
-        element={
-          <PrivateRoute>
-            <NewTest />
-          </PrivateRoute>
-        }
-      />
-      <Route
-        path="/session/:id"
-        element={
-          <PrivateRoute>
-            <Session />
-          </PrivateRoute>
-        }
-      />
+      <Route path="/" element={<Navigate to="/home" replace />} />
+      <Route element={<PrivateRoute />}>
+        <Route path="/home" element={<Home />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/test/new" element={<NewTest />} />
+        <Route path="/test/edit/:id" element={<NewTest />} />
+        <Route path="/session/:id" element={<Session />} />
+      </Route>
     </Routes>
   );
 };
