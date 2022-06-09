@@ -1,18 +1,16 @@
-import { HomeFilled, HomeOutlined, SkinFilled, SkinOutlined } from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
+import React from 'react';
+import {RiUser3Fill, RiUser3Line, RiHome2Fill, RiHome2Line} from 'react-icons/ri';
+import {NavWrapper, NavLink} from './styled'
 
-import "./Navbar.scss";
-export const Navbar = () => {
+export const Navbar:React.FC = () => {
   return (
-    <div className="NavWrapper">
-      <NavLink className="navArea" title="Home" to='/home'>
-        {({ isActive }) => isActive ? <HomeFilled /> : <HomeOutlined />}
+    <NavWrapper >
+      <NavLink  title="Home" to="/home">
+        {({ isActive }) => (isActive ? <RiHome2Fill /> : <RiHome2Line />)}
       </NavLink>
-      <div className="navDivider"></div>
-      <NavLink className="navArea" title="Profile" to='/profile'>
-        {({ isActive }) => isActive ? < SkinFilled /> : <SkinOutlined />}
+      <NavLink  title="Profile" to="/profile">
+        {({ isActive }) => (isActive ? <RiUser3Fill /> : <RiUser3Line/>)}
       </NavLink>
-
-    </div>
+    </NavWrapper>
   );
 };
