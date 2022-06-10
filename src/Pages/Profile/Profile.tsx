@@ -1,6 +1,8 @@
 import { Main } from '../../Layouts/MainView/Main';
 import { InfoBlock } from './modules/InfoBlock/InfoBlock';
+import { EditButton } from './modules/InfoBlock/styled';
 import { TestsList } from '../../components/TestList/TestList';
+import { Wrapper } from '../../components/Wrapper';
 
 import "./Profile.scss";
 import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
@@ -34,14 +36,13 @@ export const Profile = () => {
   }, []);
   return (
     <Main>
-      <div className='profileWrapper'>
+      <Wrapper padding='15px'>
         <ProfileHeader onLogOut={logout} />
-        <InfoBlock title={user?.username} subtitle='user name' />
-        <InfoBlock title={user?.email} subtitle='user email' />
+        <InfoBlock name={user?.username} email={user?.email} />
+        <EditButton>Редактировать</EditButton>
         <StartedTests />
-        <h2>Мои тесты</h2>
         <TestsList tests={userTests} maxHeight={'165px'} />
-      </div>
+      </Wrapper>
     </Main>
   );
 };

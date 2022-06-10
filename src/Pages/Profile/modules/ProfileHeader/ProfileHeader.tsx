@@ -1,17 +1,22 @@
-import { LogoutOutlined } from "@ant-design/icons";
-import { Button } from "antd";
-import "./ProfileHeader.scss";
+import React, { useState } from 'react';
+import { EditButton } from './styled';
+import { StyledModal } from '../../styled';
+import { Wrapper } from '../../../../components/Wrapper';
+import './ProfileHeader.scss';
 
 export const ProfileHeader = ({ onLogOut }: { onLogOut: () => void }) => {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
   return (
-    <div className="profileHeader">
-      <h1>Страница профиля</h1>
-      <Button
-        onClick={onLogOut}
-        type="primary"
-        shape="round"
-        icon={<LogoutOutlined />}
+    <Wrapper display='flex' alignItems='center' justifyContent='end' margin='0 0 15px'>
+      <EditButton onClick={openModal}>Выйти</EditButton>
+      <StyledModal
+        visible={isModalOpen}
+        onClose={closeModal}
+        onOk={onLogOut}
+        title='Выйти из аккаунта'
       />
-    </div>
+    </Wrapper>
   );
 };
