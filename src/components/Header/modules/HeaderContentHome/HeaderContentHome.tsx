@@ -2,12 +2,12 @@ import React, { FC } from 'react';
 import { Box } from '../../../StyledSystem';
 import { Text } from '../../../Text';
 import { Avatar } from '../../../Avatar';
+import { useAtom } from 'jotai';
+import { userAtom } from '../../../../atoms/userAtom';
 
-interface HeaderContentHomeProps {
-  userName: string | undefined;
-}
+export const HeaderContentHome: FC = () => {
+  const [user] = useAtom(userAtom);
 
-export const HeaderContentHome: FC<HeaderContentHomeProps> = ({ userName }) => {
   return (
     <Box display='flex' width='100%' justifyContent='space-between'>
       <Box>
@@ -15,10 +15,10 @@ export const HeaderContentHome: FC<HeaderContentHomeProps> = ({ userName }) => {
           Привет,
         </Text>
         <Text color='#fff' fontSize='24px'>
-          {userName}
+          {user?.username}
         </Text>
       </Box>
-      <Avatar>{userName?.[0]}</Avatar>
+      <Avatar>{user?.username?.[0]}</Avatar>
     </Box>
   );
 };

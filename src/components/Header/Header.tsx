@@ -1,20 +1,12 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useLocation } from 'react-router-dom';
 import { headerContentJSX } from './headerContentJSX';
 import { Box } from '../StyledSystem';
-import { useAtom } from 'jotai';
-import { userAtom } from '../../atoms/userAtom';
 
 export const Header = () => {
   const location = useLocation();
-  const [user] = useAtom(userAtom);
-  const getHeaderContent = (location: string, userName: string | undefined) =>
-    headerContentJSX[location](userName);
 
-  const headerContent = useMemo(
-    () => getHeaderContent(location.pathname, user?.username),
-    [location]
-  );
+  const headerContent = headerContentJSX[location.pathname];
 
   return (
     <Box

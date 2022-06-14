@@ -38,6 +38,7 @@ export const Box = styled.div<
   ${shadow}
 `;
 
-export const Text = styled.span<TypographyProps>`
+export const Text = styled.span<TypographyProps | ColorProps>`
   ${typography}
+  ${color}
 `;
