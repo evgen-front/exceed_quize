@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useLocation } from 'react-router-dom';
 import { headerContentJSX } from './headerContentJSX';
-import { Wrapper } from '../Wrapper';
+import { Box } from '../StyledSystem';
 import { useAtom } from 'jotai';
 import { userAtom } from '../../atoms/userAtom';
 
@@ -17,17 +17,16 @@ export const Header = () => {
   );
 
   return (
-    <Wrapper
+    <Box
       height='114px'
-      backGround='#2C2C2C'
+      bg='#2C2C2C'
       boxShadow='5px 5px 20px -5px rgba(0, 0, 0, 0.25)'
       borderRadius='0px 0px 15px 15px'
       padding='30px 25px'
-      display='flex'
       alignItems='center'
       justifyContent='space-between'
     >
       {headerContent}
-    </Wrapper>
+    </Box>
   );
 };

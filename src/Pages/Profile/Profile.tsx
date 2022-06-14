@@ -2,18 +2,18 @@ import { Main } from '../../Layouts/MainView/Main';
 import { InfoBlock } from './modules/InfoBlock/InfoBlock';
 import { EditButton } from './modules/InfoBlock/styled';
 import { TestsList } from '../../components/TestList/TestList';
-import { Wrapper } from '../../components/Wrapper';
+import { Box } from '../../components';
 
-import "./Profile.scss";
-import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
-import { useEffect, useState } from "react";
-import { TestService } from "../../services/TestService";
-import { useAtom } from "jotai";
-import { userAtom } from "../../atoms/userAtom";
-import { useNavigate } from "react-router-dom";
-import { AuthService } from "../../services/AuthService";
-import { StartedTests } from "./modules/StartedTests/StartedTests";
-import { HOME } from "../../Router/routes";
+import './Profile.scss';
+import { ProfileHeader } from './modules/ProfileHeader/ProfileHeader';
+import { useEffect, useState } from 'react';
+import { TestService } from '../../services/TestService';
+import { useAtom } from 'jotai';
+import { userAtom } from '../../atoms/userAtom';
+import { useNavigate } from 'react-router-dom';
+import { AuthService } from '../../services/AuthService';
+import { StartedTests } from './modules/StartedTests/StartedTests';
+import { HOME } from '../../Router/routes';
 
 export const Profile = () => {
   const [user, setUser] = useAtom(userAtom);
@@ -36,13 +36,13 @@ export const Profile = () => {
   }, []);
   return (
     <Main>
-      <Wrapper padding='15px'>
+      <Box padding='15px'>
         <ProfileHeader onLogOut={logout} />
         <InfoBlock name={user?.username} email={user?.email} />
         <EditButton>Редактировать</EditButton>
         <StartedTests />
         <TestsList tests={userTests} maxHeight={'165px'} />
-      </Wrapper>
+      </Box>
     </Main>
   );
 };

@@ -1,7 +1,7 @@
 import React, { FC, useState } from 'react';
-import { Avatar } from '../../../../components/Avatar';
+import { Avatar } from '../../../../components';
 import { StyledModal } from '../../styled';
-import { Wrapper, Text } from '../../../../components';
+import { Box, Text } from '../../../../components';
 
 interface InfoBlockProps {
   name?: string;
@@ -17,23 +17,23 @@ export const InfoBlock: FC<InfoBlockProps> = ({ name, email }) => {
   const closeModal = () => setIsAvatarModalOpen(false);
 
   return (
-    <Wrapper margin=' 15px 0' width='100%' display='flex' alignItems='center'>
+    <Box margin=' 15px 0' width='100%' display='flex' alignItems='center'>
       <StyledModal visible={isAvatarModalOpen} onClose={closeModal} withoutButtons>
-        <Wrapper>
+        <Box>
           {avatarEdits.map(({ title }) => (
-            <Wrapper margin='0 0 15px'>
+            <Box margin='0 0 15px'>
               <Text key={title}>{title}</Text>
-            </Wrapper>
+            </Box>
           ))}
-        </Wrapper>
+        </Box>
       </StyledModal>
-      <Wrapper margin='0 20px 0 0' onClick={openModal}>
+      <Box margin='0 20px 0 0' onClick={openModal}>
         <Avatar>?</Avatar>
-      </Wrapper>
-      <Wrapper flex='1'>
+      </Box>
+      <Box flex='1'>
         <Text fontSize='18px'>{name}</Text>
         <Text>{email}</Text>
-      </Wrapper>
-    </Wrapper>
+      </Box>
+    </Box>
   );
 };

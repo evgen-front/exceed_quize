@@ -1,17 +1,17 @@
 import React from 'react';
 import { Router } from './Router/Router';
-import { Header, Navbar, Wrapper } from './components';
+import { Header, Navbar, Box } from './components';
 import './index.css';
 
 const App = () => {
   return (
-    <Wrapper backGround='#F5F5F5' display='flex' flexDirection='column' height='100vh'>
+    <Box bg='#F5F5F5' display='flex' flexDirection='column' height='100vh'>
       <Header />
-      <Wrapper flex='1'>
+      <Box flex='1'>
         <Router />
-      </Wrapper>
+      </Box>
       <Navbar />
-    </Wrapper>
+    </Box>
   );
 };
 
