@@ -1,10 +1,11 @@
 .profileHeader{
    display: flex;
    align-items: center;
-   justify-content: space-between;
+   justify-content: end;
     margin-bottom: 15px;
+  width: 100%;
    h1{
        margin-bottom: 0;
-       color:#999
+       color:#999;
    }
 }

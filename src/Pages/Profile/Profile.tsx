@@ -1,17 +1,19 @@
 import { Main } from '../../Layouts/MainView/Main';
 import { InfoBlock } from './modules/InfoBlock/InfoBlock';
+import { EditButton } from './modules/InfoBlock/styled';
 import { TestsList } from '../../components/TestList/TestList';
+import { Box } from '../../components';
 
-import "./Profile.scss";
-import { ProfileHeader } from "./modules/ProfileHeader/ProfileHeader";
-import { useEffect, useState } from "react";
-import { TestService } from "../../services/TestService";
-import { useAtom } from "jotai";
-import { userAtom } from "../../atoms/userAtom";
-import { useNavigate } from "react-router-dom";
-import { AuthService } from "../../services/AuthService";
-import { StartedTests } from "./modules/StartedTests/StartedTests";
-import { HOME } from "../../Router/routes";
+import './Profile.scss';
+import { ProfileHeader } from './modules/ProfileHeader/ProfileHeader';
+import { useEffect, useState } from 'react';
+import { TestService } from '../../services/TestService';
+import { useAtom } from 'jotai';
+import { userAtom } from '../../atoms/userAtom';
+import { useNavigate } from 'react-router-dom';
+import { AuthService } from '../../services/AuthService';
+import { StartedTests } from './modules/StartedTests/StartedTests';
+import { HOME } from '../../Router/routes';
 
 export const Profile = () => {
   const [user, setUser] = useAtom(userAtom);
@@ -34,14 +36,13 @@ export const Profile = () => {
   }, []);
   return (
     <Main>
-      <div className='profileWrapper'>
+      <Box padding='15px'>
         <ProfileHeader onLogOut={logout} />
-        <InfoBlock title={user?.username} subtitle='user name' />
-        <InfoBlock title={user?.email} subtitle='user email' />
+        <InfoBlock name={user?.username} email={user?.email} />
+        <EditButton>Редактировать</EditButton>
         <StartedTests />
-        <h2>Мои тесты</h2>
         <TestsList tests={userTests} maxHeight={'165px'} />
-      </div>
+      </Box>
     </Main>
   );
 };
