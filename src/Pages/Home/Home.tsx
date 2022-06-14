@@ -27,26 +27,6 @@ export const Home = () => {
   }, []);
   return (
     <Main>
-      <Wrapper
-        height='114px'
-        backGround='#2C2C2C'
-        boxShadow='5px 5px 20px -5px rgba(0, 0, 0, 0.25)'
-        borderRadius='0px 0px 15px 15px'
-        padding='30px 25px'
-        display='flex'
-        alignItems='center'
-        justifyContent='space-between'
-      >
-        <Wrapper>
-          <Text color='#fff' fontSize='16px'>
-            Привет,
-          </Text>
-          <Text color='#fff' fontSize='24px'>
-            {user?.username}
-          </Text>
-        </Wrapper>
-        <Avatar>{avatar}</Avatar>
-      </Wrapper>
       <Wrapper padding='20px 25px'>
         <Text fontSize='24px' fontWeight='700'>
           Доступные тесты:

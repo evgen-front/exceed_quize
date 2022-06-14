@@ -1,14 +1,14 @@
-import { Route, Routes } from "react-router-dom";
-import { Home } from "../Pages/Home/Home";
-import { Profile } from "../Pages/Profile/Profile";
-import { NewTest } from "../Pages/NewTest/NewTest";
-import { SignIn } from "../Pages/SignIn/SignIn";
-import { SignUp } from "../Pages/SignUp/SignUp";
-import { Session } from "../Pages/Session/Session";
-import { PrivateRoute } from "./PrivateRoute";
-import { SINGIN, SIGNUP, HOME, PROFILE, TESTNEW, TESTEDIT, SESSION } from "./routes";
-import { userAtom } from "../atoms/userAtom";
-import { useAtom } from "jotai";
+import { Route, Routes } from 'react-router-dom';
+import { Home } from '../Pages/Home/Home';
+import { Profile } from '../Pages/Profile/Profile';
+import { NewTest } from '../Pages/NewTest/NewTest';
+import { SignIn } from '../Pages/SignIn';
+import { SignUp } from '../Pages/SignUp/SignUp';
+import { Session } from '../Pages/Session/Session';
+import { PrivateRoute } from './PrivateRoute';
+import { SINGIN, SIGNUP, HOME, PROFILE, TESTNEW, TESTEDIT, SESSION } from './routes';
+import { userAtom } from '../atoms/userAtom';
+import { useAtom } from 'jotai';
 
 export const Router = () => {
   const [user] = useAtom(userAtom);

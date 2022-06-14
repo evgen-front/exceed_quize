@@ -6,8 +6,7 @@ import './Main.scss';
 export const Main: FC<ReactChildrenProps> = ({ children }) => {
   return (
     <div className='mainWrapper'>
-      <Wrapper backGround='#F5F5F5'>{children}</Wrapper>
-      <Navbar />
+      <Wrapper>{children}</Wrapper>
     </div>
   );
 };
