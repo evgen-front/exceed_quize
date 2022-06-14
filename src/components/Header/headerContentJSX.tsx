@@ -10,5 +10,5 @@ export const headerContentJSX: HeaderContent = {
   '/profile': () => <HeaderContentProfile />,
   '/signin': () => <HeaderContentSign />,
   '/signup': () => <HeaderContentSign />,
-  'test/new': () => <></>,
+  '/test/new': () => <></>,
 };
