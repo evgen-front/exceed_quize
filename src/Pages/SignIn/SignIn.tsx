@@ -44,7 +44,6 @@ export const SignIn = () => {
         }
       })
       .catch((e) => {
-        console.log(e.response);
         switch (e.response.status) {
           case 403:
             alert('Unknown error');

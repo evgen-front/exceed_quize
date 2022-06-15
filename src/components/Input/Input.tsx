@@ -26,7 +26,7 @@ const InputWrapper = styled.div`
 const StyledInput = styled.input<StyledInputProps>`
   border: none;
   background: none;
-  ${({ isPassword }) => `width: ${isPassword ? '80%' : '100%'}`};
+  ${({ isPassword }) => `width: ${isPassword ? '90%' : '100%'}`};
   height: 19px;
   &:focus {
     outline: none;
@@ -46,11 +46,11 @@ export const Input: FC<InputProps> = ({ password = false, value, name, onChange 
         value={value}
         name={name}
         onChange={onChange}
-        isPassword={isPassword}
+        isPassword={password}
       />
-      {password && (
-        <Box color='#697176' height='20px' onClick={() => setIsPassword(!isPassword)}>
-          {isPassword ? <HiEye size={20} /> : <HiEyeOff size={20} />}
+      {password && value && (
+        <Box color='#697176' height='19px' onClick={() => setIsPassword(!isPassword)}>
+          {isPassword ? <HiEye size={19} /> : <HiEyeOff size={19} />}
         </Box>
       )}
     </InputWrapper>
