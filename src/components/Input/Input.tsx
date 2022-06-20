@@ -1,58 +1,20 @@
-import React, { ChangeEvent, FC, useState } from 'react';
-import { Box } from 'components/StyledSystem';
+import React from 'react';
 import styled from 'styled-components';
-import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { Input as AntdInput } from 'antd';
 
-interface StyledInputProps {
-  isPassword: boolean;
-}
-
-interface InputProps {
-  onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-  password: boolean;
-  value: string;
-  name: string;
-}
-
-const InputWrapper = styled.div`
+export const Input = styled(AntdInput)`
+  background-color: #fcfcfc;
   border: 1px solid #bebebe;
   border-radius: 15px;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const StyledInput = styled.input<StyledInputProps>`
-  border: none;
-  background: none;
-  ${({ isPassword }) => `width: ${isPassword ? '90%' : '100%'}`};
-  height: 19px;
+  height: 47px;
   &:focus {
     outline: none;
+    box-shadow: none;
+  }
+  &:hover {
+    border-color: #bebebe;
   }
   &:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #f5f5f5 inset !important;
   }
 `;
-
-export const Input: FC<InputProps> = ({ password = false, value, name, onChange }) => {
-  const [isPassword, setIsPassword] = useState<boolean>(password);
-
-  return (
-    <InputWrapper>
-      <StyledInput
-        type={isPassword ? 'password' : 'text'}
-        value={value}
-        name={name}
-        onChange={onChange}
-        isPassword={password}
-      />
-      {password && value && (
-        <Box color='#697176' height='19px' onClick={() => setIsPassword(!isPassword)}>
-          {isPassword ? <HiEye size={19} /> : <HiEyeOff size={19} />}
-        </Box>
-      )}
-    </InputWrapper>
-  );
-};
