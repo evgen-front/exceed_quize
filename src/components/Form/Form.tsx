@@ -20,6 +20,10 @@ const StyledForm = styled(FormikForm)`
   flex: 1;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+`;
+
 export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
   const initialValues = useMemo(
     () => inputs.reduce((prev, { name }) => ({ ...prev, [name]: '' }), {}),
@@ -65,11 +69,11 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
                 <Text fontSize={17} fontWeight={700}>
                   {isSignInPage ? 'Нет аккаунта? ' : 'Есть аккаунт? '}
                 </Text>
-                <Link to={to}>
+                <StyledLink to={to}>
                   <Text fontSize={17} fontWeight={700} color={colors.PRIMARY}>
                     {isSignInPage ? 'Регистрация' : 'Войти'}
                   </Text>
-                </Link>
+                </StyledLink>
               </Box>
               <Space height={42} />
               <Button view='primary' type='submit'>
