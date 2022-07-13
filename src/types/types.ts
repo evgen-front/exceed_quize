@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface ReactChildrenProps {
   children?: ReactNode;
@@ -55,4 +55,10 @@ export interface Answer {
   id?: number;
   text: string;
   is_true?: boolean;
+}
+
+export interface Input {
+  title: string;
+  name: string;
+  type: 'email' | 'password' | 'text';
 }

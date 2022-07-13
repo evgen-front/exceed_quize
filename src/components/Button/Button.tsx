@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 const buttonColors = {
-  primary: '#FF8A00',
+  primary: '#FF6B00',
   secondary: '#2C2C2C',
   danger: '#FE522C',
   ghost: '#BEBEBE',
@@ -20,12 +20,13 @@ interface StyledButtonProps {
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
-  height: 42px;
+  height: 46px;
   width: 100%;
   border: none;
-  border-radius: 15px;
+  border-radius: 8px;
   color: #ffffff;
-  box-shadow: 5px 5px 20px -5px rgba(0, 0, 0, 0.25);
+  font-weight: 700;
+  font-size: 18px;
   ${({ view }) => `background: ${buttonColors[view]}`}
 `;
 

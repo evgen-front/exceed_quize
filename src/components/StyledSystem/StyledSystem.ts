@@ -42,3 +42,7 @@ export const Text = styled.span<TypographyProps | ColorProps>`
   ${typography}
   ${color}
 `;
+
+export const Space = styled.div<LayoutProps>`
+  ${layout}
+`;
