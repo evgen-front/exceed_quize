@@ -1,10 +1,16 @@
-import "antd/dist/antd.css";
-import { Form, Input, Button } from "antd";
-import { SignInUp } from "../../types/types";
-import { Link, useNavigate } from "react-router-dom";
-import { AuthService } from "../../services/AuthService";
-import { LoginView } from "../../Layouts/LoginView/LoginView";
-import { SINGIN } from "../../Router/routes";
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Form } from 'components';
+import { SignInUp, Input } from 'types/types';
+import { AuthService } from 'services/AuthService';
+import { SINGIN } from 'Router/routes';
+
+const inputs: Input[] = [
+  { title: 'Имя пользователя', name: 'username', type: 'text' },
+  { title: 'Email', name: 'email', type: 'text' },
+  { title: 'Придумайте пароль', name: 'password', type: 'password' },
+  { title: 'Введите пароль еще раз', name: 'confirmPassword', type: 'password' },
+];
 
 export const SignUp = () => {
   const navigate = useNavigate();
@@ -14,7 +20,6 @@ export const SignUp = () => {
         console.log(result);
 
         if (result.status === 201) {
-          alert("Пользователь успешно зарегистрирован");
           navigate(SINGIN);
         }
       })
@@ -32,99 +37,5 @@ export const SignUp = () => {
       });
   };
 
-  return (
-    <LoginView>
-      <div className='SITitle'>
-        <h1>Регистрация</h1>
-        <p>Введите данные, чтобы зарегистрироваться</p>
-      </div>
-      <Form onFinish={onSubmit} layout='vertical'>
-        <Form.Item
-          label='Имя пользователя'
-          name='username'
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Введите имя пользователя',
-            },
-            {
-              whitespace: true,
-              message: 'Не начинайте с пробелов',
-            },
-            {
-              pattern: /^[a-zA-Zа-яА-Я\s]+$/,
-              message: 'Только русские или латинские буквы',
-            },
-            {
-              min: 2,
-              message: 'Минимум 2 символа',
-            },
-          ]}>
-          <Input placeholder="Имя пользователя" />
-        </Form.Item>
-        <Form.Item
-          label='E-mail'
-          name='email'
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Введите e-mail',
-            },
-          ]}>
-          <Input placeholder="e-mail" />
-        </Form.Item>
-        <Form.Item
-          label='Пароль'
-          name='password'
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Введите пароль',
-            },
-            {
-              whitespace: true,
-              message: 'Не начинайте с пробелов',
-            },
-            {
-              pattern: /^(?=.*\d)[a-zA-Z\d]{6,25}$/,
-              message: 'Минимум 6 символов, латинские буквы и минимум 1 цифра',
-            },
-          ]}>
-          <Input.Password placeholder="Пароль" />
-        </Form.Item>
-        <Form.Item
-          label='Подтвердите пароль'
-          name='confirmPassword'
-          hasFeedback
-          rules={[
-            {
-              required: true,
-              message: 'Повторите введённый выше пароль',
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue('password') === value) {
-                  return Promise.resolve();
-                }
-                return Promise.reject('Пароли не совпадают');
-              },
-            }),
-          ]}>
-          <Input.Password placeholder="Подтвердите пароль" />
-        </Form.Item>
-        <Form.Item>
-          <Button block type='primary' htmlType='submit'>
-            Зарегистрироваться
-          </Button>
-        </Form.Item>
-      </Form>
-      <p className='SIDownTitle'>
-        Уже есть аккаунт, <br />
-        <Link to={SINGIN}>авторизуйтесь</Link>
-      </p>
-    </LoginView>
-  );
+  return <Form inputs={inputs} onSubmit={onSubmit} buttonText='Создать аккаунт' />;
 };

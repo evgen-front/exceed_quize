@@ -5,7 +5,7 @@ import './index.css';
 
 const App = () => {
   return (
-    <Box bg='#F5F5F5' display='flex' flexDirection='column' height='100vh'>
+    <Box bg='#FFFFFF' display='flex' flexDirection='column' height='100vh'>
       <Header />
       <Box flex='1'>
         <Router />
