@@ -15,14 +15,30 @@ export const Input: FC<InputProps> = ({
   errorMessage,
 }) => {
   const [shouldDisplayPassword, setShouldDisplayPassword] = useState<boolean>(false);
+  const [isBorderLighted, setIsBorderLighted] = useState<boolean>(false);
 
   const handleDisplayPassword = () => setShouldDisplayPassword(!shouldDisplayPassword);
+  const onFocus = () => {
+    if (!isBorderLighted) {
+      setIsBorderLighted(true);
+    }
+  };
+  const onBlur = () => {
+    if (isBorderLighted) {
+      setIsBorderLighted(false);
+    }
+  };
 
   const isError = !!errorMessage;
   const isPassword = type === 'password';
   return (
     <Box position='relative'>
-      <InputWrapper isError={isError}>
+      <InputWrapper
+        isError={isError}
+        onFocus={onFocus}
+        onBlur={onBlur}
+        isBorderLighted={isBorderLighted}
+      >
         <StyledInput
           type={shouldDisplayPassword ? 'text' : type}
           name={name}

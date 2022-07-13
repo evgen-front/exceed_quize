@@ -17,12 +17,16 @@ export const InputWrapper = styled.div<InputWrapperProps>`
   border-radius: 8px;
   padding: 11px 14px;
   display: flex;
-  align-items: center;
-  border: 1px solid ${({ isError }) => (isError ? colors.DANGER : colors.LIGHTGREY)};
-  &:focus {
-    outline: none;
-    border: 1px solid ${colors.PRIMARY};
-  }
+  border: 1px solid
+    ${({ isBorderLighted, isError }) => {
+      if (isBorderLighted) {
+        return colors.PRIMARY;
+      }
+      if (isError) {
+        return colors.DANGER;
+      }
+      return colors.LIGHTGREY;
+    }};
   transition: border 0.5s;
 `;
 

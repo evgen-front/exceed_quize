@@ -11,4 +11,5 @@ export interface InputProps {
 
 export interface InputWrapperProps {
   isError?: boolean;
+  isBorderLighted?: boolean;
 }
