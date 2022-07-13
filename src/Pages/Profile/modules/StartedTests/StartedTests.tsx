@@ -6,7 +6,7 @@ export const StartedTests = ({ tests }: { tests?: Test[] | [] }) => {
   return (
     <>
       <h2>Активные тесты</h2>
-      {tests ? <TestsList tests={tests} /> : <EmptyStartedTests />}
+      {/* {tests ? <TestsList tests={tests} /> : <EmptyStartedTests />} */}
     </>
   );
 };

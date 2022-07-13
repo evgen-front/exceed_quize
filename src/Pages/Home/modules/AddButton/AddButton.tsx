@@ -9,8 +9,14 @@ const StyledIcon = styled(RiAddFill)`
   width: 50%;
 `;
 
-export const AddButton: FC = () => (
+interface AddButtonProps {
+  handler: () => void;
+}
+
+export const AddButton: FC<AddButtonProps> = ({ handler }) => (
   <Box
+    onClick={handler}
+    style={{ cursor: 'pointer' }}
     bg='#FF8A00'
     height='60px'
     width='60px'

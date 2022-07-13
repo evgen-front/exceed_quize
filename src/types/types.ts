@@ -1,4 +1,4 @@
-import React, { ReactChild, ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface ReactChildrenProps {
   children?: ReactNode;
@@ -11,18 +11,20 @@ export interface SignInUp {
 }
 
 export interface TestResponse {
-  id: number;
-  title: string;
-  published: boolean;
-  modified_at: null | Date;
   created_at: Date;
   holder_id: number;
+  id: number;
+  modified_at: null | Date;
+  published: boolean;
+  questions?: Question[];
+  title: string;
 }
 
 export interface Test {
-  id?: number; //!!!
+  id?: number;
   title: string;
   published: boolean;
+  questions?: Question[];
 }
 
 export interface User {

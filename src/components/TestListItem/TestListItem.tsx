@@ -1,17 +1,11 @@
-import {
-  CaretRightFilled,
-  DeleteOutlined,
-  EditOutlined,
-  StarFilled,
-  UserOutlined,
-} from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
-import { HomeService } from "../../services/HomeService";
-import { Test } from "../../types/types";
-import "./testListItem.scss";
-import { Modal } from "antd";
-import { FC } from "react";
-import { getSessionPath, getTestEditPath } from "../../Router/routes";
+import { CaretRightFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { NavLink } from 'react-router-dom';
+import { TestService } from '../../services/TestService';
+import { Test } from '../../types/types';
+import './testListItem.scss';
+import { Modal } from 'antd';
+import { FC } from 'react';
+import { getSessionPath, getTestEditPath } from '../../Router/routes';
 
 interface TestListItemProps {
   test: Test;
@@ -23,10 +17,10 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
 
   const showDeleteConfirm = () => {
     confirm({
-      title: "Подтвердить удаление теста?",
-      okText: "Подтвердить",
-      okType: "danger",
-      cancelText: "Отменить",
+      title: 'Подтвердить удаление теста?',
+      okText: 'Подтвердить',
+      okType: 'danger',
+      cancelText: 'Отменить',
       onOk() {
         deleteTest();
       },
@@ -35,18 +29,29 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
 
   const deleteTest = () => {
     test.id &&
-      HomeService.deleteTest(test.id)
+      TestService.deleteTest(test.id)
         .then(() => refetch())
         .catch((err) => console.log(err.message));
   };
 
+  const questionAmount = (test: Test) => {
+    if (test.questions) {
+      const amount = test.questions.length;
+      if (amount === 1) {
+        return `${amount} вопрос`;
+      }
+      if (amount === 2 || amount === 3 || amount === 4) {
+        return `${amount} вопроса`;
+      }
+      return `${amount} вопросов`;
+    }
+  };
+
   return (
-    <div className="testListItem completed">
-      <div className="testListItem_header">
-        <div className="testListItem_title">
-          <StarFilled /> {test.title}
-        </div>
-        <div className="testListItem_buttons">
+    <div className='testListItem completed'>
+      <div className='testListItem_header'>
+        <div className='testListItem_title'>{test.title}</div>
+        <div className='testListItem_buttons'>
           <NavLink to={getSessionPath(test.id)}>
             <CaretRightFilled />
           </NavLink>
@@ -56,11 +61,8 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
           <DeleteOutlined onClick={showDeleteConfirm} />
         </div>
       </div>
-      <div className="testListItem_bottom">
-        <div className="testListItem_progress">3 из 10 вопросов</div>
-        <div className="testListItem_author">
-          <UserOutlined /> kir
-        </div>
+      <div className='testListItem_bottom'>
+        <div className='testListItem_progress'>{questionAmount(test)}</div>
       </div>
     </div>
   );

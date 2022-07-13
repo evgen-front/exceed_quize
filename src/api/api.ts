@@ -1,19 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
 
-const getCookie = function (name: string) {
-  var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  if (match) return match[2];
-}
-//@ts-ignore
-let currentCSRF: string = getCookie('CSRF');
+export const API_URL = 'http://localhost';
 
-export const API_URL = 'http://localhost'
+// const ENDPOINTS = {
+//   TESTS: '/tsts/',
+//   GET_TEST(test_id: number) {
+//     return `/tests/${test_id}`;
+//   },
+// };
+
+// console.log(ENDPOINTS.GET_TEST(2));
 
 export const $api = axios.create({
   withCredentials: true,
   baseURL: API_URL,
-})
-
-$api.defaults.headers.post['Access-Control-Allow-Origin'] = '*';
-if (currentCSRF) { $api.defaults.headers.common['X-CSRF'] = currentCSRF; }
-
+});

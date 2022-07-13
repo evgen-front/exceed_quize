@@ -38,10 +38,6 @@ export const SignIn = () => {
       });
   };
 
-  useEffect(() => {
-    AuthService.getCSRF();
-  }, []);
-
   return (
     <Box padding='28px 15px'>
       <Text fontSize='24px' fontWeight={700}>

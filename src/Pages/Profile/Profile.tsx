@@ -40,8 +40,7 @@ export const Profile = () => {
         <ProfileHeader onLogOut={logout} />
         <InfoBlock name={user?.username} email={user?.email} />
         <EditButton>Редактировать</EditButton>
-        <StartedTests />
-        <TestsList tests={userTests} maxHeight={'165px'} />
+        {/* <StartedTests /> */}
       </Box>
     </Main>
   );

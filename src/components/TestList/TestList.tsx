@@ -1,26 +1,26 @@
-import { Test } from '../../types/types';
+import { FC } from 'react';
 import { TestListItem } from '../TestListItem/TestListItem';
+import { useTests } from 'hooks/useTests';
+import { Spin } from 'antd';
 import './testList.scss';
 
-export const TestsList = ({
-  tests,
-  maxHeight = '100%',
-  refetch,
-}: {
-  tests: Test[];
-  maxHeight?: string;
-  refetch?: () => void;
-}) => {
+export const TestsList: FC = () => {
+  const { isLoading, isError, testList, refetch } = useTests();
+
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  if (isError) {
+    return <div>Ошибка загрузки</div>;
+  }
+
   return (
-    <div className='testListWrapper' style={{ maxHeight }}>
-      <h2>Мои тесты</h2>
-      {tests &&
-        tests.map(
-          (test, index) =>
-            refetch && (
-              <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
-            )
-        )}
-    </div>
+    <>
+      {testList?.length &&
+        testList.map((test, index) => (
+          <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
+        ))}
+    </>
   );
 };

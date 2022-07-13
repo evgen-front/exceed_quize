@@ -1,22 +1,18 @@
-import {
-  DeleteTwoTone,
-  EditTwoTone,
-  PlusOutlined,
-} from "@ant-design/icons";
-import { Button, Checkbox } from "antd";
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { useEffect, useState } from "react";
-import { useForm, Validations } from "../../../hooks/useForm";
-import { NewTestService } from "../../../services/NewTestService"; //!!!
-import { Answer } from "../../../types/types"; //!!!
-import "./AddAnswer.scss";
-import { EditBlock } from "./EditBlock/EditBlock";
+import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
+import { Button, Checkbox } from 'antd';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { useEffect, useState } from 'react';
+import { useForm, Validations } from '../../../hooks/useForm';
+import { AnswerService } from '../../../services/AnswerService'; //!!!
+import { Answer } from '../../../types/types'; //!!!
+import './AddAnswer.scss';
+import { EditBlock } from './EditBlock/EditBlock';
 
 const validations: Validations = {
   answerName: {
     required: {
       value: true,
-      message: "Введите текст ответа",
+      message: 'Введите текст ответа',
     },
   },
 };
@@ -29,25 +25,20 @@ interface UpdateAnswerProps {
 }
 
 export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
-  const [answerId, setAnswerId] = useState<string>("");
+  const [answerId, setAnswerId] = useState<string>('');
   const [answerList, setAnswerList] = useState<Answer[]>([]);
   const [addAnswerFlag, setAddAnswerFlag] = useState<boolean>(false);
   const [editAnswerId, setEditAnswerId] = useState<number | null>(null);
 
   const getAnswers = (): void => {
-    NewTestService.getAnswers(questionId)
+    AnswerService.getAnswers(questionId)
       .then((res) => setAnswerList(res.data))
       .catch((err) => console.log(err)); //!!!
   };
 
-  const updateAnswer = ({
-    questionId,
-    id,
-    text,
-    e,
-  }: UpdateAnswerProps): void => {
+  const updateAnswer = ({ questionId, id, text, e }: UpdateAnswerProps): void => {
     const data = e ? { text, is_true: e?.target.checked } : { text };
-    NewTestService.updateAnswer(questionId, id, data)
+    AnswerService.updateAnswer(questionId, id, data)
       .then((res) => getAnswers())
       .catch((err) => console.log(err.message));
   };
@@ -72,7 +63,7 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   };
 
   const addAnswer = () => {
-    NewTestService.createNewAnswer(questionId, { text: formState.answerName })
+    AnswerService.createNewAnswer(questionId, { text: formState.answerName })
       .then((res) => setAnswerId(res.data.id))
       .catch((err) => console.log(err));
     setAddAnswerFlag(false);
@@ -81,14 +72,14 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   };
 
   const deleteAnswer = (id: number) => {
-    NewTestService.deleteAnswer(questionId, id)
-      .then(res => getAnswers())
-      .catch(err => console.log(err.message))
-  }
+    AnswerService.deleteAnswer(questionId, id)
+      .then((res) => getAnswers())
+      .catch((err) => console.log(err.message));
+  };
 
   const startEditAnswer = (id: number, text: string) => {
     setEditAnswerId(id);
-    handleChange("answerName", text);
+    handleChange('answerName', text);
   };
 
   //@ts-ignore
@@ -102,16 +93,13 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
   }, [questionId, answerId]);
 
   return (
-    <div className="answerWrap">
-      <div className="answer_viewBlock">
-        <p className="answer_viewBlock_title">Ответы:</p>
-        <div className="answer_viewBlock_list">
+    <div className='answerWrap'>
+      <div className='answer_viewBlock'>
+        <p className='answer_viewBlock_title'>Ответы:</p>
+        <div className='answer_viewBlock_list'>
           {answerList.length ? (
             answerList.map(({ id, text, is_true }) => (
-              <div
-                key={`answerItem_${id}`}
-                className="answer_viewBlock_list_item"
-              >
+              <div key={`answerItem_${id}`} className='answer_viewBlock_list_item'>
                 {editAnswerId === id ? (
                   <EditBlock
                     answerName={formState.answerName}
@@ -122,21 +110,15 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
                   />
                 ) : (
                   <>
-                    <p className="answer_viewBlock_list_item_description">
-                      - {text}
-                    </p>
-                    <div className="answer_viewBlock_list_item_iconBlock">
+                    <p className='answer_viewBlock_list_item_description'>- {text}</p>
+                    <div className='answer_viewBlock_list_item_iconBlock'>
                       <Checkbox
-                        name="isRightAnswer"
+                        name='isRightAnswer'
                         onChange={(e) => id && handleRightAnswer(e, id, text)}
                         checked={is_true}
                       ></Checkbox>
-                      <EditTwoTone
-                        onClick={() => id && startEditAnswer(id, text)}
-                      />
-                      <DeleteTwoTone
-                        onClick={() => id && deleteAnswer(id)}
-                      />
+                      <EditTwoTone onClick={() => id && startEditAnswer(id, text)} />
+                      <DeleteTwoTone onClick={() => id && deleteAnswer(id)} />
                     </div>
                   </>
                 )}
@@ -147,7 +129,7 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
           )}
         </div>
       </div>
-      <div className="answer_addAnswerBlock">
+      <div className='answer_addAnswerBlock'>
         {addAnswerFlag ? (
           <EditBlock
             answerName={formState.answerName}
@@ -158,11 +140,11 @@ export const AddAnswer = ({ questionId }: { questionId: number | null }) => {
           />
         ) : (
           <Button
-            className="answer_addAnswerBlock_addButton"
-            type="primary"
-            shape="round"
+            className='answer_addAnswerBlock_addButton'
+            type='primary'
+            shape='round'
             icon={<PlusOutlined />}
-            size={"middle"}
+            size={'middle'}
             onClick={addAnswerFlagTrue}
           >
             Добавить ответ

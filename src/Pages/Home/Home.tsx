@@ -1,39 +1,92 @@
 import { AddButton } from './modules/AddButton';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FC, useState } from 'react';
 import { Box, Text } from '../../components';
 import { TestsList } from '../../components/TestList/TestList';
 import { Main } from '../../Layouts/MainView/Main';
-import { HomeService } from '../../services/HomeService';
-import { Test } from '../../types/types';
 import './Home.scss';
 
-export const Home = () => {
-  const [testList, setTestList] = useState<Test[] | []>([]);
+// *********** TEST ************
+import { Col, Drawer, Form, Input, Row, Select } from 'antd';
+import { Switch } from 'antd';
 
-  const fetchAllTests = () => {
-    HomeService.getAllTests()
-      .then((res) => setTestList(res.data))
-      .catch((err) => console.log(err));
+const { Option } = Select;
+
+export const Home: FC = () => {
+  const [createFormOpen, setCreateFormOpen] = useState(false);
+
+  const handleDrawer = () => {
+    setCreateFormOpen(!createFormOpen);
   };
 
-  useEffect(() => {
-    fetchAllTests();
-  }, []);
+  const onSwitchChange = (checked: boolean) => {
+    console.log(`switch to ${checked}`);
+  };
+
   return (
     <Main>
       <Box padding='20px 25px'>
         <Text fontSize='24px' fontWeight='700'>
           Доступные тесты:
         </Text>
-        <TestsList refetch={fetchAllTests} tests={testList} />
+
+        <div className='testListWrapper' style={{ maxHeight: '100%' }}>
+          <TestsList />
+        </div>
       </Box>
 
       <Box position='fixed' bottom='95px' right='25px'>
-        <Link to='/test/new'>
-          <AddButton />
-        </Link>
+        <AddButton handler={handleDrawer} />
       </Box>
+
+      <Drawer
+        title='Создание Quiz'
+        width={'100%'}
+        onClose={handleDrawer}
+        visible={createFormOpen}
+        bodyStyle={{ paddingBottom: 80 }}
+      >
+        <Form
+          layout='vertical'
+          hideRequiredMark
+          initialValues={{ published: false, duration: '10' }}
+        >
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                name='name'
+                label='Название'
+                rules={[{ required: true, message: 'Пожалуйста введите название' }]}
+              >
+                <Input placeholder='Название теста' />
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item
+                name='duration'
+                label='Длительность'
+                rules={[{ required: true, message: 'Пожалуйста введите длительность' }]}
+              >
+                <Select placeholder='Выберите длительность'>
+                  <Option value='5'>5 минут</Option>
+                  <Option value='10'>10 минут</Option>
+                  <Option value='15'>15 минут</Option>
+                </Select>
+              </Form.Item>
+            </Col>
+          </Row>
+
+          <Row gutter={16}>
+            <Col span={24}>
+              <Form.Item name='published' label='Опубликован' valuePropName='checked'>
+                <Switch onChange={onSwitchChange} />
+              </Form.Item>
+            </Col>
+          </Row>
+        </Form>
+      </Drawer>
     </Main>
   );
 };

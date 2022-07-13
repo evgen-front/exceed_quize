@@ -1,20 +1,20 @@
-import { EditTwoTone } from "@ant-design/icons";
-import { CheckboxChangeEvent } from "antd/lib/checkbox";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { useForm, Validations } from "../../hooks/useForm";
-import { Main } from "../../Layouts/MainView/Main"; // !!! how can I to reduce a pass?
-import { NewTestService } from "../../services/NewTestService";
-import { Test } from "../../types/types";
-import { AddQuestion } from "./AddQuestion/AddQuestion";
-import { InputBlock } from "./InputBlock/InputBlock";
-import "./NewTest.scss";
+import { EditTwoTone } from '@ant-design/icons';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
+import { useForm, Validations } from '../../hooks/useForm';
+import { Main } from '../../Layouts/MainView/Main'; // !!! how can I to reduce a pass?
+import { TestService } from '../../services/TestService';
+import { Test } from '../../types/types';
+import { AddQuestion } from './AddQuestion/AddQuestion';
+import { InputBlock } from './InputBlock/InputBlock';
+import './NewTest.scss';
 
 const validations: Validations = {
   testName: {
     required: {
       value: true,
-      message: "Введите название теста",
+      message: 'Введите название теста',
     },
   },
 };
@@ -39,7 +39,7 @@ export const NewTest = () => {
       published: testPublished,
     };
 
-    NewTestService.createTest(newTest)
+    TestService.createTest(newTest)
       .then((res) => {
         setTestId(res.data.id);
       })
@@ -52,9 +52,9 @@ export const NewTest = () => {
       published: testPublished,
     };
 
-    NewTestService.updateTest(testId, updateTest)
+    TestService.updateTest(testId, updateTest)
       .then((res) => {
-        handleChange("testName", res.data.title);
+        handleChange('testName', res.data.title);
         setTestEditFlag(false);
       })
       .catch((err) => console.log(err.message));
@@ -69,10 +69,10 @@ export const NewTest = () => {
   useEffect(() => {
     if (id) {
       const test_id: number = +id;
-      NewTestService.getTest(test_id)
+      TestService.getTest(test_id)
         .then((res) => {
           setTestId(res.data.id);
-          handleChange("testName", res.data.title);
+          handleChange('testName', res.data.title);
         })
         .catch((err) => console.log(err.message));
     }
@@ -80,9 +80,9 @@ export const NewTest = () => {
 
   return (
     <Main>
-      <div className="NTWrapper">
-        <p className="NTWrapper_title">
-          {id ? "Редактировать тест..." : "Создать новый тест..."}
+      <div className='NTWrapper'>
+        <p className='NTWrapper_title'>
+          {id ? 'Редактировать тест...' : 'Создать новый тест...'}
         </p>
         {!testId ? (
           <InputBlock
@@ -95,7 +95,7 @@ export const NewTest = () => {
             testPublished={testPublished}
           />
         ) : (
-          <div className="NT_questionWrapper">
+          <div className='NT_questionWrapper'>
             {testEditFlag ? (
               <InputBlock
                 testName={formState.testName}
@@ -106,12 +106,12 @@ export const NewTest = () => {
                 testPublished={testPublished}
               />
             ) : (
-              <div className="NT_questionWrapper_testNameBlock">
-                <p className="NT_questionWrapper_testNameBlock_testName">
+              <div className='NT_questionWrapper_testNameBlock'>
+                <p className='NT_questionWrapper_testNameBlock_testName'>
                   {formState.testName}
                 </p>
                 <EditTwoTone
-                  className="NT_questionWrapper_testNameBlock_editButton"
+                  className='NT_questionWrapper_testNameBlock_editButton'
                   onClick={() => handleStartEdit()}
                 />
               </div>
