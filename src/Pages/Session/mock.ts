@@ -1,17 +1,17 @@
 export const answersMock = [
-    {
-        id:1,
-        number: 1,
-        text: 'answer 1'
-    },
-    {
-        id:2,
-        number: 2,
-        text: 'answer 2'
-    },
-    {
-        id:3,
-        number: 3,
-        text: 'answer 3'
-    }
-]
+  {
+    id: 1,
+    ordering: 1,
+    text: 'answer 1',
+  },
+  {
+    id: 2,
+    ordering: 2,
+    text: 'answer 2',
+  },
+  {
+    id: 3,
+    ordering: 3,
+    text: 'answer 3',
+  },
+];

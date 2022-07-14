@@ -1,37 +1,49 @@
-import { CaretRightFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { FC, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { TestService } from '../../services/TestService';
-import { Test } from '../../types/types';
-import './testListItem.scss';
-import { Modal } from 'antd';
-import { FC } from 'react';
 import { getSessionPath, getTestEditPath } from '../../Router/routes';
-
+import { useMutation, useQueryClient } from 'react-query';
+import { Test } from '../../types/types';
+import { CaretRightFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import './testListItem.scss';
+import { DelModal } from 'components/TestListItem/utils/DelModal';
+import { SessionService } from 'services/SessionService';
 interface TestListItemProps {
   test: Test;
   refetch: () => void;
 }
 
 export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
-  const { confirm } = Modal;
+  const queryClient = useQueryClient();
+  const [isModal, setModal] = useState(false);
 
-  const showDeleteConfirm = () => {
-    confirm({
-      title: 'Подтвердить удаление теста?',
-      okText: 'Подтвердить',
-      okType: 'danger',
-      cancelText: 'Отменить',
-      onOk() {
-        deleteTest();
-      },
-    });
+  const mutation = useMutation('createSession', () =>
+    SessionService.getSessions(Number(test.id))
+  );
+
+  const { data } = mutation;
+
+  console.log(data);
+
+  const handleModal = () => {
+    setModal(!isModal);
   };
 
-  const deleteTest = () => {
-    test.id &&
-      TestService.deleteTest(test.id)
-        .then(() => refetch())
-        .catch((err) => console.log(err.message));
+  const { mutateAsync } = useMutation(
+    'deleteTest',
+    (id: number) => TestService.deleteTest(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
+  );
+
+  const deleteTest = async () => {
+    if (test.id) {
+      await mutateAsync(test.id);
+    }
+    handleModal();
   };
 
   const questionAmount = (test: Test) => {
@@ -48,22 +60,38 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
   };
 
   return (
-    <div className='testListItem completed'>
-      <div className='testListItem_header'>
-        <div className='testListItem_title'>{test.title}</div>
-        <div className='testListItem_buttons'>
-          <NavLink to={getSessionPath(test.id)}>
-            <CaretRightFilled />
-          </NavLink>
-          <NavLink to={getTestEditPath(test.id)}>
-            <EditOutlined />
-          </NavLink>
-          <DeleteOutlined onClick={showDeleteConfirm} />
+    <>
+      <div className='testListItem completed'>
+        <div className='testListItem_header'>
+          <div className='testListItem_title'>{test.title}</div>
+          <div className='testListItem_buttons'>
+            <NavLink to={getSessionPath(test.id)}>
+              <CaretRightFilled />
+            </NavLink>
+            <NavLink to={getTestEditPath(test.id)}>
+              <EditOutlined />
+            </NavLink>
+            <DeleteOutlined onClick={handleModal} />
+            <button
+              onClick={() => {
+                mutation.mutateAsync();
+              }}
+            >
+              нажми
+            </button>
+          </div>
+        </div>
+        <div className='testListItem_bottom'>
+          <div className='testListItem_progress'>{questionAmount(test)}</div>
         </div>
       </div>
-      <div className='testListItem_bottom'>
-        <div className='testListItem_progress'>{questionAmount(test)}</div>
-      </div>
-    </div>
+
+      <DelModal
+        isVisible={isModal}
+        content={<p>Вы уверены, что хотите удалить тест?</p>}
+        onSubmit={deleteTest}
+        onClose={handleModal}
+      />
+    </>
   );
 };

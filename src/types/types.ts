@@ -41,9 +41,9 @@ export interface Question {
 }
 
 export interface QuestionResponse {
-  id?: number;
+  id: number;
   text: string;
-  ordering?: number;
+  ordering: number;
 }
 
 export interface Variant {
@@ -57,6 +57,16 @@ export interface Answer {
   id?: number;
   text: string;
   is_true?: boolean;
+}
+
+export interface AnswerResponse {
+  id: number;
+  text: string;
+  is_true: boolean;
+}
+
+export interface UserAnswer {
+  answer_id?: number;
 }
 
 export interface Input {

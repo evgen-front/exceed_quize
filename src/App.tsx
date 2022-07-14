@@ -4,15 +4,7 @@ import { Header, Navbar, Box } from './components';
 import './index.css';
 
 const App = () => {
-  return (
-    <Box bg='#FFFFFF' display='flex' flexDirection='column' height='100vh'>
-      <Header />
-      <Box flex='1'>
-        <Router />
-      </Box>
-      <Navbar />
-    </Box>
-  );
+  return <Router />;
 };
 
 export default App;

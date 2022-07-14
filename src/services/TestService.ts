@@ -7,8 +7,8 @@ export class TestService {
     return $api.get('/tests/');
   }
 
-  static async getTest(test_id: number): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}/`);
+  static async getTest(test_id: number): Promise<AxiosResponse<TestResponse>> {
+    return $api.get<TestResponse>(`/tests/${test_id}/`);
   }
 
   static async getAllTests(): Promise<AxiosResponse<TestResponse[]>> {
@@ -16,7 +16,9 @@ export class TestService {
   }
 
   static async createTest(data: Test): Promise<AxiosResponse> {
-    return $api.post('/tests/', data);
+    return $api.post('/tests/', data, {
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 
   static async updateTest(test_id: number | null, data: Test): Promise<AxiosResponse> {

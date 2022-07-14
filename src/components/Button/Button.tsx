@@ -4,30 +4,40 @@ import styled from 'styled-components';
 const buttonColors = {
   primary: '#FF6B00',
   secondary: '#2C2C2C',
-  danger: '#FE522C',
-  ghost: '#BEBEBE',
+  danger: '#EF4444',
 };
 
 interface ButtonProps {
   onClick?: () => void;
   type?: 'submit';
-  view?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  view?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'ghostdanger';
   children?: React.ReactNode;
 }
 
 interface StyledButtonProps {
-  view: 'primary' | 'secondary' | 'danger' | 'ghost';
+  view: 'primary' | 'secondary' | 'danger' | 'ghost' | 'ghostdanger';
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
   height: 46px;
   width: 100%;
-  border: none;
   border-radius: 8px;
-  color: #ffffff;
+  color: ${({ view }) =>
+    view === 'ghost'
+      ? buttonColors.primary
+      : view === 'ghostdanger'
+      ? buttonColors.danger
+      : '#FFFFFF'};
+  ${({ view }) =>
+    view === 'ghost'
+      ? `border: 1px solid ${buttonColors.primary}`
+      : view === 'ghostdanger'
+      ? `border: 1px solid ${buttonColors.danger}`
+      : 'border: none'};
   font-weight: 700;
   font-size: 18px;
-  ${({ view }) => `background: ${buttonColors[view]}`}
+  background: ${({ view }) =>
+    view === 'ghost' || view === 'ghostdanger' ? 'transparent' : buttonColors[view]};
 `;
 
 export const Button: FC<ButtonProps> = ({

@@ -33,6 +33,10 @@ export const Navbar: React.FC = () => {
 
   return (
     <Box
+      position='fixed'
+      bottom='0'
+      left='0'
+      width='100%'
       display='flex'
       justifyContent='space-around'
       alignItems='center'

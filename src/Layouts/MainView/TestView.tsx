@@ -1,9 +1,9 @@
 import { FC } from 'react';
-import { Box, Header, Navbar } from '../../components';
+import { Box } from '../../components';
 import { ReactChildrenProps } from '../../types/types';
 import './Main.scss';
 
-export const Main: FC<ReactChildrenProps> = ({ children }) => {
+export const TestView: FC<ReactChildrenProps> = ({ children }) => {
   return (
     <Box
       bg='#F2F3F4'
@@ -12,13 +12,11 @@ export const Main: FC<ReactChildrenProps> = ({ children }) => {
       height='100%'
       minHeight='100vh'
     >
-      <Header />
       <Box flex='1'>
         <div className='mainWrapper'>
           <Box>{children}</Box>
         </div>
       </Box>
-      <Navbar />
     </Box>
   );
 };

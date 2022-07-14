@@ -3,6 +3,14 @@
   font-family: 'Pragmatica';
   src: url('https://fojin.tech/fonts/Pragmatica_Book.woff2') format('woff2');
   src: url('https://fojin.tech/fonts/Pragmatica_Book.woff') format('woff');
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Pragmatica';
+  src: url('https://fojin.tech/fonts/Pragmatica-Bold.woff2') format('woff2');
+  src: url('https://fojin.tech/fonts/Pragmatica-Bold.woff') format('woff');
+  font-weight: 700;
 }
 
 * {

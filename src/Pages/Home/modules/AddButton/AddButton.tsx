@@ -5,8 +5,8 @@ import { RiAddFill } from 'react-icons/ri';
 
 const StyledIcon = styled(RiAddFill)`
   color: #ffffff;
-  height: 50%;
-  width: 50%;
+  height: 60%;
+  width: 60%;
 `;
 
 interface AddButtonProps {
@@ -17,7 +17,7 @@ export const AddButton: FC<AddButtonProps> = ({ handler }) => (
   <Box
     onClick={handler}
     style={{ cursor: 'pointer' }}
-    bg='#FF8A00'
+    bg='#161616'
     height='60px'
     width='60px'
     borderRadius='15px'

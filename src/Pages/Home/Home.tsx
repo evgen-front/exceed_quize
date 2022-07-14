@@ -8,14 +8,39 @@ import './Home.scss';
 // *********** TEST ************
 import { Col, Drawer, Form, Input, Row, Select } from 'antd';
 import { Switch } from 'antd';
+import { useMutation } from 'react-query';
+import { Test } from 'types/types';
+import { TestService } from 'services/TestService';
+import { useQueryClient } from 'react-query';
 
 const { Option } = Select;
 
 export const Home: FC = () => {
+  const queryClient = useQueryClient();
   const [createFormOpen, setCreateFormOpen] = useState(false);
+
+  const { mutateAsync } = useMutation(
+    'createTest',
+    (data: Test) => TestService.createTest(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
+  );
 
   const handleDrawer = () => {
     setCreateFormOpen(!createFormOpen);
+  };
+
+  const handleSubmit = async (e: any) => {
+    e.preventDefault('');
+    const data = {
+      title: 'Новый тест',
+      published: false,
+    };
+    await mutateAsync(data);
+    handleDrawer();
   };
 
   const onSwitchChange = (checked: boolean) => {
@@ -85,6 +110,8 @@ export const Home: FC = () => {
               </Form.Item>
             </Col>
           </Row>
+
+          <button onClick={handleSubmit}>Сохранить</button>
         </Form>
       </Drawer>
     </Main>

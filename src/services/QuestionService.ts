@@ -1,10 +1,12 @@
 import { AxiosResponse } from 'axios';
 import { $api } from '../api/api';
-import { Question } from '../types/types';
+import { Question, QuestionResponse } from '../types/types';
 
 export class QuestionService {
-  static async getQuestions(test_id: number | null): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}/questions/`);
+  static async getQuestions(
+    test_id: number | null
+  ): Promise<AxiosResponse<QuestionResponse[]>> {
+    return $api.get<QuestionResponse[]>(`/tests/${test_id}/questions/`);
   }
 
   static async createNewQuestion(

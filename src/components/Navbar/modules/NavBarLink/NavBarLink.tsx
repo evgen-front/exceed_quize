@@ -17,7 +17,7 @@ const StyledLink = styled(Link)`
   font-size: 25px;
   width: 500px;
   :hover {
-    color: #ff8a00;
+    color: #ff6b00;
   }
 `;
 
@@ -30,8 +30,7 @@ export const NavBarLink: FC<NavBarLink> = ({ title, to, icon }) => (
         width='70px'
         justifyContent='center'
         alignItems='center'
-        borderBottom={isActive ? '2px solid' : '2px solid white'}
-        color={isActive ? '#ff8a00' : '#BEBEBE'}
+        color={isActive ? '#FF6B00' : '#BEBEBE'}
       >
         {icon}
       </Box>
