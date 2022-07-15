@@ -11,19 +11,20 @@ export interface SignInUp {
 }
 
 export interface TestResponse {
-  id: number;
-  title: string;
-  published: boolean;
-  modified_at: null | Date;
   created_at: Date;
   holder_id: number;
+  id: number;
+  modified_at: null | Date;
+  published: boolean;
+  questions?: Question[];
+  title: string;
 }
 
 export interface Test {
-  id?: number; //!!!
+  id?: number;
   title: string;
   published: boolean;
-  questions?: unknown[];
+  questions?: Question[];
 }
 
 export interface User {
@@ -41,9 +42,9 @@ export interface Question {
 }
 
 export interface QuestionResponse {
-  id?: number;
+  id: number;
   text: string;
-  ordering?: number;
+  ordering: number;
 }
 
 export interface Variant {
@@ -57,6 +58,16 @@ export interface Answer {
   id?: number;
   text: string;
   is_true?: boolean;
+}
+
+export interface AnswerResponse {
+  id: number;
+  text: string;
+  is_true: boolean;
+}
+
+export interface UserAnswer {
+  answer_id?: number;
 }
 
 export interface Input {

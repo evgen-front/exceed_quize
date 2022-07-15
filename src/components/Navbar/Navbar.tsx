@@ -35,15 +35,16 @@ export const Navbar: React.FC = () => {
 
   return (
     <Box
+      position='fixed'
+      bottom='0'
+      left='0'
+      width='100%'
       display='flex'
       justifyContent='space-around'
       alignItems='center'
       bg='white'
       height='65px'
       borderRadius=' 15px 15px 0 0'
-      position='fixed'
-      bottom='0'
-      width='100vw'
     >
       {navLinks.map(({ title, to, icon }) => (
         <NavBarLink key={title} title={title} to={to} icon={icon} />

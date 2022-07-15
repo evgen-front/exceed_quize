@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Upload } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
-import type { UploadFile } from "antd/es/upload/interface";
-import type { UploadProps } from "antd/es/upload";
-import { NewTestService } from "../../../services/NewTestService";
+import React, { useEffect, useState } from 'react';
+import { Upload } from 'antd';
+import { PlusOutlined } from '@ant-design/icons';
+import type { UploadFile } from 'antd/es/upload/interface';
+import type { UploadProps } from 'antd/es/upload';
+import { QuestionService } from '../../../services/QuestionService';
 
 interface UploadImageProps {
   questionId: number | null;
@@ -17,13 +17,13 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
 
   useEffect(() => {
     if (testId && questionId) {
-      NewTestService.getImage(testId, questionId)
+      QuestionService.getImage(testId, questionId)
         .then(() =>
           setFileList([
             {
               uid: questionId.toString(),
-              name: "",
-              status: "done",
+              name: '',
+              status: 'done',
               url: baseUrl,
               thumbUrl: baseUrl,
             },
@@ -33,14 +33,12 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
     }
   }, [testId, questionId]);
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
+  const handleChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
   const deleteImage = () => {
-    NewTestService.deleteImage(testId, questionId).catch((err) =>
-      console.log(err)
-    );
+    QuestionService.deleteImage(testId, questionId).catch((err) => console.log(err));
   };
 
   const uploadButton = (
@@ -48,9 +46,10 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
       <div
         style={{
           marginTop: 8,
-          display: "flex",
-          flexDirection: "column",
-        }}>
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
         <PlusOutlined />
         Загрузить картинку
       </div>
@@ -60,13 +59,14 @@ export function UploadImage({ questionId, testId }: UploadImageProps) {
     <div>
       <Upload
         action={baseUrl}
-        listType="picture-card"
+        listType='picture-card'
         fileList={fileList}
         withCredentials
-        name="file"
-        accept="image/png, image/jpeg, image/jpg, image/gif"
+        name='file'
+        accept='image/png, image/jpeg, image/jpg, image/gif'
         onRemove={deleteImage}
-        onChange={handleChange}>
+        onChange={handleChange}
+      >
         {fileList.length >= 1 ? null : uploadButton}
       </Upload>
     </div>

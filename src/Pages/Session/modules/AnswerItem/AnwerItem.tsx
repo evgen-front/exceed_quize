@@ -1,33 +1,23 @@
-import { CheckOutlined } from "@ant-design/icons";
-import "./AnswerItem.scss";
-export interface AnswerProps {
-    id: number;
-    number: number;
-    text: string;
-}
+import { CheckOutlined } from '@ant-design/icons';
+import { AnswerResponse } from 'types/types';
+import './AnswerItem.scss';
 
 export interface AnswerItemProps {
-    answer: AnswerProps;
-    onSelect: () => void;
-    selected: boolean;
+  answer: AnswerResponse;
+  onSelect: () => void;
+  selected: boolean;
 }
 
-export const AnswerItem = ({
-    answer,
-    onSelect,
-    selected
-}: AnswerItemProps) => {
-
-
-    return (
-        <div
-            className={`answer ${selected ? "selected" : ""}`}
-            onClick={selected ? undefined : onSelect}
-        >
-            <span className="answer_text">session with id {answer?.id}</span>
-            <div className={`selected_sign  ${selected ? "show" : "hide"}`}>
-                <CheckOutlined className="selected_sign_icon" />
-            </div>
-        </div>
-    );
+export const AnswerItem = ({ answer, onSelect, selected }: AnswerItemProps) => {
+  return (
+    <div
+      className={`answer ${selected ? 'selected' : ''}`}
+      onClick={selected ? undefined : onSelect}
+    >
+      <span className='answer_text'>{answer?.text}</span>
+      <div className={`selected_sign  ${selected ? 'show' : 'hide'}`}>
+        <CheckOutlined className='selected_sign_icon' />
+      </div>
+    </div>
+  );
 };

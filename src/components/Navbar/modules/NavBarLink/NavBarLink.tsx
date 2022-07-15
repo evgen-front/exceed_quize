@@ -1,9 +1,8 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import styled from 'styled-components';
 import { NavLink as Link } from 'react-router-dom';
-import { Box } from 'components/StyledSystem';
 
-interface NavBarLink {
+interface NavBarLinkProps {
   title: string;
   to: string;
   icon: string;
@@ -42,7 +41,7 @@ const StyledImage = styled.img`
   width: 36px;
 `;
 
-export const NavBarLink: FC<NavBarLink> = ({ title, to, icon }) => (
+export const NavBarLink: FC<NavBarLinkProps> = ({ title, to, icon }) => (
   <StyledLink title={title} to={to}>
     {({ isActive }) => (
       <IconWrapper isActive={isActive}>

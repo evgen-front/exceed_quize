@@ -1,27 +1,31 @@
-import React, { FC, Fragment } from 'react';
-import { Test } from 'types/types';
+import { FC, memo, Fragment } from 'react';
+import { useTests } from 'hooks/useTests';
 import { Box, Space } from 'components';
 import { TestListItem } from '../TestListItem/TestListItem';
+import './testList.scss';
 
-interface TestListProps {
-  tests: Test[];
-  maxHeight?: string;
-  refetch?: () => void;
-}
+export const MemoizedTestsList: FC = memo(function TestsList() {
+  const { isLoading, isError, testList } = useTests();
 
-export const TestsList: FC<TestListProps> = ({ tests, maxHeight = '100%', refetch }) => {
+  if (isLoading) {
+    return <div>Загрузка</div>;
+  }
+
+  if (isError) {
+    return <div>Ошибка загрузки</div>;
+  }
+
   return (
-    <Box maxHeight={maxHeight}>
-      {tests &&
-        tests.map(
-          (test, index) =>
-            refetch && (
-              <Fragment key={test.id}>
-                <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
-                <Space height='20px' />
-              </Fragment>
-            )
-        )}
-    </Box>
+    <>
+      <Box>
+        {testList?.length &&
+          testList.map((test) => (
+            <Fragment key={test.id}>
+              <TestListItem test={test} />
+              <Space height='20px' />
+            </Fragment>
+          ))}
+      </Box>
+    </>
   );
-};
+});
