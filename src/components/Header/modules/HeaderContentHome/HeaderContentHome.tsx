@@ -18,7 +18,7 @@ export const HeaderContentHome: FC = () => {
           {user?.username}
         </Text>
       </Box>
-      <Avatar>{user?.username?.[0]}</Avatar>
+      <Avatar name={user?.username} />
     </Box>
   );
 };

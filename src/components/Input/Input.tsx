@@ -48,12 +48,7 @@ export const Input: FC<InputProps> = ({
           className={isError ? 'error' : ''}
         />
         {isPassword && (
-          <Box
-            width='22px'
-            ml='10px'
-            color={colors.LIGHTGREY}
-            onClick={handleDisplayPassword}
-          >
+          <Box width='22px' ml='10px' color={colors.GREY} onClick={handleDisplayPassword}>
             <Icon src={shouldDisplayPassword ? EyeIcon : EyeCloseIcon} alt='icon' />
           </Box>
         )}

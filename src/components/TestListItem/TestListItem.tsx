@@ -1,17 +1,15 @@
-import {
-  CaretRightFilled,
-  DeleteOutlined,
-  EditOutlined,
-  StarFilled,
-  UserOutlined,
-} from "@ant-design/icons";
-import { NavLink } from "react-router-dom";
-import { HomeService } from "../../services/HomeService";
-import { Test } from "../../types/types";
-import "./testListItem.scss";
-import { Modal } from "antd";
-import { FC } from "react";
-import { getSessionPath, getTestEditPath } from "../../Router/routes";
+import React, { FC } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
+import { Modal } from 'antd';
+import { HomeService } from 'services/HomeService';
+import { Test } from 'types/types';
+import { getSessionPath, getTestEditPath } from 'Router/routes';
+import { Card, Box, Text, Space, Button } from 'components';
+import { colors } from 'consts';
+import { userAtom } from 'atoms/userAtom';
+import { getQuestionAmount } from 'Pages/Home/utils';
 
 interface TestListItemProps {
   test: Test;
@@ -19,14 +17,18 @@ interface TestListItemProps {
 }
 
 export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
+  const [user] = useAtom(userAtom);
+  const navigate = useNavigate();
   const { confirm } = Modal;
+
+  const questionAmount = getQuestionAmount(test.questions?.length);
 
   const showDeleteConfirm = () => {
     confirm({
-      title: "Подтвердить удаление теста?",
-      okText: "Подтвердить",
-      okType: "danger",
-      cancelText: "Отменить",
+      title: 'Подтвердить удаление теста?',
+      okText: 'Подтвердить',
+      okType: 'danger',
+      cancelText: 'Отменить',
       onOk() {
         deleteTest();
       },
@@ -41,27 +43,37 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
   };
 
   return (
-    <div className="testListItem completed">
-      <div className="testListItem_header">
-        <div className="testListItem_title">
-          <StarFilled /> {test.title}
-        </div>
-        <div className="testListItem_buttons">
-          <NavLink to={getSessionPath(test.id)}>
-            <CaretRightFilled />
-          </NavLink>
-          <NavLink to={getTestEditPath(test.id)}>
-            <EditOutlined />
-          </NavLink>
-          <DeleteOutlined onClick={showDeleteConfirm} />
-        </div>
-      </div>
-      <div className="testListItem_bottom">
-        <div className="testListItem_progress">3 из 10 вопросов</div>
-        <div className="testListItem_author">
-          <UserOutlined /> kir
-        </div>
-      </div>
-    </div>
+    <Card>
+      <Box
+        display='flex'
+        justifyContent={user?.is_admin ? 'space-between' : ''}
+        alignItems='center'
+      >
+        <Text fontSize='20px' fontWeight={700}>
+          {test.title}
+        </Text>
+        {user?.is_admin && (
+          <Box display='flex'>
+            <RiPencilFill
+              color={colors.GREY}
+              size={20}
+              onClick={() => navigate(getTestEditPath(test.id))}
+            />
+            <Space width={17} />
+            <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={showDeleteConfirm} />
+          </Box>
+        )}
+      </Box>
+      <Space height={12} />
+      <Text
+        fontSize={16}
+        fontWeight={600}
+        color={colors.GREY}
+      >{`${questionAmount} / 10`}</Text>
+      <Space height={32} />
+      <Button view='primary' onClick={() => navigate(getSessionPath(test.id))}>
+        Начать
+      </Button>
+    </Card>
   );
 };

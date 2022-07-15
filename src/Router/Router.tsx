@@ -1,14 +1,9 @@
 import { Route, Routes } from 'react-router-dom';
-import { Home } from '../Pages/Home/Home';
-import { Profile } from '../Pages/Profile/Profile';
-import { NewTest } from '../Pages/NewTest/NewTest';
-import { SignIn } from '../Pages/SignIn';
-import { SignUp } from '../Pages/SignUp/SignUp';
-import { Session } from '../Pages/Session/Session';
+import { useAtom } from 'jotai';
+import { Home, Profile, Session, SignIn, SignUp, NewTest } from 'Pages';
 import { PrivateRoute } from './PrivateRoute';
 import { SINGIN, SIGNUP, HOME, PROFILE, TESTNEW, TESTEDIT, SESSION } from './routes';
-import { userAtom } from '../atoms/userAtom';
-import { useAtom } from 'jotai';
+import { userAtom } from 'atoms/userAtom';
 
 export const Router = () => {
   const [user] = useAtom(userAtom);

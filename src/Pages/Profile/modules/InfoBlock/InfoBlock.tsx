@@ -27,9 +27,7 @@ export const InfoBlock: FC<InfoBlockProps> = ({ name, email }) => {
           ))}
         </Box>
       </StyledModal>
-      <Box margin='0 20px 0 0' onClick={openModal}>
-        <Avatar>?</Avatar>
-      </Box>
+      <Box margin='0 20px 0 0' onClick={openModal}></Box>
       <Box flex='1'>
         <Text fontSize='18px'>{name}</Text>
         <Text>{email}</Text>

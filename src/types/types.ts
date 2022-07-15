@@ -23,6 +23,7 @@ export interface Test {
   id?: number; //!!!
   title: string;
   published: boolean;
+  questions?: unknown[];
 }
 
 export interface User {
@@ -30,6 +31,7 @@ export interface User {
   username: string;
   is_active: boolean;
   email: string;
+  is_admin: boolean;
 }
 
 export interface Question {

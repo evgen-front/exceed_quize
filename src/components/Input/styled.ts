@@ -25,7 +25,7 @@ export const InputWrapper = styled.div<InputWrapperProps>`
       if (isError) {
         return colors.DANGER;
       }
-      return colors.LIGHTGREY;
+      return colors.GREY;
     }};
   transition: border 0.5s;
 `;
