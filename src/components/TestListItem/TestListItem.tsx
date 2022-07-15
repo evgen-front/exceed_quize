@@ -64,7 +64,7 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
                 onClick={() => navigate(getTestEditPath(test.id))}
               />
               <Space width={17} />
-              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={deleteTest} />
+              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
             </Box>
           )}
         </Box>
