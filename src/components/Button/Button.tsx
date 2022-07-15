@@ -7,6 +7,7 @@ const buttonColors = {
   danger: colors.DANGER,
   secondary: colors.SECONDARY,
   ghost: colors.WHITE,
+  grey: colors.GREY,
 };
 
 interface ButtonProps {
@@ -14,6 +15,7 @@ interface ButtonProps {
   type?: 'submit';
   view?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'ghostdanger';
   children?: React.ReactNode;
+  disabled?: boolean;
 }
 
 interface StyledButtonProps {
@@ -38,8 +40,12 @@ const StyledButton = styled.button<StyledButtonProps>`
       : 'border: none'};
   font-weight: 700;
   font-size: 18px;
-  background: ${({ view }) =>
-    view === 'ghost' || view === 'ghostdanger' ? 'transparent' : buttonColors[view]};
+  background: ${({ view, disabled }) =>
+    view === 'ghost' || view === 'ghostdanger'
+      ? 'transparent'
+      : disabled
+      ? buttonColors.grey
+      : buttonColors[view]};
 `;
 
 export const Button: FC<ButtonProps> = ({
@@ -47,8 +53,9 @@ export const Button: FC<ButtonProps> = ({
   type,
   view = 'primary',
   children,
+  disabled,
 }) => (
-  <StyledButton onClick={onClick} type={type} view={view}>
+  <StyledButton onClick={onClick} type={type} view={view} disabled={disabled}>
     {children}
   </StyledButton>
 );

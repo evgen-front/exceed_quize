@@ -1,7 +1,6 @@
-import { Button } from 'antd';
-import { Box } from 'components';
+import { Box, Button, Text } from 'components';
 import { TestView } from 'Layouts/MainView/TestView';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { NavLink, useParams } from 'react-router-dom';
 import { AnswerService } from 'services/AnswerService';
@@ -43,13 +42,11 @@ export const Session = () => {
     }
   );
 
-  const { questions } = sessionData || { questions: [] };
+  const { questions, sessionId } = sessionData || { questions: [] };
   const [questionState, setQuestionState] = useState({
     currentQuestionIndex: 0,
     nextQuestionIndex: 1,
   });
-
-  console.log(questionState);
 
   const currentQuestion = questions[questionState.currentQuestionIndex];
   const nextQuestion = questions[questionState.nextQuestionIndex];
@@ -61,10 +58,27 @@ export const Session = () => {
     nextQuestion?.id
   );
 
+  const { mutateAsync: createUserAnswerAsync } = useMutation(
+    'createUserAnswer',
+    (answer_id: number) => SessionService.createUserAnswer(sessionId!, { answer_id })
+  );
+
   const handleNext = () => {
+    if (selectedAnswer) {
+      createUserAnswerAsync(selectedAnswer?.id);
+    }
+
+    if (selectedAnswer?.is_true) {
+      setRightAnsers(rightAnswers + 1);
+      setSelectedAnswer(null);
+    }
+
+    if (questionState.currentQuestionIndex === questions.length - 1) {
+      setIsComplete(true);
+    }
+
     setQuestionState(({ nextQuestionIndex }) => {
       const updatedNextQuestionIndex = nextQuestionIndex + 1;
-      console.log(updatedNextQuestionIndex, questions);
       return {
         currentQuestionIndex: nextQuestionIndex,
         nextQuestionIndex:
@@ -75,6 +89,23 @@ export const Session = () => {
     });
   };
 
+  // useEffect(() => {
+  // if (selectedAnswer) {
+  //   createUserAnswerAsync(selectedAnswer?.id);
+  // }
+  // if (selectedAnswer?.is_true) {
+  //   setRightAnsers(rightAnswers + 1);
+  // }
+  // if (questionCount + 1 !== questions.length) {
+  //   setQuestionCount(questionCount + 1);
+  //   setTimeout(() => {
+  //     refetch();
+  //   }, 0);
+  // } else {
+  //   setIsComplete(true);
+  // }
+  // }, [currentQuestion]);
+
   if (isSessionDataLoading) {
     return <div>Загрузка</div>;
   }
@@ -82,12 +113,14 @@ export const Session = () => {
   if (isComplete) {
     return (
       <div>
-        <Box>
-          Ответы: {rightAnswers} / {questions?.length}
+        <Box maxWidth={'500px'} margin='30px auto'>
+          <Text>
+            Ответы: {rightAnswers} / {questions?.length}
+          </Text>
+          <NavLink to={'/'}>
+            <Button>На главную</Button>
+          </NavLink>
         </Box>
-        <NavLink to={'/'}>
-          <Button>На главную</Button>
-        </NavLink>
       </div>
     );
   }
@@ -97,6 +130,11 @@ export const Session = () => {
       <div className='sessionWrapper'>
         <div className='session_slide'>
           <div className='session_slide-question'>
+            {/* <img
+              src='https://picsum.photos/220/190'
+              alt='default'
+              className='session_slide-question_img'
+            /> */}
             <div className='session_slide-question_text'>{currentQuestion?.text}</div>
           </div>
           <div className='session_slide-answers'>
@@ -113,12 +151,12 @@ export const Session = () => {
                 />
               ))
             )}
+
             <Button
               disabled={!selectedAnswer || areNextQuestionAnswersLoading}
-              shape='round'
               onClick={handleNext}
             >
-              next
+              Следующий вопрос
             </Button>
           </div>
         </div>
