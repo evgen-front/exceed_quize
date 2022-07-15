@@ -1,26 +1,27 @@
-import { Test } from '../../types/types';
+import React, { FC, Fragment } from 'react';
+import { Test } from 'types/types';
+import { Box, Space } from 'components';
 import { TestListItem } from '../TestListItem/TestListItem';
-import './testList.scss';
 
-export const TestsList = ({
-  tests,
-  maxHeight = '100%',
-  refetch,
-}: {
+interface TestListProps {
   tests: Test[];
   maxHeight?: string;
   refetch?: () => void;
-}) => {
+}
+
+export const TestsList: FC<TestListProps> = ({ tests, maxHeight = '100%', refetch }) => {
   return (
-    <div className='testListWrapper' style={{ maxHeight }}>
-      <h2>Мои тесты</h2>
+    <Box maxHeight={maxHeight}>
       {tests &&
         tests.map(
           (test, index) =>
             refetch && (
-              <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
+              <Fragment key={test.id}>
+                <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
+                <Space height='20px' />
+              </Fragment>
             )
         )}
-    </div>
+    </Box>
   );
 };

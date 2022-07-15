@@ -1,23 +1,23 @@
-import { Main } from '../../Layouts/MainView/Main';
-import { InfoBlock } from './modules/InfoBlock/InfoBlock';
-import { EditButton } from './modules/InfoBlock/styled';
-import { TestsList } from '../../components/TestList/TestList';
-import { Box } from '../../components';
-
-import './Profile.scss';
-import { ProfileHeader } from './modules/ProfileHeader/ProfileHeader';
-import { useEffect, useState } from 'react';
-import { TestService } from '../../services/TestService';
-import { useAtom } from 'jotai';
-import { userAtom } from '../../atoms/userAtom';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { AuthService } from '../../services/AuthService';
-import { StartedTests } from './modules/StartedTests/StartedTests';
-import { HOME } from '../../Router/routes';
+import styled from 'styled-components';
+import { useAtom } from 'jotai';
+import { Avatar, Box, Button, Card, Space, Text } from 'components';
+import { TestService } from 'services/TestService';
+import { userAtom } from 'atoms/userAtom';
+import { AuthService } from 'services/AuthService';
+import { HOME } from 'Router/routes';
+import IconExit from 'public/icons/logout-box-r-fill.svg';
+import { colors } from 'consts';
+
+const StyledImg = styled.img`
+  filter: invert(100%) sepia(3%) saturate(370%) hue-rotate(268deg) brightness(118%)
+    contrast(100%);
+`;
 
 export const Profile = () => {
   const [user, setUser] = useAtom(userAtom);
-  const [userTests, setUserTests] = useState([]);
+  const [, setUserTests] = useState([]);
   const _navigate = useNavigate();
 
   const logout = () => {
@@ -35,14 +35,49 @@ export const Profile = () => {
       });
   }, []);
   return (
-    <Main>
-      <Box padding='15px'>
-        <ProfileHeader onLogOut={logout} />
-        <InfoBlock name={user?.username} email={user?.email} />
-        <EditButton>Редактировать</EditButton>
-        <StartedTests />
-        <TestsList tests={userTests} maxHeight={'165px'} />
+    <Box
+      padding='0 20px 30px'
+      height='100%'
+      display='flex'
+      flexDirection='column'
+      justifyContent='end'
+    >
+      <Box
+        position='absolute'
+        zIndex='2'
+        top='85px'
+        left='0'
+        width='100%'
+        padding='0 20px'
+      >
+        <Card padding='50px'>
+          <Box
+            display='flex'
+            flexDirection='column'
+            justifyContent='center'
+            alignItems='center'
+          >
+            <Avatar name={user?.username} size={120} />
+            <Space height={20} />
+            <Text fontSize={20} fontWeight={700}>
+              {user?.username}
+            </Text>
+            <Space height={26} />
+            <Text fontSize={20} color={colors.GREY}>
+              {user?.email}
+            </Text>
+          </Box>
+        </Card>
+        <Space height={32} />
+        {user?.is_admin && <Button view='primary'>Права администратора</Button>}
       </Box>
-    </Main>
+      <Button view='danger' onClick={logout}>
+        <Box display='flex' alignItems='center' justifyContent='center' width='100%'>
+          <StyledImg src={IconExit} alt='icon' />
+          <Space width={6} />
+          Выйти
+        </Box>
+      </Button>
+    </Box>
   );
 };

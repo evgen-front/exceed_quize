@@ -1,5 +1,15 @@
 export const colors = {
+  WHITE: '#FFFFFF',
   PRIMARY: '#FF6B00',
+  SECONDARY: '#161616',
   DANGER: '#EF4444',
-  LIGHTGREY: '#C8CBD0',
+  GREY: '#C8CBD0',
+  SILVERSPRINGS: '#F2F3F4',
+};
+
+export const backGroundColor: { [key: string]: string } = {
+  '/signin': '#FFFFFF',
+  '/signup': '#FFFFFF',
+  '/': colors.SILVERSPRINGS,
+  '/profile': colors.SILVERSPRINGS,
 };

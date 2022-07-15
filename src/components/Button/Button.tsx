@@ -1,22 +1,22 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
+import { colors } from 'consts';
 
 const buttonColors = {
-  primary: '#FF6B00',
-  secondary: '#2C2C2C',
-  danger: '#FE522C',
-  ghost: '#BEBEBE',
+  primary: colors.PRIMARY,
+  danger: colors.DANGER,
+  ghost: colors.WHITE,
 };
 
 interface ButtonProps {
   onClick?: () => void;
   type?: 'submit';
-  view?: 'primary' | 'secondary' | 'danger' | 'ghost';
+  view?: 'primary' | 'danger' | 'ghost';
   children?: React.ReactNode;
 }
 
 interface StyledButtonProps {
-  view: 'primary' | 'secondary' | 'danger' | 'ghost';
+  view: 'primary' | 'danger' | 'ghost';
 }
 
 const StyledButton = styled.button<StyledButtonProps>`
