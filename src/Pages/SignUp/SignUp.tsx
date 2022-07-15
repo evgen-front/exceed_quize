@@ -4,6 +4,7 @@ import { Form } from 'components';
 import { SignInUp, Input } from 'types/types';
 import { AuthService } from 'services/AuthService';
 import { SINGIN } from 'Router/routes';
+import { Main } from 'Layouts/MainView/Main';
 
 const inputs: Input[] = [
   { title: 'Имя пользователя', name: 'username', type: 'text' },
@@ -37,5 +38,9 @@ export const SignUp = () => {
       });
   };
 
-  return <Form inputs={inputs} onSubmit={onSubmit} buttonText='Создать аккаунт' />;
+  return (
+    <Main>
+      <Form inputs={inputs} onSubmit={onSubmit} buttonText='Создать аккаунт' />
+    </Main>
+  );
 };

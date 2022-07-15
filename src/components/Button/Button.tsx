@@ -1,10 +1,12 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
+import { colors } from 'consts';
 
 const buttonColors = {
-  primary: '#FF6B00',
-  secondary: '#2C2C2C',
-  danger: '#EF4444',
+  primary: colors.PRIMARY,
+  danger: colors.DANGER,
+  secondary: colors.SECONDARY,
+  ghost: colors.WHITE,
 };
 
 interface ButtonProps {

@@ -5,21 +5,23 @@ import { Box } from 'components/StyledSystem';
 import { HOME, PROFILE } from '../../Router/routes';
 import { userAtom } from '../../atoms/userAtom';
 import { NavBarLink } from './modules/NavBarLink';
+import HomeIcon from 'public/icons/home-4-fill.svg';
+import UserIcon from 'public/icons/account-circle-fill.svg';
 
 const navLinks: {
   title: string;
   to: string;
-  Icon: React.ElementType<{ size: number | string }>;
+  icon: string;
 }[] = [
   {
     title: 'Home',
     to: HOME,
-    Icon: MdHome,
+    icon: HomeIcon,
   },
   {
     title: 'Profile',
     to: PROFILE,
-    Icon: MdAccountCircle,
+    icon: UserIcon,
   },
 ];
 
@@ -44,8 +46,8 @@ export const Navbar: React.FC = () => {
       height='65px'
       borderRadius=' 15px 15px 0 0'
     >
-      {navLinks.map(({ title, to, Icon }) => (
-        <NavBarLink key={title} title={title} to={to} icon={<Icon size={33} />} />
+      {navLinks.map(({ title, to, icon }) => (
+        <NavBarLink key={title} title={title} to={to} icon={icon} />
       ))}
     </Box>
   );

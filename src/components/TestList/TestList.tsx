@@ -1,6 +1,7 @@
-import { FC, memo } from 'react';
-import { TestListItem } from '../TestListItem/TestListItem';
+import { FC, memo, Fragment } from 'react';
 import { useTests } from 'hooks/useTests';
+import { Box, Space } from 'components';
+import { TestListItem } from '../TestListItem/TestListItem';
 import './testList.scss';
 
 export const MemoizedTestsList: FC = memo(function TestsList() {
@@ -16,8 +17,15 @@ export const MemoizedTestsList: FC = memo(function TestsList() {
 
   return (
     <>
-      {testList?.length &&
-        testList.map((test, index) => <TestListItem key={`test_${index}`} test={test} />)}
+      <Box>
+        {testList?.length &&
+          testList.map((test) => (
+            <Fragment key={test.id}>
+              <TestListItem test={test} />
+              <Space height='20px' />
+            </Fragment>
+          ))}
+      </Box>
     </>
   );
 });

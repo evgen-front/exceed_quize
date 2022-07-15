@@ -6,6 +6,7 @@ import { userAtom } from 'atoms/userAtom';
 import { Input, SignInUp } from 'types/types';
 import { Form } from 'components';
 import { HOME } from 'Router/routes';
+import { Main } from 'Layouts/MainView/Main';
 
 const inputs: Input[] = [
   { title: 'Имя пользователя', name: 'username', type: 'text' },
@@ -39,5 +40,9 @@ export const SignIn = () => {
       });
   };
 
-  return <Form inputs={inputs} onSubmit={onSubmit} buttonText='Войти' />;
+  return (
+    <Main>
+      <Form inputs={inputs} onSubmit={onSubmit} buttonText='Войти' />
+    </Main>
+  );
 };

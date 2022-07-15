@@ -32,6 +32,7 @@ export interface User {
   username: string;
   is_active: boolean;
   email: string;
+  is_admin: boolean;
 }
 
 export interface Question {

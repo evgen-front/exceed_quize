@@ -1,7 +1,6 @@
-import React from 'react';
 import { Router } from './Router/Router';
-import { Header, Navbar, Box } from './components';
 import './index.css';
+import 'antd/dist/antd.css';
 
 const App = () => {
   return <Router />;

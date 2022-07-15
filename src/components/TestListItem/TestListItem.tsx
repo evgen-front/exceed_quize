@@ -1,29 +1,26 @@
 import { FC, useState } from 'react';
-import { NavLink } from 'react-router-dom';
 import { TestService } from '../../services/TestService';
 import { getSessionPath, getTestEditPath } from '../../Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
-import { Test } from '../../types/types';
-import { CaretRightFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { DelModal } from 'components/TestListItem/utils/DelModal';
-import { SessionService } from 'services/SessionService';
-import './testListItem.scss';
+import { useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
+import { Test } from 'types/types';
+import { Card, Box, Text, Space, Button } from 'components';
+import { colors } from 'consts';
+import { userAtom } from 'atoms/userAtom';
+import { getQuestionAmount } from 'Pages/Home/utils';
 
 interface TestListItemProps {
   test: Test;
 }
+
 export const TestListItem: FC<TestListItemProps> = ({ test }) => {
   const queryClient = useQueryClient();
   const [isModal, setModal] = useState(false);
-
-  const mutation = useMutation('createSession', () =>
-    SessionService.getSessions(Number(test.id))
-  );
-
-  // const { data } = mutation;
-  // console.log(data);
-
-  console.log('render');
+  const [user] = useAtom(userAtom);
+  const navigate = useNavigate();
 
   const handleModal = () => {
     setModal(!isModal);
@@ -39,6 +36,8 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
     }
   );
 
+  const questionAmount = getQuestionAmount(test.questions?.length);
+
   const deleteTest = async () => {
     if (test.id) {
       await mutateAsync(test.id);
@@ -46,45 +45,38 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
     handleModal();
   };
 
-  const questionAmount = (test: Test) => {
-    if (test.questions) {
-      const amount = test.questions.length;
-      if (amount === 1) {
-        return `${amount} вопрос`;
-      }
-      if (amount === 2 || amount === 3 || amount === 4) {
-        return `${amount} вопроса`;
-      }
-      return `${amount} вопросов`;
-    }
-  };
-
   return (
     <>
-      <div className='testListItem completed'>
-        <div className='testListItem_header'>
-          <div className='testListItem_title'>{test.title}</div>
-          <div className='testListItem_buttons'>
-            <NavLink to={getSessionPath(test.id)}>
-              <CaretRightFilled />
-            </NavLink>
-            <NavLink to={getTestEditPath(test.id)}>
-              <EditOutlined />
-            </NavLink>
-            <DeleteOutlined onClick={handleModal} />
-            <button
-              onClick={() => {
-                mutation.mutateAsync();
-              }}
-            >
-              нажми
-            </button>
-          </div>
-        </div>
-        <div className='testListItem_bottom'>
-          <div className='testListItem_progress'>{questionAmount(test)}</div>
-        </div>
-      </div>
+      <Card>
+        <Box
+          display='flex'
+          justifyContent={user?.is_admin ? 'space-between' : ''}
+          alignItems='center'
+        >
+          <Text fontSize='20px' fontWeight={700}>
+            {test.title}
+          </Text>
+          {user?.is_admin && (
+            <Box display='flex'>
+              <RiPencilFill
+                color={colors.GREY}
+                size={20}
+                onClick={() => navigate(getTestEditPath(test.id))}
+              />
+              <Space width={17} />
+              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={deleteTest} />
+            </Box>
+          )}
+        </Box>
+        <Space height={12} />
+        <Text fontSize={16} fontWeight={600} color={colors.GREY}>
+          {questionAmount}
+        </Text>
+        <Space height={32} />
+        <Button view='primary' onClick={() => navigate(getSessionPath(test.id))}>
+          Начать
+        </Button>
+      </Card>
 
       <DelModal
         isVisible={isModal}

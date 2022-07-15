@@ -1,23 +1,11 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
-import { Box } from '../../../../components';
+import { colors } from 'consts';
+import { Box } from 'components';
 import { RiAddFill } from 'react-icons/ri';
 
-const StyledIcon = styled(RiAddFill)`
-  color: #ffffff;
-  height: 60%;
-  width: 60%;
-`;
-
-interface AddButtonProps {
-  handler: () => void;
-}
-
-export const AddButton: FC<AddButtonProps> = ({ handler }) => (
+export const AddButton: FC = () => (
   <Box
-    onClick={handler}
-    style={{ cursor: 'pointer' }}
-    bg='#161616'
+    bg={colors.SECONDARY}
     height='60px'
     width='60px'
     borderRadius='15px'
@@ -26,6 +14,6 @@ export const AddButton: FC<AddButtonProps> = ({ handler }) => (
     justifyContent='center'
     alignItems='center'
   >
-    <StyledIcon />
+    <RiAddFill color={colors.WHITE} size={35} />
   </Box>
 );
