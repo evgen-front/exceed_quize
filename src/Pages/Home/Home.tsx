@@ -1,7 +1,7 @@
 import { AddButton } from './modules/AddButton';
 import { FC, useState } from 'react';
 import { Box, Text } from '../../components';
-import { TestsList } from '../../components/TestList/TestList';
+import { MemoizedTestsList } from '../../components/TestList/TestList';
 import { Main } from '../../Layouts/MainView/Main';
 import './Home.scss';
 
@@ -55,7 +55,7 @@ export const Home: FC = () => {
         </Text>
 
         <div className='testListWrapper' style={{ maxHeight: '100%' }}>
-          <TestsList />
+          <MemoizedTestsList />
         </div>
       </Box>
 

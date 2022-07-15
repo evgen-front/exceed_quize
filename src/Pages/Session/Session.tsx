@@ -1,9 +1,10 @@
 import { Button } from 'antd';
+import { Box } from 'components';
 import { useAnswers } from 'hooks/useAnswers';
 import { TestView } from 'Layouts/MainView/TestView';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { SessionService } from 'services/SessionService';
 import { AnswerResponse, QuestionResponse } from 'types/types';
 import { AnswerItem } from './modules/AnswerItem/AnwerItem';
@@ -18,9 +19,9 @@ export const Session = () => {
   const [rightAnswers, setRightAnsers] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  const { answers, refetch } = useAnswers(questions[questionCount]?.id);
+  const { answers, refetch, isRefetching } = useAnswers(questions[questionCount]?.id);
 
-  const mutation = useMutation(
+  const { isLoading, mutateAsync: createSessionAsync } = useMutation(
     'createSession',
     () => SessionService.createSession(Number(id)),
     {
@@ -31,18 +32,17 @@ export const Session = () => {
     }
   );
 
-  const userAnswer = useMutation('createUserAnswer', () =>
+  const { mutateAsync: createUserAnswerAsync } = useMutation('createUserAnswer', () =>
     SessionService.createUserAnswer(sessionId!, { answer_id: selectedAnswer?.id })
   );
-  const { isLoading } = mutation;
 
   useEffect(() => {
-    mutation.mutateAsync();
+    createSessionAsync();
   }, []);
 
   const handleNext = () => {
     if (questions) {
-      userAnswer.mutateAsync();
+      createUserAnswerAsync();
 
       if (selectedAnswer?.is_true) {
         setRightAnsers(rightAnswers + 1);
@@ -59,14 +59,19 @@ export const Session = () => {
     }
   };
 
-  if (isLoading) {
-    return <div>Loading</div>;
+  if (isLoading || isRefetching) {
+    return <div>Загрузка</div>;
   }
 
   if (isComplete) {
     return (
       <div>
-        ответы: {rightAnswers} / {questions?.length}
+        <Box>
+          Ответы: {rightAnswers} / {questions?.length}
+        </Box>
+        <NavLink to={'/'}>
+          <Button>На главную</Button>
+        </NavLink>
       </div>
     );
   }

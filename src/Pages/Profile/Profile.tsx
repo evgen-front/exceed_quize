@@ -1,7 +1,7 @@
 import { Main } from '../../Layouts/MainView/Main';
 import { InfoBlock } from './modules/InfoBlock/InfoBlock';
 import { EditButton } from './modules/InfoBlock/styled';
-import { TestsList } from '../../components/TestList/TestList';
+// import { TestsList } from '../../components/TestList/TestList';
 import { Box } from '../../components';
 
 import './Profile.scss';
@@ -12,7 +12,7 @@ import { useAtom } from 'jotai';
 import { userAtom } from '../../atoms/userAtom';
 import { useNavigate } from 'react-router-dom';
 import { AuthService } from '../../services/AuthService';
-import { StartedTests } from './modules/StartedTests/StartedTests';
+// import { StartedTests } from './modules/StartedTests/StartedTests';
 import { HOME } from '../../Router/routes';
 
 export const Profile = () => {

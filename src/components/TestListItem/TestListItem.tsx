@@ -5,15 +5,14 @@ import { getSessionPath, getTestEditPath } from '../../Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
 import { Test } from '../../types/types';
 import { CaretRightFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import './testListItem.scss';
 import { DelModal } from 'components/TestListItem/utils/DelModal';
 import { SessionService } from 'services/SessionService';
+import './testListItem.scss';
+
 interface TestListItemProps {
   test: Test;
-  refetch: () => void;
 }
-
-export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
+export const TestListItem: FC<TestListItemProps> = ({ test }) => {
   const queryClient = useQueryClient();
   const [isModal, setModal] = useState(false);
 
@@ -21,9 +20,10 @@ export const TestListItem: FC<TestListItemProps> = ({ test, refetch }) => {
     SessionService.getSessions(Number(test.id))
   );
 
-  const { data } = mutation;
+  // const { data } = mutation;
+  // console.log(data);
 
-  console.log(data);
+  console.log('render');
 
   const handleModal = () => {
     setModal(!isModal);

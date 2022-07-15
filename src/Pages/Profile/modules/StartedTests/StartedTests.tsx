@@ -1,5 +1,5 @@
 import { EmptyStartedTests } from '../../../../components/EmptyStartedTests/EmptyStartedTests';
-import { TestsList } from '../../../../components/TestList/TestList';
+// import { TestsList } from '../../../../components/TestList/TestList';
 import { Test } from '../../../../types/types';
 
 export const StartedTests = ({ tests }: { tests?: Test[] | [] }) => {

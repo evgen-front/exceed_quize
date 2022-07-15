@@ -1,14 +1,13 @@
-import { FC } from 'react';
+import { FC, memo } from 'react';
 import { TestListItem } from '../TestListItem/TestListItem';
 import { useTests } from 'hooks/useTests';
-import { Spin } from 'antd';
 import './testList.scss';
 
-export const TestsList: FC = () => {
-  const { isLoading, isError, testList, refetch } = useTests();
+export const MemoizedTestsList: FC = memo(function TestsList() {
+  const { isLoading, isError, testList } = useTests();
 
   if (isLoading) {
-    return <Spin />;
+    return <div>Загрузка</div>;
   }
 
   if (isError) {
@@ -18,9 +17,7 @@ export const TestsList: FC = () => {
   return (
     <>
       {testList?.length &&
-        testList.map((test, index) => (
-          <TestListItem refetch={refetch} key={`test_${index}`} test={test} />
-        ))}
+        testList.map((test, index) => <TestListItem key={`test_${index}`} test={test} />)}
     </>
   );
-};
+});
