@@ -8,9 +8,9 @@ import {
 import { Button, Input, Modal } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { useForm, Validations } from '../../../hooks/useForm';
-import { QuestionService } from '../../../services/QuestionService'; // !!! how can I to reduce a pass?
-import { Question, QuestionResponse } from '../../../types/types';
+import { useForm, Validations } from 'hooks/useForm';
+import { QuestionService } from 'api/services/QuestionService'; // !!! how can I to reduce a pass?
+import { Question, QuestionResponse } from 'types';
 import { AddAnswer } from '../AddAnswer/AddAnswer';
 import { UploadImage } from '../UploadImage/UploadImage';
 import './AddQuestion.scss';

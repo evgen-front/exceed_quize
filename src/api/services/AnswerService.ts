@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { $api } from '../api/api';
-import { Answer, AnswerResponse } from '../types/types';
+import { $api } from 'api';
+import { Answer, AnswerResponse } from 'types';
 
 export class AnswerService {
   static async getAnswer(

@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { TestService } from 'services/TestService';
-import { TestResponse } from 'types/types';
+import { TestService } from 'api/services/TestService';
+import { TestResponse } from 'types';
 
 export const useTests = () => {
   const {

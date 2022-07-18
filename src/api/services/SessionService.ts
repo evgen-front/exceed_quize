@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { UserAnswer } from 'types/types';
-import { $api } from '../api/api';
+import { $api } from 'api';
+import { UserAnswer } from 'types';
 
 export class SessionService {
   static async createSession(test_id: number): Promise<AxiosResponse> {

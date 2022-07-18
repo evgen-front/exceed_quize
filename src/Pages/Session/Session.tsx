@@ -1,11 +1,11 @@
 import { Box, Button, Text } from 'components';
 import { TestView } from 'Layouts/MainView/TestView';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { NavLink, useParams } from 'react-router-dom';
-import { AnswerService } from 'services/AnswerService';
-import { SessionService } from 'services/SessionService';
-import { AnswerResponse } from 'types/types';
+import { AnswerService } from 'api/services/AnswerService';
+import { SessionService } from 'api/services/SessionService';
+import { AnswerResponse } from 'types';
 import { AnswerItem } from './modules/AnswerItem/AnwerItem';
 import './Session.scss';
 
@@ -88,23 +88,6 @@ export const Session = () => {
       };
     });
   };
-
-  // useEffect(() => {
-  // if (selectedAnswer) {
-  //   createUserAnswerAsync(selectedAnswer?.id);
-  // }
-  // if (selectedAnswer?.is_true) {
-  //   setRightAnsers(rightAnswers + 1);
-  // }
-  // if (questionCount + 1 !== questions.length) {
-  //   setQuestionCount(questionCount + 1);
-  //   setTimeout(() => {
-  //     refetch();
-  //   }, 0);
-  // } else {
-  //   setIsComplete(true);
-  // }
-  // }, [currentQuestion]);
 
   if (isSessionDataLoading) {
     return <div>Загрузка</div>;

@@ -1,5 +1,5 @@
 import { CheckOutlined } from '@ant-design/icons';
-import { AnswerResponse } from 'types/types';
+import { AnswerResponse } from 'types';
 import './AnswerItem.scss';
 
 export interface AnswerItemProps {

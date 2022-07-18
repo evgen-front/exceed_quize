@@ -2,7 +2,6 @@ import { FC, memo, Fragment } from 'react';
 import { useTests } from 'hooks/useTests';
 import { Box, Space } from 'components';
 import { TestListItem } from '../TestListItem/TestListItem';
-import './testList.scss';
 
 export const MemoizedTestsList: FC = memo(function TestsList() {
   const { isLoading, isError, testList } = useTests();

@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { $api } from '../api/api';
-import { Test, TestResponse } from '../types/types';
+import { $api } from 'api';
+import { Test, TestResponse } from 'types';
 
 export class TestService {
   static async getUserTests(): Promise<AxiosResponse> {

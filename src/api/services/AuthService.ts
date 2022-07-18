@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { $api } from '../api/api';
-import { SignInUp } from '../types/types';
+import { $api } from 'api';
+import { SignInUp } from 'types';
 
 export class AuthService {
   static async signin(data: SignInUp): Promise<AxiosResponse> {

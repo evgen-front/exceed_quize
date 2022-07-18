@@ -1,12 +1,12 @@
 import { FC, useState } from 'react';
-import { TestService } from '../../services/TestService';
+import { TestService } from '../../api/services/TestService';
 import { getSessionPath, getTestEditPath } from '../../Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
 import { DelModal } from 'components/TestListItem/utils/DelModal';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
-import { Test } from 'types/types';
+import { Test } from 'types';
 import { Card, Box, Text, Space, Button } from 'components';
 import { colors } from 'consts';
 import { userAtom } from 'atoms/userAtom';
@@ -56,17 +56,18 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {user?.is_admin && (
-            <Box display='flex'>
-              <RiPencilFill
-                color={colors.GREY}
-                size={20}
-                onClick={() => navigate(getTestEditPath(test.id))}
-              />
-              <Space width={17} />
-              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
-            </Box>
-          )}
+          {user?.is_admin ||
+            (true && (
+              <Box display='flex'>
+                <RiPencilFill
+                  color={colors.GREY}
+                  size={20}
+                  onClick={() => navigate(getTestEditPath(test.id))}
+                />
+                <Space width={17} />
+                <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
+              </Box>
+            ))}
         </Box>
         <Space height={12} />
         <Text fontSize={16} fontWeight={600} color={colors.GREY}>

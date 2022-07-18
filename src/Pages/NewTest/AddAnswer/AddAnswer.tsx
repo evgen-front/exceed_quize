@@ -2,9 +2,9 @@ import { DeleteTwoTone, EditTwoTone, PlusOutlined } from '@ant-design/icons';
 import { Button, Checkbox } from 'antd';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useEffect, useState } from 'react';
-import { useForm, Validations } from '../../../hooks/useForm';
-import { AnswerService } from '../../../services/AnswerService'; //!!!
-import { Answer } from '../../../types/types'; //!!!
+import { useForm, Validations } from 'hooks/useForm';
+import { AnswerService } from 'api/services/AnswerService';
+import { Answer } from 'types';
 import './AddAnswer.scss';
 import { EditBlock } from './EditBlock/EditBlock';
 

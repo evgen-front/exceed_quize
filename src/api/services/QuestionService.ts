@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { $api } from '../api/api';
-import { Question, QuestionResponse } from '../types/types';
+import { $api } from 'api';
+import { Question, QuestionResponse } from 'types';
 
 export class QuestionService {
   static async getQuestions(
