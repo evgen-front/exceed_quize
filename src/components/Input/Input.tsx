@@ -53,13 +53,11 @@ export const Input: FC<InputProps> = ({
           </Box>
         )}
       </InputWrapper>
-      {isError && (
-        <ErrorWrapper>
-          {isError && (
-            <ErrorMessage color={colors.DANGER}>{errorMessage as string}</ErrorMessage>
-          )}
-        </ErrorWrapper>
-      )}
+      <ErrorWrapper>
+        {isError && (
+          <ErrorMessage color={colors.DANGER}>{errorMessage as string}</ErrorMessage>
+        )}
+      </ErrorWrapper>
     </Box>
   );
 };
