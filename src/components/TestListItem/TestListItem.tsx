@@ -1,4 +1,4 @@
-import { FC, useState } from 'react';
+import { FC, memo, useState } from 'react';
 import { TestService } from '../../api/services/TestService';
 import { getSessionPath, getTestEditPath } from '../../Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
@@ -6,17 +6,18 @@ import { DelModal } from 'components/TestListItem/utils/DelModal';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
-import { Test } from 'types';
+import { Test, TestResponse } from 'types';
 import { Card, Box, Text, Space, Button } from 'components';
 import { colors } from 'consts';
 import { userAtom } from 'atoms/userAtom';
 import { getQuestionAmount } from 'Pages/Home/utils';
 
 interface TestListItemProps {
-  test: Test;
+  test: TestResponse;
+  openDrawer: (data: TestResponse) => void;
 }
 
-export const TestListItem: FC<TestListItemProps> = ({ test }) => {
+export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) => {
   const queryClient = useQueryClient();
   const [isModal, setModal] = useState(false);
   const [user] = useAtom(userAtom);
@@ -50,7 +51,7 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
       <Card>
         <Box
           display='flex'
-          justifyContent={user?.is_admin ? 'space-between' : ''}
+          justifyContent={user?.is_admin || true ? 'space-between' : ''}
           alignItems='center'
         >
           <Text fontSize='20px' fontWeight={700}>
@@ -62,7 +63,8 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
                 <RiPencilFill
                   color={colors.GREY}
                   size={20}
-                  onClick={() => navigate(getTestEditPath(test.id))}
+                  // onClick={() => navigate(getTestEditPath(test.id))}
+                  onClick={() => openDrawer(test)}
                 />
                 <Space width={17} />
                 <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
@@ -87,4 +89,4 @@ export const TestListItem: FC<TestListItemProps> = ({ test }) => {
       />
     </>
   );
-};
+});
