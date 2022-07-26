@@ -11,7 +11,7 @@ import { colors } from 'consts';
 import { userAtom } from 'atoms/userAtom';
 import { getQuestionAmount } from 'Pages/Home/utils';
 import { useBoolean } from 'hooks/useBoolean';
-import { AtentionModal } from 'components/TestListItem/utils/AtentionModal';
+import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 
 interface TestListItemProps {
   test: TestResponse;

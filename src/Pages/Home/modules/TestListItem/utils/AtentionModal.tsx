@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import Modal from '../../Modal/Modal';
+import { Modal } from 'components';
 import { Button } from 'components/Button';
 import attention from 'public/icons/information-fill.svg';
 import { ModalContent, ModalControls } from 'components/Modal/styles';

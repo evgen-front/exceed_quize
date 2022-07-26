@@ -8,7 +8,7 @@ import IconExit from 'public/icons/logout-box-r-fill.svg';
 import { colors } from 'consts';
 import { Main } from 'Layouts/MainView/Main';
 import { useBoolean } from 'hooks/useBoolean';
-import { AtentionModal } from 'components/TestListItem/utils/AtentionModal';
+import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 import { StyledImg } from './styled';
 
 export const Profile = () => {
