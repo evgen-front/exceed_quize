@@ -1,8 +1,13 @@
 import React, { FC, useState } from 'react';
-import { Box } from 'components';
+import { Box, Space } from 'components';
 import { colors } from 'consts';
 import EyeIcon from 'public/icons/eye-fill.svg';
 import EyeCloseIcon from 'public/icons/eye-off-fill.svg';
+import {
+  RiCheckboxBlankCircleLine,
+  RiCheckboxCircleLine,
+  RiCloseFill,
+} from 'react-icons/ri';
 import { InputWrapper, StyledInput, Icon, ErrorWrapper, ErrorMessage } from './styled';
 import { InputProps } from './types';
 
@@ -12,7 +17,11 @@ export const Input: FC<InputProps> = ({
   placeholder = '',
   value,
   onChange,
+  onDelete,
+  onCheck,
+  isRight,
   errorMessage,
+  withAnswerControls,
 }) => {
   const [shouldDisplayPassword, setShouldDisplayPassword] = useState<boolean>(false);
   const [isBorderLighted, setIsBorderLighted] = useState<boolean>(false);
@@ -50,6 +59,21 @@ export const Input: FC<InputProps> = ({
         {isPassword && (
           <Box width='22px' ml='10px' color={colors.GREY} onClick={handleDisplayPassword}>
             <Icon src={shouldDisplayPassword ? EyeIcon : EyeCloseIcon} alt='icon' />
+          </Box>
+        )}
+        {withAnswerControls && (
+          <Box display='flex' alignItems='center'>
+            <Box onClick={onCheck} display='flex'>
+              {isRight ? (
+                <RiCheckboxCircleLine color={colors.GREEN} size={20} />
+              ) : (
+                <RiCheckboxBlankCircleLine color={colors.GREY} size={20} />
+              )}
+            </Box>
+            <Space width={13} />
+            <RiCloseFill color={colors.GREY} size={20} onClick={onDelete}>
+              x
+            </RiCloseFill>
           </Box>
         )}
       </InputWrapper>

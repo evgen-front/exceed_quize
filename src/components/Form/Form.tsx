@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Formik, Form as FormikForm } from 'formik';
 import styled from 'styled-components';
 import { SINGIN, SIGNUP } from 'Router/routes';
-import { Box, Input, Button, Text, Space } from 'components';
+import { Box, Input, Button, Text, Space, Switch } from 'components';
 import { colors } from 'consts';
 import { validateInputs } from './validator';
 

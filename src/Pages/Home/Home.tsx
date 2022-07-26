@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TestsList } from 'components/TestList/TestList';
+import { TestsList } from './modules';
 import { Main } from 'Layouts/MainView/Main';
 import { Box, Space } from 'components';
 

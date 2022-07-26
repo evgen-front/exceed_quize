@@ -15,7 +15,6 @@ export const Profile = () => {
   const [isExitModalOpen, { setTrue: openExitModal, setFalse: closeExitModal }] =
     useBoolean();
   const [user, setUser] = useAtom(userAtom);
-
   const _navigate = useNavigate();
 
   const logout = () => {

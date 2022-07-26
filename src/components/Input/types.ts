@@ -5,7 +5,11 @@ export interface InputProps {
   type?: 'password' | 'text' | 'email';
   placeholder?: string;
   value: string;
+  withAnswerControls?: boolean;
   onChange: (event: any) => void;
+  onCheck?: () => void;
+  onDelete?: () => void;
+  isRight?: boolean;
   errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[] | undefined;
 }
 

@@ -4,6 +4,7 @@ export const colors = {
   SECONDARY: '#161616',
   DANGER: '#EF4444',
   GREY: '#C8CBD0',
+  GREEN: '#10B981',
   SILVERSPRINGS: '#F2F3F4',
 };
 

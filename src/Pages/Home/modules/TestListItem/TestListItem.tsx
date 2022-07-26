@@ -1,9 +1,8 @@
 import { FC, memo, useMemo } from 'react';
-import { TestService } from '../../api/services/TestService';
-import { getSessionPath, getTestEditPath } from '../../Router/routes';
+import { getSessionPath } from 'Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
-import { AtentionModal } from 'components/TestListItem/utils/AtentionModal';
 import { useNavigate } from 'react-router-dom';
+import { TestService } from 'api/services/TestService';
 import { useAtom } from 'jotai';
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
 import { TestResponse } from 'types';
@@ -12,6 +11,7 @@ import { colors } from 'consts';
 import { userAtom } from 'atoms/userAtom';
 import { getQuestionAmount } from 'Pages/Home/utils';
 import { useBoolean } from 'hooks/useBoolean';
+import { AtentionModal } from 'components/TestListItem/utils/AtentionModal';
 
 interface TestListItemProps {
   test: TestResponse;
@@ -48,32 +48,26 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
       <Card>
         <Box
           display='flex'
-          justifyContent={user?.is_admin || true ? 'space-between' : ''}
+          justifyContent={user?.is_admin ? 'space-between' : ''}
           alignItems='center'
         >
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {user?.is_admin ||
-            (true && (
-              <Box display='flex'>
-                <RiPencilFill
-                  color={colors.GREY}
-                  size={20}
-                  // onClick={() => navigate(getTestEditPath(test.id))}
-                  onClick={() => openDrawer(test)}
-                />
-                <Space width={17} />
-                <RiDeleteBin6Fill
-                  color={colors.GREY}
-                  size={20}
-                  onClick={openDeleteModal}
-                />
-              </Box>
-            ))}
+          {user?.is_admin && (
+            <Box display='flex'>
+              <RiPencilFill
+                color={colors.GREY}
+                size={20}
+                onClick={() => openDrawer(test)}
+              />
+              <Space width={17} />
+              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={openDeleteModal} />
+            </Box>
+          )}
         </Box>
         <Space height={12} />
-        <Text fontSize={16} fontWeight={600} color={colors.GREY}>
+        <Text fontSize={16} fontWeight={600} color={colors.GREY} letterSpacing='0.025em'>
           {questionAmount}
         </Text>
         <Space height={32} />

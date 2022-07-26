@@ -9,7 +9,7 @@ export const useTests = () => {
     isLoading,
     refetch,
   } = useQuery('testList', TestService.getAllTests, {
-    select: ({ data }): TestResponse[] => data.sort((a, b) => a.id - b.id),
+    select: ({ data }) => data.sort((a, b) => a.id - b.id),
   });
 
   return { testList, isError, refetch, isLoading };

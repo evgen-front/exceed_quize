@@ -29,10 +29,7 @@ export const NewTest = () => {
     setTestEditFlag(true);
   };
 
-  const handleTestPublic = (e: CheckboxChangeEvent) => {
-    setTestPublished(e.target.checked);
-  };
-
+  const handleTestPublic = () => setTestPublished(!testPublished);
   const createNewTest = () => {
     const newTest: Test = {
       title: formState.testName,

@@ -10,7 +10,7 @@ interface ModalProps {
 const modalElement = document.querySelector('#modal') as HTMLElement;
 const body = document.querySelector('body') as HTMLElement;
 
-const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
+export const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
   const [isClose, setIsClose] = useState(true);
 
   useEffect(() => {
@@ -35,5 +35,3 @@ const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
     modalElement
   );
 };
-
-export default Modal;

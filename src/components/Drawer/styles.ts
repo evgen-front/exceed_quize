@@ -63,6 +63,8 @@ export const DrawerContent = styled.div`
   line-height: 28px;
   margin-bottom: 30px;
   align-items: flex-start;
+  width: 100%;
+  overflow: auto;
 `;
 
 export const DrawerControls = styled.div`
