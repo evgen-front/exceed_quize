@@ -17,7 +17,7 @@ export interface TestResponse {
   id: number;
   modified_at: null | Date;
   published: boolean;
-  questions?: Question[];
+  questions: Question[];
   title: string;
 }
 
@@ -40,6 +40,8 @@ export interface Question {
   id?: number;
   text?: string;
   ordering?: number;
+  is_true?: boolean;
+  answers?: { id: number; text: string; is_true: boolean; image: string | null }[];
 }
 
 export interface QuestionResponse {

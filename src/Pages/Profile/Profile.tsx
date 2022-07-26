@@ -10,6 +10,7 @@ import { HOME } from 'Router/routes';
 import IconExit from 'public/icons/logout-box-r-fill.svg';
 import { colors } from 'consts';
 import { Main } from 'Layouts/MainView/Main';
+import { DelModal } from 'Pages/Home/modules/TestListItem/utils/DelModal';
 
 const StyledImg = styled.img`
   filter: invert(100%) sepia(3%) saturate(370%) hue-rotate(268deg) brightness(118%)
@@ -18,8 +19,12 @@ const StyledImg = styled.img`
 
 export const Profile = () => {
   const [user, setUser] = useAtom(userAtom);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [, setUserTests] = useState([]);
   const _navigate = useNavigate();
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
 
   const logout = () => {
     AuthService.logout();
@@ -73,7 +78,7 @@ export const Profile = () => {
           <Space height={32} />
           {user?.is_admin && <Button view='primary'>Права администратора</Button>}
         </Box>
-        <Button view='danger' onClick={logout}>
+        <Button view='danger' onClick={openModal}>
           <Box display='flex' alignItems='center' justifyContent='center' width='100%'>
             <StyledImg src={IconExit} alt='icon' />
             <Space width={6} />
@@ -81,6 +86,13 @@ export const Profile = () => {
           </Box>
         </Button>
       </Box>
+      <DelModal
+        isVisible={isModalOpen}
+        content={<Text>Вы уверены что хотите выйти?</Text>}
+        onClose={closeModal}
+        onSubmit={logout}
+        confirmText='Выйти'
+      />
     </Main>
   );
 };

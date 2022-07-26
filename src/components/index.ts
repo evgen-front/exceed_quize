@@ -6,3 +6,7 @@ export * from './Input';
 export * from './Button';
 export * from './Form';
 export * from './Card';
+export * from './Modal';
+export * from './Switch';
+export * from './Drawer';
+export * from './QuestionImage';

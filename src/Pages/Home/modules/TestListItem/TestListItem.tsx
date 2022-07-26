@@ -1,9 +1,9 @@
 import { FC, memo, useState } from 'react';
-import { TestService } from '../../api/services/TestService';
-import { getSessionPath, getTestEditPath } from '../../Router/routes';
+import { getSessionPath, getTestEditPath } from 'Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
-import { DelModal } from 'components/TestListItem/utils/DelModal';
+import { DelModal } from './utils/DelModal';
 import { useNavigate } from 'react-router-dom';
+import { TestService } from 'api/services/TestService';
 import { useAtom } from 'jotai';
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
 import { Test, TestResponse } from 'types';
@@ -51,28 +51,26 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
       <Card>
         <Box
           display='flex'
-          justifyContent={user?.is_admin || true ? 'space-between' : ''}
+          justifyContent={user?.is_admin ? 'space-between' : ''}
           alignItems='center'
         >
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {user?.is_admin ||
-            (true && (
-              <Box display='flex'>
-                <RiPencilFill
-                  color={colors.GREY}
-                  size={20}
-                  // onClick={() => navigate(getTestEditPath(test.id))}
-                  onClick={() => openDrawer(test)}
-                />
-                <Space width={17} />
-                <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
-              </Box>
-            ))}
+          {user?.is_admin && (
+            <Box display='flex'>
+              <RiPencilFill
+                color={colors.GREY}
+                size={20}
+                onClick={() => openDrawer(test)}
+              />
+              <Space width={17} />
+              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
+            </Box>
+          )}
         </Box>
         <Space height={12} />
-        <Text fontSize={16} fontWeight={600} color={colors.GREY}>
+        <Text fontSize={16} fontWeight={600} color={colors.GREY} letterSpacing='0.025em'>
           {questionAmount}
         </Text>
         <Space height={32} />
@@ -86,6 +84,7 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
         content={<p>Вы уверены, что хотите удалить тест?</p>}
         onSubmit={deleteTest}
         onClose={handleModal}
+        confirmText='Удалить'
       />
     </>
   );
