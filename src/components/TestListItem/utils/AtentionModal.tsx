@@ -1,4 +1,4 @@
-import { FC, ReactNode } from 'react';
+import { FC } from 'react';
 import Modal from '../../Modal/Modal';
 import { Button } from 'components/Button';
 import attention from 'public/icons/information-fill.svg';
@@ -6,29 +6,31 @@ import { ModalContent, ModalControls } from 'components/Modal/styles';
 
 interface ModalProps {
   isVisible: boolean;
-  content: ReactNode;
+  text: string;
   onClose: () => void;
   onSubmit: () => void;
+  submitText: string;
 }
 
-export const DelModal: FC<ModalProps> = ({
-  isVisible = false,
-  content,
+export const AtentionModal: FC<ModalProps> = ({
+  isVisible,
+  text,
   onClose,
   onSubmit,
+  submitText,
 }: ModalProps) => {
   return (
     <Modal open={isVisible} onClose={onClose}>
       <ModalContent>
         <img src={attention} alt='attention' />
-        {content}
+        <p>{text}</p>
       </ModalContent>
       <ModalControls>
         <Button view='ghostdanger' onClick={onClose}>
           Отмена
         </Button>
         <Button view='danger' onClick={onSubmit}>
-          Удалить
+          {submitText}
         </Button>
       </ModalControls>
     </Modal>

@@ -1,4 +1,4 @@
-import { FC, ReactNode, useCallback, useEffect, useState } from 'react';
+import { FC, ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DrawerModel, DrawerContainer } from './styles';
 
@@ -14,7 +14,7 @@ export const Drawer: FC<DrawerProps> = ({ open, onClose, children }) => {
   const [isClose, setIsClose] = useState(true);
   const [firstInit, setFirstInit] = useState(true);
 
-  const freezeBody = useCallback(() => {
+  useEffect(() => {
     if (open) {
       setIsClose(false);
       body.style.touchAction = 'none';
@@ -25,14 +25,10 @@ export const Drawer: FC<DrawerProps> = ({ open, onClose, children }) => {
         setIsClose(true);
       }, 300);
     }
-  }, [open]);
-
-  useEffect(() => {
-    freezeBody();
     if (firstInit && !isClose) {
       setFirstInit(false);
     }
-  }, [isClose, firstInit, freezeBody]);
+  }, [open, isClose, firstInit]);
 
   if (isClose && firstInit) return null;
 

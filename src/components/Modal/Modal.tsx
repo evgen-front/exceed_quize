@@ -13,7 +13,7 @@ const body = document.querySelector('body') as HTMLElement;
 const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
   const [isClose, setIsClose] = useState(true);
 
-  const freezeBody = () => {
+  useEffect(() => {
     if (open) {
       setIsClose(false);
       body.style.touchAction = 'none';
@@ -24,10 +24,6 @@ const Modal: FC<ModalProps> = ({ open, onClose, children }) => {
         setIsClose(true);
       }, 300);
     }
-  };
-
-  useEffect(() => {
-    freezeBody();
   }, [open]);
 
   if (isClose) return null;

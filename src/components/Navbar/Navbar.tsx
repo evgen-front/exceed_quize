@@ -1,6 +1,5 @@
 import React from 'react';
 import { useAtom } from 'jotai';
-import { MdAccountCircle, MdHome } from 'react-icons/md';
 import { Box } from 'components/StyledSystem';
 import { HOME, PROFILE } from '../../Router/routes';
 import { userAtom } from '../../atoms/userAtom';

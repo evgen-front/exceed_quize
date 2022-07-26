@@ -4,3 +4,4 @@ export * from './NewTest';
 export * from './Profile';
 export * from './SignUp';
 export * from './Session';
+export * from './CompletedTest';

@@ -50,8 +50,6 @@ export const CreateDrawer: FC<ModalProps> = ({
     });
   }, [data]);
 
-  console.log(currentTest);
-
   return (
     <Drawer open={isVisible} onClose={onClose}>
       <DrawerHeader>

@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { Button, Modal as AntdModal } from 'antd';
+import { Modal as AntdModal } from 'antd';
 
 interface StyledModalProps {
   visible: boolean;
@@ -51,3 +51,8 @@ export const StyledModal: FC<StyledModalProps> = ({
     {children}
   </Modal>
 );
+
+export const StyledImg = styled.img`
+  filter: invert(100%) sepia(3%) saturate(370%) hue-rotate(268deg) brightness(118%)
+    contrast(100%);
+`;

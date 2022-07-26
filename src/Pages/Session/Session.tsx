@@ -1,12 +1,14 @@
-import { Box, Button, Text } from 'components';
-import { TestView } from 'Layouts/MainView/TestView';
 import { useState } from 'react';
+import { Box, Button } from 'components';
+import { useParams } from 'react-router-dom';
+import { TestView } from 'Layouts/MainView/TestView';
 import { useMutation, useQuery } from 'react-query';
-import { NavLink, useParams } from 'react-router-dom';
 import { AnswerService } from 'api/services/AnswerService';
 import { SessionService } from 'api/services/SessionService';
-import { AnswerResponse } from 'types';
+import { QuestionService } from 'api/services/QuestionService';
 import { AnswerItem } from './modules/AnswerItem/AnwerItem';
+import { AnswerResponse, QuestionResponse } from 'types';
+import { Navigate } from 'react-router-dom';
 import './Session.scss';
 
 type SessionPageParams = {
@@ -20,6 +22,18 @@ const useQuestionAnswers = (questionId?: number) => {
   });
 };
 
+const useQuestionImage = (test_id: number, questionId?: number) => {
+  return useQuery(
+    ['QuestionImage', questionId],
+    () => QuestionService.getImage(test_id, questionId!),
+    {
+      select: ({ data }): any => data,
+      enabled: !!questionId,
+      retry: 0,
+    }
+  );
+};
+
 export const Session = () => {
   const { testId } = useParams<SessionPageParams>() as SessionPageParams;
   const [selectedAnswer, setSelectedAnswer] = useState<null | AnswerResponse>(null);
@@ -28,13 +42,14 @@ export const Session = () => {
 
   const { isLoading: isSessionDataLoading, data: sessionData } = useQuery(
     'createSession',
-    () => SessionService.createSession(+testId),
+    () => SessionService.createSession(Number(testId)),
     {
-      select: ({ data }: any) => {
+      select: ({ data }) => {
+        const sortedQuestions = data.questions.sort((a, b) => b.ordering - a.ordering);
         const result: {
-          questions: any[];
+          questions: QuestionResponse[];
           sessionId: number;
-        } = { questions: data.questions || [], sessionId: data.id };
+        } = { questions: sortedQuestions || [], sessionId: data.id };
 
         return result;
       },
@@ -43,19 +58,24 @@ export const Session = () => {
   );
 
   const { questions, sessionId } = sessionData || { questions: [] };
-  const [questionState, setQuestionState] = useState({
+  const [questionIndexState, setQuestionIndexState] = useState({
     currentQuestionIndex: 0,
     nextQuestionIndex: 1,
   });
 
-  const currentQuestion = questions[questionState.currentQuestionIndex];
-  const nextQuestion = questions[questionState.nextQuestionIndex];
+  const currentQuestion = questions[questionIndexState.currentQuestionIndex];
+  const nextQuestion = questions[questionIndexState.nextQuestionIndex];
 
-  const { data: currentQuestionAnswers, isLoading: areCurrentQuestionAnswersLoading } =
+  const { data: currentQuestionAnswers, isLoading: isCurrentQuestionAnswersLoading } =
     useQuestionAnswers(currentQuestion?.id);
 
-  const { isLoading: areNextQuestionAnswersLoading } = useQuestionAnswers(
+  const { isLoading: isNextQuestionAnswersLoading } = useQuestionAnswers(
     nextQuestion?.id
+  );
+
+  const { data: imageData, isLoading: isImageLoading } = useQuestionImage(
+    Number(testId),
+    questionIndexState.currentQuestionIndex
   );
 
   const { mutateAsync: createUserAnswerAsync } = useMutation(
@@ -73,11 +93,12 @@ export const Session = () => {
       setSelectedAnswer(null);
     }
 
-    if (questionState.currentQuestionIndex === questions.length - 1) {
+    if (questionIndexState.currentQuestionIndex === questions.length - 1) {
       setIsComplete(true);
+      return;
     }
 
-    setQuestionState(({ nextQuestionIndex }) => {
+    setQuestionIndexState(({ nextQuestionIndex }) => {
       const updatedNextQuestionIndex = nextQuestionIndex + 1;
       return {
         currentQuestionIndex: nextQuestionIndex,
@@ -95,16 +116,10 @@ export const Session = () => {
 
   if (isComplete) {
     return (
-      <div>
-        <Box maxWidth={'500px'} margin='30px auto'>
-          <Text>
-            Ответы: {rightAnswers} / {questions?.length}
-          </Text>
-          <NavLink to={'/'}>
-            <Button>На главную</Button>
-          </NavLink>
-        </Box>
-      </div>
+      <Navigate
+        to='/completed'
+        state={{ rightAnswers, lenght: questions?.length, sessionId }}
+      />
     );
   }
 
@@ -113,15 +128,28 @@ export const Session = () => {
       <div className='sessionWrapper'>
         <div className='session_slide'>
           <div className='session_slide-question'>
-            {/* <img
-              src='https://picsum.photos/220/190'
-              alt='default'
-              className='session_slide-question_img'
-            /> */}
+            {isImageLoading ? (
+              <p>Загрузка изображения</p>
+            ) : (
+              <Box flex='1 0 auto'>
+                <img
+                  // src='https://picsum.photos/220/190'
+                  src={
+                    imageData
+                      ? imageData
+                      : `https://www.zepter.ru/static/media/product-placeholder.8057445e.png`
+                  }
+                  alt='default'
+                  className='session_slide-question_img'
+                  width='100%'
+                />
+              </Box>
+            )}
+
             <div className='session_slide-question_text'>{currentQuestion?.text}</div>
           </div>
           <div className='session_slide-answers'>
-            {areCurrentQuestionAnswersLoading ? (
+            {isCurrentQuestionAnswersLoading ? (
               <div>Загрузка</div>
             ) : (
               currentQuestionAnswers &&
@@ -136,7 +164,7 @@ export const Session = () => {
             )}
 
             <Button
-              disabled={!selectedAnswer || areNextQuestionAnswersLoading}
+              disabled={!selectedAnswer || isNextQuestionAnswersLoading}
               onClick={handleNext}
             >
               Следующий вопрос

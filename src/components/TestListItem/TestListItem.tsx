@@ -1,16 +1,17 @@
-import { FC, memo, useState } from 'react';
+import { FC, memo, useMemo } from 'react';
 import { TestService } from '../../api/services/TestService';
 import { getSessionPath, getTestEditPath } from '../../Router/routes';
 import { useMutation, useQueryClient } from 'react-query';
-import { DelModal } from 'components/TestListItem/utils/DelModal';
+import { AtentionModal } from 'components/TestListItem/utils/AtentionModal';
 import { useNavigate } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
-import { Test, TestResponse } from 'types';
+import { TestResponse } from 'types';
 import { Card, Box, Text, Space, Button } from 'components';
 import { colors } from 'consts';
 import { userAtom } from 'atoms/userAtom';
 import { getQuestionAmount } from 'Pages/Home/utils';
+import { useBoolean } from 'hooks/useBoolean';
 
 interface TestListItemProps {
   test: TestResponse;
@@ -18,14 +19,12 @@ interface TestListItemProps {
 }
 
 export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) => {
-  const queryClient = useQueryClient();
-  const [isModal, setModal] = useState(false);
-  const [user] = useAtom(userAtom);
   const navigate = useNavigate();
-
-  const handleModal = () => {
-    setModal(!isModal);
-  };
+  const queryClient = useQueryClient();
+  const [user] = useAtom(userAtom);
+  const questionAmount = useMemo(() => getQuestionAmount(test.questions?.length), []);
+  const [isDeleteModalOpen, { setTrue: openDeleteModal, setFalse: closeDeleteModal }] =
+    useBoolean();
 
   const { mutateAsync } = useMutation(
     'deleteTest',
@@ -37,13 +36,11 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
     }
   );
 
-  const questionAmount = getQuestionAmount(test.questions?.length);
-
   const deleteTest = async () => {
     if (test.id) {
       await mutateAsync(test.id);
     }
-    handleModal();
+    closeDeleteModal();
   };
 
   return (
@@ -67,7 +64,11 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
                   onClick={() => openDrawer(test)}
                 />
                 <Space width={17} />
-                <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={handleModal} />
+                <RiDeleteBin6Fill
+                  color={colors.GREY}
+                  size={20}
+                  onClick={openDeleteModal}
+                />
               </Box>
             ))}
         </Box>
@@ -81,11 +82,12 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
         </Button>
       </Card>
 
-      <DelModal
-        isVisible={isModal}
-        content={<p>Вы уверены, что хотите удалить тест?</p>}
+      <AtentionModal
+        isVisible={isDeleteModalOpen}
+        text='Вы уверены, что хотите удалить тест?'
         onSubmit={deleteTest}
-        onClose={handleModal}
+        onClose={closeDeleteModal}
+        submitText='Удалить'
       />
     </>
   );

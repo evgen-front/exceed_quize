@@ -1,4 +1,4 @@
-import { FC, memo, Fragment, useState, useMemo, useCallback } from 'react';
+import { FC, memo, Fragment, useState, useCallback } from 'react';
 import { useTests } from 'hooks/useTests';
 import { Box, Space } from 'components';
 import { TestListItem } from '../TestListItem/TestListItem';
