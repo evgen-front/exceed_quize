@@ -200,7 +200,7 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
       setQuestions((prevState) => [...prevState, blankQuestion]);
     }
     setCurrentIndex((prevState) => prevState + 1);
-  }, []);
+  }, [currentIndex]);
 
   const goToPreviousQuestion = useCallback(() => {
     if (!currentIndex) {
@@ -208,7 +208,7 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
       return;
     }
     setCurrentIndex((prevState) => prevState - 1);
-  }, []);
+  }, [currentIndex]);
 
   const closeDrawer = useCallback(() => {
     setQuestions([blankQuestion]);
@@ -257,13 +257,15 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
           </Text>
           <Switch isActive={currentTest.testData.published} onSwitch={toggleSwitch} />
         </Box>
-        {!!currentTest.testData.questions?.length && (
+
+        {!!questions?.length && (
           <Box width='100%' mt='40px'>
             <Text color={colors.GREY} fontSize='16px' fontWeight={500}>
               {questionAmount}
             </Text>
             <Space height={33.5} />
-            {currentTest.testData.questions.map((question, i) => (
+
+            {questions.map((question, i) => (
               <Box
                 key={`question_${i}`}
                 display='flex'
