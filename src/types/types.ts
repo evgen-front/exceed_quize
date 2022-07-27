@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 export interface ReactChildrenProps {
   children?: ReactNode;
 }
+
 export interface SignInUp {
   username: string;
   email?: string;
@@ -16,15 +17,14 @@ export interface TestResponse {
   id: number;
   modified_at: null | Date;
   published: boolean;
-  questions?: Question[];
   title: string;
+  questions: QuestionResponse[];
 }
 
 export interface Test {
-  id?: number;
   title: string;
   published: boolean;
-  questions?: Question[];
+  holder_id?: number;
 }
 
 export interface User {
@@ -36,22 +36,16 @@ export interface User {
 }
 
 export interface Question {
-  id?: number;
-  text?: string;
+  text: string;
   ordering?: number;
+  is_true?: boolean;
+  answers?: { id: number; text: string; is_true: boolean; image: string | null }[];
 }
 
 export interface QuestionResponse {
   id: number;
   text: string;
   ordering: number;
-}
-
-export interface Variant {
-  id: string;
-  answerId: string;
-  title: string;
-  isTrue: boolean;
 }
 
 export interface Answer {
@@ -74,4 +68,20 @@ export interface Input {
   title: string;
   name: string;
   type: 'email' | 'password' | 'text';
+}
+
+export interface NewSession {
+  id: number;
+  finished_date: string;
+  user_id: number;
+  test_id: number;
+  questions: QuestionResponse[];
+}
+
+export interface ResultItem {
+  session_id: number;
+  user_id: number;
+  answer: AnswerResponse;
+  question: QuestionResponse;
+  right_answer: AnswerResponse;
 }

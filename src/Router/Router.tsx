@@ -1,8 +1,17 @@
 import { Route, Routes } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { Home, Profile, Session, SignIn, SignUp, NewTest } from 'Pages';
+import { Home, Profile, Session, SignIn, SignUp, NewTest, CompletedTest } from 'Pages';
 import { PrivateRoute } from './PrivateRoute';
-import { SINGIN, SIGNUP, HOME, PROFILE, TESTNEW, TESTEDIT, SESSION } from './routes';
+import {
+  SINGIN,
+  SIGNUP,
+  HOME,
+  PROFILE,
+  TESTNEW,
+  TESTEDIT,
+  SESSION,
+  COMPLETED,
+} from './routes';
 import { userAtom } from 'atoms/userAtom';
 
 export const Router = () => {
@@ -19,6 +28,7 @@ export const Router = () => {
         <Route path={TESTNEW} element={<NewTest />} />
         <Route path={TESTEDIT} element={<NewTest />} />
         <Route path={SESSION} element={<Session />} />
+        <Route path={COMPLETED} element={<CompletedTest />} />
       </Route>
     </Routes>
   );

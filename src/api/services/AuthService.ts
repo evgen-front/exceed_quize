@@ -1,0 +1,17 @@
+import { AxiosResponse } from 'axios';
+import { $api } from 'api';
+import { SignInUp } from 'types';
+
+export class AuthService {
+  static async signin(data: SignInUp): Promise<AxiosResponse> {
+    return $api.post('/login', { ...data });
+  }
+
+  static async signup(data: SignInUp): Promise<AxiosResponse> {
+    return $api.post('/register', data);
+  }
+
+  static async logout(): Promise<void> {
+    return $api.delete('/logout');
+  }
+}

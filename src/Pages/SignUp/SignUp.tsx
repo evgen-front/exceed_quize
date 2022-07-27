@@ -1,8 +1,7 @@
-import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'components';
-import { SignInUp, Input } from 'types/types';
-import { AuthService } from 'services/AuthService';
+import { SignInUp, Input } from 'types';
+import { AuthService } from 'api/services/AuthService';
 import { SINGIN } from 'Router/routes';
 import { Main } from 'Layouts/MainView/Main';
 

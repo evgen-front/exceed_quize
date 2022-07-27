@@ -1,7 +1,6 @@
 import { FC } from 'react';
-import { Box } from '../../components';
-import { ReactChildrenProps } from '../../types/types';
-import './Main.scss';
+import { Box } from 'components';
+import { ReactChildrenProps } from 'types';
 
 export const TestView: FC<ReactChildrenProps> = ({ children }) => {
   return (
@@ -13,9 +12,7 @@ export const TestView: FC<ReactChildrenProps> = ({ children }) => {
       minHeight='100vh'
     >
       <Box flex='1'>
-        <div className='mainWrapper'>
-          <Box>{children}</Box>
-        </div>
+        <Box>{children}</Box>
       </Box>
     </Box>
   );

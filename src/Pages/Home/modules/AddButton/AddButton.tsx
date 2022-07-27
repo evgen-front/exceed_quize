@@ -3,8 +3,13 @@ import { colors } from 'consts';
 import { Box } from 'components';
 import { RiAddFill } from 'react-icons/ri';
 
-export const AddButton: FC = () => (
+interface AddButtonProps {
+  onClick?: () => void;
+}
+
+export const AddButton: FC<AddButtonProps> = ({ onClick }) => (
   <Box
+    onClick={onClick}
     bg={colors.SECONDARY}
     height='60px'
     width='60px'

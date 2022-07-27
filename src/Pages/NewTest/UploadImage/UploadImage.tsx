@@ -3,7 +3,7 @@ import { Upload } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
 import type { UploadProps } from 'antd/es/upload';
-import { QuestionService } from '../../../services/QuestionService';
+import { QuestionService } from '../../../api/services/QuestionService';
 
 interface UploadImageProps {
   questionId: number | null;

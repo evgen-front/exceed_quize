@@ -8,9 +8,9 @@ import {
 import { Button, Input, Modal } from 'antd';
 import { FC, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
-import { useForm, Validations } from '../../../hooks/useForm';
-import { QuestionService } from '../../../services/QuestionService'; // !!! how can I to reduce a pass?
-import { Question, QuestionResponse } from '../../../types/types';
+import { useForm, Validations } from 'hooks/useForm';
+import { QuestionService } from 'api/services/QuestionService'; // !!! how can I to reduce a pass?
+import { Question, QuestionResponse } from 'types';
 import { AddAnswer } from '../AddAnswer/AddAnswer';
 import { UploadImage } from '../UploadImage/UploadImage';
 import './AddQuestion.scss';
@@ -33,7 +33,7 @@ export const AddQuestion: FC<AddQuestionProps> = ({ testId }) => {
   const [questionList, setQuestionList] = useState<QuestionResponse[]>([]);
   const [questionId, setQuestionId] = useState<number | null>(null);
   const [editQuestionFlag, setEditQuestionFlag] = useState<boolean>(false);
-  const [editableQuestion, setEditableQuestion] = useState<Question | {}>({});
+  const [editableQuestion, setEditableQuestion] = useState<QuestionResponse | null>(null);
 
   const getQuestions = (testId: number | null) => {
     QuestionService.getQuestions(testId)
@@ -77,22 +77,21 @@ export const AddQuestion: FC<AddQuestionProps> = ({ testId }) => {
       .catch((err) => console.log(err)); //!!!
   };
 
-  const updateQuestion = (
-    newOrdering: number,
-    editQuestion: Question = editableQuestion
-  ) => {
-    const { id, ordering }: Question = editQuestion;
-    const editedQuestion: Question = {
-      text: formState.questionName,
-      ordering: newOrdering ? newOrdering : ordering,
-    };
-    id &&
-      QuestionService.updateQuestion(testId, id, editedQuestion)
-        .then((res) => {
-          getQuestions(testId);
-        })
-        .catch((err) => console.log(err.message));
-    setEditQuestionFlag(false);
+  const updateQuestion = (newOrdering: number, editQuestion = editableQuestion) => {
+    if (editQuestion) {
+      const { id, ordering } = editQuestion;
+      const editedQuestion: Question = {
+        text: formState.questionName,
+        ordering: newOrdering ? newOrdering : ordering,
+      };
+      id &&
+        QuestionService.updateQuestion(testId, id, editedQuestion)
+          .then((res) => {
+            getQuestions(testId);
+          })
+          .catch((err) => console.log(err.message));
+      setEditQuestionFlag(false);
+    }
   };
 
   const deleteQuestion = (id: number) => {
@@ -112,9 +111,11 @@ export const AddQuestion: FC<AddQuestionProps> = ({ testId }) => {
   };
 
   const undoEditQuestion = () => {
-    const { text }: Question = editableQuestion;
-    text && handleChange('questionName', text);
-    setEditQuestionFlag(false);
+    if (editableQuestion) {
+      const { text } = editableQuestion;
+      text && handleChange('questionName', text);
+      setEditQuestionFlag(false);
+    }
   };
 
   //@ts-ignore

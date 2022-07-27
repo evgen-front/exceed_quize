@@ -2,10 +2,10 @@ import { EditTwoTone } from '@ant-design/icons';
 import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { useForm, Validations } from '../../hooks/useForm';
-import { Main } from '../../Layouts/MainView/Main'; // !!! how can I to reduce a pass?
-import { TestService } from '../../services/TestService';
-import { Test } from '../../types/types';
+import { useForm, Validations } from 'hooks/useForm';
+import { Main } from 'Layouts/MainView/Main'; // !!! how can I to reduce a pass?
+import { TestService } from 'api/services/TestService';
+import { Test } from 'types';
 import { AddQuestion } from './AddQuestion/AddQuestion';
 import { InputBlock } from './InputBlock/InputBlock';
 import './NewTest.scss';
@@ -29,10 +29,7 @@ export const NewTest = () => {
     setTestEditFlag(true);
   };
 
-  const handleTestPublic = (e: CheckboxChangeEvent) => {
-    setTestPublished(e.target.checked);
-  };
-
+  const handleTestPublic = () => setTestPublished(!testPublished);
   const createNewTest = () => {
     const newTest: Test = {
       title: formState.testName,

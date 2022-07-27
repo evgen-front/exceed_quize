@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { TestService } from 'services/TestService';
-import { TestResponse } from 'types/types';
+import { TestService } from 'api/services/TestService';
+import { TestResponse } from 'types';
 
 export const useTests = () => {
   const {
@@ -9,7 +9,7 @@ export const useTests = () => {
     isLoading,
     refetch,
   } = useQuery('testList', TestService.getAllTests, {
-    select: ({ data }): TestResponse[] => data.sort((a, b) => a.id - b.id),
+    select: ({ data }) => data.sort((a, b) => a.id - b.id),
   });
 
   return { testList, isError, refetch, isLoading };

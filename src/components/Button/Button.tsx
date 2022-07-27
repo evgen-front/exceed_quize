@@ -26,6 +26,8 @@ const StyledButton = styled.button<StyledButtonProps>`
   height: 46px;
   width: 100%;
   border-radius: 8px;
+  font-weight: 700;
+  font-size: 18px;
   color: ${({ view }) =>
     view === 'ghost'
       ? buttonColors.primary
@@ -38,8 +40,6 @@ const StyledButton = styled.button<StyledButtonProps>`
       : view === 'ghostdanger'
       ? `border: 1px solid ${buttonColors.danger}`
       : 'border: none'};
-  font-weight: 700;
-  font-size: 18px;
   background: ${({ view, disabled }) =>
     view === 'ghost' || view === 'ghostdanger'
       ? 'transparent'

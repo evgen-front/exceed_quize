@@ -1,6 +1,6 @@
 import { useQuery } from 'react-query';
-import { AnswerService } from 'services/AnswerService';
-import { AnswerResponse } from 'types/types';
+import { AnswerService } from 'api/services/AnswerService';
+import { AnswerResponse } from 'types';
 
 export const useAnswers = (id: any) => {
   const {

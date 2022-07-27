@@ -1,11 +1,10 @@
 import { FC } from 'react';
-import { ReactChildrenProps } from '../../types/types';
-import { backGroundColor } from '../../consts';
-import { Header, Navbar, Box } from '../../components';
+import { ReactChildrenProps } from 'types';
+import { backGroundColor } from 'consts';
+import { Header, Navbar, Box } from 'components';
 import { useLocation } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { userAtom } from '../../atoms/userAtom';
-import './Main.scss';
+import { userAtom } from 'atoms/userAtom';
 
 export const Main: FC<ReactChildrenProps> = ({ children }) => {
   const [user] = useAtom(userAtom);
