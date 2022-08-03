@@ -9,10 +9,10 @@ export const useAnswers = (id: any) => {
     isLoading,
     refetch,
     isRefetching,
-  } = useQuery('Answers', () => AnswerService.getAnswers(id), {
+  } = useQuery(['Answers', id], () => AnswerService.getAnswers(id), {
     select: ({ data }): AnswerResponse[] => data.sort((a, b) => a.id - b.id),
     enabled: !!id,
   });
 
-  return { answers, isError, refetch, isRefetching };
+  return { answers, isLoading, isError, refetch, isRefetching };
 };

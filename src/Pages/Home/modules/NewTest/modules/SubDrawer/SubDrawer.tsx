@@ -42,7 +42,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   mode,
 }) => {
   const [isError, setIsError] = useState<boolean>(false);
-  const withImage = !!currentQuestion.image;
+  const withImage = !!currentQuestion?.image;
   const isCreatingTest = mode === 'create';
   const inputsAreFilled =
     currentQuestion.answers.every(({ text }) => !!text) && currentQuestion.text;

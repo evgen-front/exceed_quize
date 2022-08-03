@@ -82,7 +82,7 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
   useEffect(() => {
     setCurrentTest((prevState) => ({
       ...prevState,
-      isEdit: currentTest.testData.title !== initialTitle,
+      isEdit: currentTest.testData.title !== initialTitle && !!questions.length,
     }));
   }, [currentTest.testData.title]);
 
@@ -203,10 +203,7 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
   }, [currentIndex]);
 
   const goToPreviousQuestion = useCallback(() => {
-    if (!currentIndex) {
-      closeSubDrawer();
-      return;
-    }
+    closeSubDrawer();
     setCurrentIndex((prevState) => prevState - 1);
   }, [currentIndex]);
 
@@ -295,8 +292,17 @@ export const CreateDrawer: FC<DrawerProps> = ({ isVisible, onClose, mode, index 
           </Box>
         )}
       </DrawerContent>
-      <Button view='ghost' onClick={isCreatingTest ? openSubDrawer : () => {}}>
-        {isCreatingTest ? 'Далее' : 'Сохранить'}
+      <Button
+        view='ghost'
+        onClick={() => {
+          openSubDrawer();
+        }}
+      >
+        Добавить вопрос
+      </Button>
+      <br />
+      <Button view='primary' onClick={() => {}} disabled={!currentTest.isEdit}>
+        Сохранить
       </Button>
       <SubDrawer
         open={isSubDrawerOpen}

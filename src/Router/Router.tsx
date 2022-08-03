@@ -1,6 +1,8 @@
 import { Route, Routes } from 'react-router-dom';
 import { useAtom } from 'jotai';
-import { Home, Profile, Session, SignIn, SignUp, NewTest, CompletedTest } from 'Pages';
+import { Profile, Session, SignIn, SignUp, NewTest, CompletedTest } from 'Pages';
+
+import { Home } from '../Pages/HomeTEST';
 import { PrivateRoute } from './PrivateRoute';
 import {
   SINGIN,
