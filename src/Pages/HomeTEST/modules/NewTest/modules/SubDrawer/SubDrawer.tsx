@@ -4,7 +4,7 @@ import { RiCloseFill } from 'react-icons/ri';
 import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { colors } from 'consts';
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { Answer, AnswerResponse, QuestionResponse } from 'types';
+import { Answer, AnswerDrawer, AnswerResponse, QuestionResponse } from 'types';
 import { questionsSubdrawerType } from '../../TestDrawer';
 import { useAnswers } from 'hooks';
 import { useMutation, useQueryClient } from 'react-query';
@@ -18,7 +18,7 @@ interface SubDrawerProps {
 
 interface NewQuestionType {
   text: string;
-  answers: AnswerResponse[];
+  answers: AnswerDrawer[];
 }
 
 const initialQuestionState = {
@@ -117,9 +117,9 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     }));
   }, []);
 
-  const handleSaveAnswer = (index: number, data: Answer, id?: number) => {
+  const handleSaveAnswer = (index: number, data: AnswerDrawer, id?: number) => {
     if (questionData.data) {
-      if (id && String(id).length < 3) {
+      if (id && !data.is_new) {
         updateAnswer({
           question_id: questionData.data?.id,
           answer_id: id,
@@ -139,11 +139,16 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
   };
 
   const handleCreateNewAnswer = () => {
-    const uid = Math.floor(Math.random() * 1000); // Задаем для только что созданного вопроса уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
+    // Задаем для только что созданного вопроса уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
+    const uid = Math.floor(Math.random() * 1000);
 
     setCurrentQuestion((prevState) => ({
       ...prevState,
-      answers: [...prevState.answers, { id: uid, text: '', is_true: false }],
+      answers: [
+        ...prevState.answers,
+        // Создаем внутри флаг что вопрос новый, при refetch это поле всё ровно удалится
+        { id: uid, text: '', is_true: false, is_new: true },
+      ],
     }));
   };
 
@@ -188,7 +193,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
           <Space height={12} />
           <Box maxHeight={300} overflow='auto'>
             {isLoading ||
-              currentQuestion.answers?.map(({ text, id, is_true }, index) => (
+              currentQuestion.answers?.map(({ text, id, is_true, is_new }, index) => (
                 <React.Fragment key={id}>
                   {/* ============= Добавить onBlur  ============= */}
                   <Input
@@ -198,7 +203,9 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
                     onDelete={() => handleDeleteAnswer(id)}
                     onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
                     onChange={(e) => handleEditAnswer(e, id)}
-                    onSave={(e) => handleSaveAnswer(index, { text, id, is_true }, id)}
+                    onSave={(e) =>
+                      handleSaveAnswer(index, { text, id, is_true, is_new }, id)
+                    }
                   />
                   <Space height={20} />
                 </React.Fragment>

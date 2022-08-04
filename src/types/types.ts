@@ -60,6 +60,10 @@ export interface AnswerResponse {
   is_true: boolean;
 }
 
+export interface AnswerDrawer extends AnswerResponse {
+  is_new?: boolean;
+}
+
 export interface UserAnswer {
   answer_id?: number;
 }
