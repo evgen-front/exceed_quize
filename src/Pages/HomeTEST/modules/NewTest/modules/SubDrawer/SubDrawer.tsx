@@ -62,7 +62,18 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     }
   );
 
-  const handleAnswerDelete = useCallback(
+  const { mutateAsync: createAnswer } = useMutation(
+    'createAnswer',
+    ({ question_id, data }: { question_id: number; data: Answer }) =>
+      AnswerService.createNewAnswer(question_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('Answers');
+      },
+    }
+  );
+
+  const handleDeleteAnswer = useCallback(
     (id: number) => {
       if (questionData.data && id) {
         deleteAnswer({
@@ -74,7 +85,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     [questionData.data, deleteAnswer]
   );
 
-  const handleAnswerEdit = useCallback(
+  const handleCheckAnswer = useCallback(
     (data: Answer) => {
       if (questionData.data && data.id) {
         updateAnswer({
@@ -97,17 +108,44 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     [setCurrentQuestion]
   );
 
-  const handleAddAnswer = useCallback(
-    (event: ChangeEvent<HTMLInputElement>, id: number) => {
-      setCurrentQuestion((prevState) => ({
-        ...prevState,
-        answers: prevState.answers.map((answer) => {
-          return answer.id === id ? { ...answer, text: event.target.value } : answer;
-        }),
-      }));
-    },
-    []
-  );
+  const handleEditAnswer = useCallback((e: ChangeEvent<HTMLInputElement>, id: number) => {
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      answers: prevState.answers.map((answer) => {
+        return answer.id === id ? { ...answer, text: e.target.value } : answer;
+      }),
+    }));
+  }, []);
+
+  const handleSaveAnswer = (index: number, data: Answer, id?: number) => {
+    if (questionData.data) {
+      if (id && String(id).length < 3) {
+        updateAnswer({
+          question_id: questionData.data?.id,
+          answer_id: id,
+          data: {
+            text: currentQuestion.answers[index].text,
+          },
+        });
+      } else {
+        createAnswer({
+          question_id: questionData.data?.id,
+          data: {
+            text: currentQuestion.answers[index].text,
+          },
+        });
+      }
+    }
+  };
+
+  const handleCreateNewAnswer = () => {
+    const uid = Math.floor(Math.random() * 1000); // Задаем для только что созданного вопроса уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
+
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      answers: [...prevState.answers, { id: uid, text: '', is_true: false }],
+    }));
+  };
 
   useEffect(() => {
     setCurrentQuestion(
@@ -150,24 +188,31 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
           <Space height={12} />
           <Box maxHeight={300} overflow='auto'>
             {isLoading ||
-              currentQuestion.answers?.map(({ text, id, is_true }) => (
+              currentQuestion.answers?.map(({ text, id, is_true }, index) => (
                 <React.Fragment key={id}>
                   {/* ============= Добавить onBlur  ============= */}
                   <Input
                     withAnswerControls
                     isRight={is_true}
                     value={text}
-                    onDelete={() => handleAnswerDelete(id)}
-                    onCheck={() => handleAnswerEdit({ text, id, is_true: !is_true })}
-                    onChange={(event) => handleAddAnswer(event, id)}
+                    onDelete={() => handleDeleteAnswer(id)}
+                    onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
+                    onChange={(e) => handleEditAnswer(e, id)}
+                    onSave={(e) => handleSaveAnswer(index, { text, id, is_true }, id)}
                   />
                   <Space height={20} />
                 </React.Fragment>
               ))}
 
-            <Text fontSize={16} fontWeight={500} onClick={() => {}}>
-              + Добавить вариант ответа
-            </Text>
+            {currentQuestion.answers.length < 4 && (
+              <Text
+                fontSize={16}
+                fontWeight={500}
+                onClick={() => handleCreateNewAnswer()}
+              >
+                + Добавить вариант ответа
+              </Text>
+            )}
           </Box>
         </Box>
       </Box>

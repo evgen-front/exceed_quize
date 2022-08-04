@@ -233,7 +233,8 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
         Добавить вопрос
       </Button>
       <br />
-      <Button view='primary' onClick={handleCreateTest} disabled={testDataDifference}>
+      {/* <Button view='primary' onClick={handleCreateTest} disabled={testDataDifference}> */}
+      <Button view='primary' onClick={handleCreateTest}>
         Сохранить и закрыть
       </Button>
 
