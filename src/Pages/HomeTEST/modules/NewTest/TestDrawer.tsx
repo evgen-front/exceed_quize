@@ -1,46 +1,26 @@
 import { ChangeEvent, FC, useEffect, useMemo, useState, useCallback, memo } from 'react';
-import { RiPencilFill, RiCloseFill } from 'react-icons/ri';
-import { Button, Switch, Drawer, Box, Space, Text } from 'components';
-import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
-import { Input } from 'components/Input';
-import { useBoolean } from 'hooks';
-import { getQuestionAmount } from 'Pages/HomeTEST/utils';
-import { SubDrawer } from './modules';
-import { colors } from 'consts';
-import styled from 'styled-components';
-import { testInDrawerType } from '../TestList';
-import { QuestionResponse, TestResponse } from 'types';
 import { useMutation, useQueryClient } from 'react-query';
-import { TestService } from 'api/services/TestService';
-import { useQuery } from 'react-query';
-import { QuestionService } from 'api/services/QuestionService';
 
-const BoxWithEllipsis = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  flex: 1;
-  margin-left: 12px;
-  margin-right: 15px;
-`;
+import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
+import { Button, Switch, Drawer, Box, Space, Text } from 'components';
+import { QuestionListItem } from './modules/QuestionListItem';
+import { getQuestionAmount } from 'Pages/HomeTEST/utils';
+import { TestService } from 'api/services/TestService';
+import { Input } from 'components/Input';
+import { SubDrawer } from './modules';
+import { useBoolean } from 'hooks';
+import { colors } from 'consts';
+
+import { NewTestDataType, questionsSubdrawerType } from './types';
+import { QuestionResponse, TestResponse } from 'types';
+import { testInDrawerType } from '../TestList';
+// import { useQuery } from 'react-query';
+// import { QuestionService } from 'api/services/QuestionService';
 
 interface DrawerProps {
   isVisible: boolean;
   onClose: () => void;
   testData: testInDrawerType;
-}
-
-interface NewTestDataType {
-  id?: number;
-  published: boolean;
-  title: string;
-  questions: QuestionResponse[];
-}
-
-export interface questionsSubdrawerType {
-  isCreating: boolean;
-  index: number | null;
-  data: QuestionResponse | null;
 }
 
 const initialTestState = {
@@ -55,42 +35,39 @@ const initialStateQuestionDrawer = {
   data: null,
 };
 
-export const useQuestions = (id: any) => {
-  const {
-    data: questions,
-    isError,
-    isLoading,
-    refetch,
-  } = useQuery('Questions', () => QuestionService.getQuestions(id), {
-    select: ({ data }) => data.sort((a, b) => a.id - b.id),
-    enabled: false,
-  });
-
-  return { questions, isError, refetch, isLoading };
-};
+// export const useQuestions = (id: any) => {
+//   const {
+//     data: questions,
+//     isError,
+//     isLoading,
+//     refetch,
+//   } = useQuery('Questions', () => QuestionService.getQuestions(id), {
+//     select: ({ data }) => data.sort((a, b) => a.id - b.id),
+//     enabled: false,
+//   });
+//   return { questions, isError, refetch, isLoading };
+// };
 
 export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData }) => {
   const [isSubDrawerOpen, { setTrue: openSubDrawer, setFalse: closeSubDrawer }] =
     useBoolean();
-
-  // ************** TEST ****************
-  const queryClient = useQueryClient();
-
   const [currentTest, setCurrentTest] = useState<TestResponse | NewTestDataType>(
     initialTestState
   );
   const [questionSubdrawer, setQuestionSubdrawer] = useState<questionsSubdrawerType>(
     initialStateQuestionDrawer
   );
+  const queryClient = useQueryClient();
 
   // Разница между внутренним состоянием и состоянием которые пришло при открытии Drawer
   // А так же наличие title и хотя бы 1-го вопроса
+  // Для того что бы заблокировать кнопку Сохранить если отличий нет
   const testDataDifference = useMemo(() => {
     const isSame = JSON.stringify(currentTest) === JSON.stringify(testData.data);
     return isSame || !currentTest.questions.length || !currentTest.title;
   }, [currentTest, testData.data]);
 
-  // *** Мутирующие запросы для создания/редактирования теста ***
+  // Запросы для создания/редактирования теста
   const { mutateAsync: createTest } = useMutation(
     'createTest',
     () => TestService.createTest(currentTest),
@@ -110,9 +87,8 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
       },
     }
   );
-  // *** --------------------------------------------------- ***
 
-  // Значение строки с количественным
+  // Значение строки с количеством вопросов с парвильным склонением
   const questionAmount = useMemo(
     () => getQuestionAmount(currentTest.questions?.length),
     [currentTest.questions]
@@ -123,9 +99,10 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
       setQuestionSubdrawer(
         data && index ? { isCreating: false, data, index } : initialStateQuestionDrawer
       );
+      !currentTest.id && handleCreateTest();
       openSubDrawer();
     },
-    [openSubDrawer]
+    [currentTest, openSubDrawer]
   );
 
   const handleTitleChange = useCallback(
@@ -150,11 +127,11 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
       createTest();
     } else {
       updateTest();
+      onClose();
     }
-    onClose();
   }, [testData.isCreating, createTest, updateTest, onClose]);
 
-  // Обновление внутреннего состояния Drawer
+  // Обновление внутреннего состояния Drawer (сетим пустое значение если никаких данных нет)
   useEffect(() => {
     setCurrentTest(testData.data || initialTestState);
   }, [isVisible, testData.data]);
@@ -170,14 +147,14 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           <Text fontSize='16px' fontWeight='500'>
             Название теста
           </Text>
-          <Space height='12px' />
+          <Space height={12} />
           <Input
             name='title'
             type='text'
             value={currentTest.title}
             onChange={handleTitleChange}
           />
-          <Space height='28px' />
+          <Space height={28} />
         </Box>
         <Box
           display='flex'
@@ -188,7 +165,11 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           <Text fontSize='16px' fontWeight='500'>
             Опубликован
           </Text>
-          <Switch isActive={currentTest.published} onSwitch={handlePublishChange} />
+          <Switch
+            isActive={currentTest.published}
+            onSwitch={handlePublishChange}
+            // disabled={true}
+          />
         </Box>
         <Text color={colors.GREY} fontSize='16px' fontWeight={500}>
           {questionAmount}
@@ -197,44 +178,26 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
         {!!currentTest.questions.length && (
           <Box width='100%' mt='40px'>
             <Space height={33.5} />
-
-            {/* Вопросы */}
             {currentTest.questions.map((question, index) => (
-              <Box
+              <QuestionListItem
                 key={question.id}
-                display='flex'
-                alignItems='center'
-                justifyContent='space-between'
-                mb={33.5}
-              >
-                <Text fontSize={16} fontWeight={500}>
-                  Вопрос {index + 1}
-                </Text>
-                <BoxWithEllipsis>
-                  <Text fontSize={16} fontWeight={400}>
-                    {question.text}
-                  </Text>
-                </BoxWithEllipsis>
-                <Box display='flex' alignItems='center'>
-                  <RiPencilFill
-                    size={20}
-                    color={colors.GREY}
-                    onClick={() => handleOpenSubDrawer(question, index + 1)}
-                  />
-                  <Space width={14} />
-                  <RiCloseFill size={25} color={colors.GREY} />
-                </Box>
-              </Box>
+                question={question}
+                index={index}
+                handleOpenSubDrawer={handleOpenSubDrawer}
+              />
             ))}
           </Box>
         )}
       </DrawerContent>
-      <Button view='ghost' onClick={() => handleOpenSubDrawer()}>
+      <Button
+        view='ghost'
+        onClick={() => handleOpenSubDrawer()}
+        disabled={!currentTest.title}
+      >
         Добавить вопрос
       </Button>
-      <br />
-      {/* <Button view='primary' onClick={handleCreateTest} disabled={testDataDifference}> */}
-      <Button view='primary' onClick={handleCreateTest}>
+      <Space height={20} />
+      <Button view='primary' onClick={handleCreateTest} disabled={testDataDifference}>
         Сохранить и закрыть
       </Button>
 

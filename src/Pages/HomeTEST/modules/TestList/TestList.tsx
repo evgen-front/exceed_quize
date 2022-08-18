@@ -23,8 +23,6 @@ export const TestsList: FC = memo(() => {
   const [user] = useAtom(userAtom);
   const { isLoading, isError, testList } = useTests();
   const [isDrawerOpen, { setTrue: openDrawer, setFalse: closeDrawer }] = useBoolean();
-
-  // ************** TEST ****************
   const [testInDrawer, setTestInDrawer] =
     useState<testInDrawerType>(initialDrawerStateTest);
 

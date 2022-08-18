@@ -1,17 +1,19 @@
 import { FC, memo, useMemo } from 'react';
-import { getSessionPath } from 'Router/routes';
-import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { TestService } from 'api/services/TestService';
+import { useMutation, useQueryClient } from 'react-query';
 import { useAtom } from 'jotai';
+
+import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
+import { Card, Box, Text, Space, Button } from 'components';
+import { TestService } from 'api/services/TestService';
+import { getQuestionAmount } from 'Pages/Home/utils';
+import { getSessionPath } from 'Router/routes';
+import { useBoolean } from 'hooks/useBoolean';
+import { userAtom } from 'atoms/userAtom';
+
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
 import { TestResponse } from 'types';
-import { Card, Box, Text, Space, Button } from 'components';
 import { colors } from 'consts';
-import { userAtom } from 'atoms/userAtom';
-import { getQuestionAmount } from 'Pages/Home/utils';
-import { useBoolean } from 'hooks/useBoolean';
-import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 
 interface TestListItemProps {
   test: TestResponse;
@@ -53,30 +55,28 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {/* !!!!!!! CHANGE BACK */}
-          {user?.is_admin ||
-            (true && (
-              <Box display='flex' marginLeft='auto' paddingLeft={20}>
-                <RiPencilFill
-                  color={colors.GREY}
-                  size={20}
-                  onClick={() => openDrawer(test)}
-                />
-                <Space width={17} />
-                <RiDeleteBin6Fill
-                  color={colors.GREY}
-                  size={20}
-                  onClick={openDeleteModal}
-                />
-              </Box>
-            ))}
+          {user?.is_admin && (
+            <Box display='flex' marginLeft='auto' paddingLeft={20}>
+              <RiPencilFill
+                color={colors.GREY}
+                size={20}
+                onClick={() => openDrawer(test)}
+              />
+              <Space width={17} />
+              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={openDeleteModal} />
+            </Box>
+          )}
         </Box>
         <Space height={12} />
         <Text fontSize={16} fontWeight={600} color={colors.GREY} letterSpacing='0.025em'>
           {questionAmount}
         </Text>
         <Space height={32} />
-        <Button view='primary' onClick={() => navigate(getSessionPath(test.id))}>
+        <Button
+          view='primary'
+          onClick={() => navigate(getSessionPath(test.id))}
+          disabled={!test.questions.length}
+        >
           Начать
         </Button>
       </Card>

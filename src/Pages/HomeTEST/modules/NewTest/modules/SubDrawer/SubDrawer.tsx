@@ -5,10 +5,10 @@ import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { colors } from 'consts';
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
 import { Answer, AnswerDrawer, AnswerResponse, QuestionResponse } from 'types';
-import { questionsSubdrawerType } from '../../TestDrawer';
 import { useAnswers } from 'hooks';
 import { useMutation, useQueryClient } from 'react-query';
 import { AnswerService } from 'api/services/AnswerService';
+import { questionsSubdrawerType } from '../../types';
 
 interface SubDrawerProps {
   open: boolean;
@@ -139,7 +139,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
   };
 
   const handleCreateNewAnswer = () => {
-    // Задаем для только что созданного вопроса уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
+    // Задаем для только что созданного ответа уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
     const uid = Math.floor(Math.random() * 1000);
 
     setCurrentQuestion((prevState) => ({
