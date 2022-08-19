@@ -1,24 +1,28 @@
 import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { RiCloseFill } from 'react-icons/ri';
-import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { colors } from 'consts';
+import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { Answer, AnswerDrawer, AnswerResponse, QuestionResponse } from 'types';
+import { Answer, AnswerDrawer, AnswerResponse, Question, QuestionResponse } from 'types';
 import { useAnswers } from 'hooks';
 import { useMutation, useQueryClient } from 'react-query';
 import { AnswerService } from 'api/services/AnswerService';
 import { questionsSubdrawerType } from '../../types';
+import { QuestionService } from 'api/services/QuestionService';
 
 interface SubDrawerProps {
   open: boolean;
   onClose: () => void;
   questionData: questionsSubdrawerType;
+  testId: number;
 }
 
 interface NewQuestionType {
+  id?: number;
   text: string;
   answers: AnswerDrawer[];
+  image?: string;
 }
 
 const initialQuestionState = {
@@ -26,12 +30,28 @@ const initialQuestionState = {
   answers: [],
 };
 
-export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) => {
+export const SubDrawer: FC<SubDrawerProps> = ({
+  open,
+  onClose,
+  questionData,
+  testId,
+}) => {
   const [currentQuestion, setCurrentQuestion] =
     useState<NewQuestionType>(initialQuestionState);
 
   const queryClient = useQueryClient();
   const { isLoading, answers } = useAnswers(questionData.data?.id);
+
+  const { mutateAsync: createQuestion } = useMutation(
+    'createQuestion',
+    ({ test_id, data }: { test_id: number; data: Question }) =>
+      QuestionService.createNewQuestion(test_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
+  );
 
   const { mutateAsync: updateAnswer } = useMutation(
     'updateAnswer',
@@ -73,16 +93,24 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     }
   );
 
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    // addImage(currentIndex, acceptedFiles);
+  }, []);
+
+  const {
+    getRootProps,
+    getInputProps,
+    open: openDropzone,
+  } = useDropzone({ onDrop, multiple: false, noClick: true, noKeyboard: true });
+
   const handleDeleteAnswer = useCallback(
-    (id: number) => {
-      if (questionData.data && id) {
-        deleteAnswer({
-          question_id: questionData.data?.id,
-          answer_id: id,
-        });
-      }
+    (question_id: number, answer_id: number) => {
+      deleteAnswer({
+        question_id,
+        answer_id,
+      });
     },
-    [questionData.data, deleteAnswer]
+    [deleteAnswer]
   );
 
   const handleCheckAnswer = useCallback(
@@ -156,6 +184,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
     setCurrentQuestion(
       questionData.data && answers
         ? {
+            id: questionData.data.id,
             text: questionData.data.text,
             answers: answers,
           }
@@ -179,63 +208,95 @@ export const SubDrawer: FC<SubDrawerProps> = ({ open, onClose, questionData }) =
           value={currentQuestion.text}
           onChange={handleTextChange}
         />
+        <Space height={10} />
+        {!currentQuestion.id && (
+          <Button
+            onClick={() =>
+              createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
+            }
+            disabled={!currentQuestion.text}
+          >
+            Сохранить
+          </Button>
+        )}
         <Space height={30.5} />
 
-        <Box>
-          <input type='file' />
-          <Text fontSize={16} fontWeight={500} onClick={() => {}}>
-            + Добавить изображение
-          </Text>
-        </Box>
-
-        <Box mt={50.5}>
-          <Text>Варианты ответов</Text>
-          <Space height={12} />
-          <Box maxHeight={300} overflow='auto'>
-            {isLoading ||
-              currentQuestion.answers?.map(({ text, id, is_true, is_new }, index) => (
-                <React.Fragment key={id}>
-                  {/* ============= Добавить onBlur  ============= */}
-                  <Input
-                    withAnswerControls
-                    isRight={is_true}
-                    value={text}
-                    onDelete={() => handleDeleteAnswer(id)}
-                    onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
-                    onChange={(e) => handleEditAnswer(e, id)}
-                    onSave={(e) =>
-                      handleSaveAnswer(index, { text, id, is_true, is_new }, id)
-                    }
-                  />
-                  <Space height={20} />
-                </React.Fragment>
-              ))}
-
-            {currentQuestion.answers.length < 4 && (
-              <Text
-                fontSize={16}
-                fontWeight={500}
-                onClick={() => handleCreateNewAnswer()}
-              >
-                + Добавить вариант ответа
+        {currentQuestion.image ? (
+          <Box display='flex' width='100%' justifyContent='space-between'>
+            <QuestionImage src={currentQuestion.image} />
+            <Box
+              display='flex'
+              alignItems='center'
+              height='fit-content'
+              mt={15.5}
+              // onClick={() => deleteImage(currentIndex)}
+            >
+              <RiCloseFill color={colors.DANGER} size={20} />
+              <Space width={5} />
+              <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
+                Удалить
               </Text>
-            )}
+            </Box>
           </Box>
-        </Box>
+        ) : (
+          <Box {...getRootProps()}>
+            <input {...getInputProps()} />
+            <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
+              + Добавить изображение
+            </Text>
+          </Box>
+        )}
+
+        {currentQuestion.id && (
+          <Box mt={50.5}>
+            <Text>Варианты ответов</Text>
+            <Space height={12} />
+            <Box maxHeight={300} overflow='auto'>
+              {isLoading ||
+                currentQuestion.answers?.map(({ text, id, is_true, is_new }, index) => (
+                  <React.Fragment key={id}>
+                    <Input
+                      withAnswerControls
+                      isRight={is_true}
+                      value={text}
+                      onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
+                      onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
+                      onChange={(e) => handleEditAnswer(e, id)}
+                      onSave={(e) =>
+                        handleSaveAnswer(index, { text, id, is_true, is_new }, id)
+                      }
+                    />
+                    <Space height={20} />
+                  </React.Fragment>
+                ))}
+
+              {currentQuestion.answers.length < 4 && (
+                <Text
+                  fontSize={16}
+                  fontWeight={500}
+                  onClick={() => handleCreateNewAnswer()}
+                >
+                  + Добавить вариант ответа
+                </Text>
+              )}
+            </Box>
+          </Box>
+        )}
       </Box>
 
       <Box justifySelf='end'>
         <>
-          {questionData.isCreating && (
+          {/* {questionData.isCreating && (
             <Button view='ghost' onClick={() => {}}>
               Следующий вопрос
             </Button>
-          )}
+          )} */}
 
-          <Space height={20} />
-          <Button view='primary' onClick={onClose}>
-            Сохранить и закрыть
-          </Button>
+          {currentQuestion.id && (
+            <Button view='primary' onClick={onClose}>
+              Сохранить и закрыть
+            </Button>
+          )}
         </>
       </Box>
     </Drawer>

@@ -6,18 +6,35 @@ import { colors } from 'consts';
 import { BoxWithEllipsis } from './styled';
 
 import { QuestionResponse } from 'types';
+import { useMutation, useQueryClient } from 'react-query';
+import { QuestionService } from 'api/services/QuestionService';
 
 interface QuestionListItemProps {
   question: QuestionResponse;
   index: number;
   handleOpenSubDrawer: (question: QuestionResponse, index: number) => void;
+  testId: number;
 }
 
 export const QuestionListItem: FC<QuestionListItemProps> = ({
   question,
   index,
   handleOpenSubDrawer,
+  testId,
 }) => {
+  const queryClient = useQueryClient();
+
+  const { mutateAsync: deleteQuestion } = useMutation(
+    'deleteQuestion',
+    ({ testId, questionId }: { testId: number; questionId: number }) =>
+      QuestionService.deleteQuestion(testId, questionId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
+  );
+
   return (
     <Box
       key={question.id}
@@ -41,7 +58,11 @@ export const QuestionListItem: FC<QuestionListItemProps> = ({
           onClick={() => handleOpenSubDrawer(question, index + 1)}
         />
         <Space width={14} />
-        <RiCloseFill size={25} color={colors.GREY} />
+        <RiCloseFill
+          size={25}
+          color={colors.GREY}
+          onClick={() => deleteQuestion({ testId, questionId: question.id })}
+        />
       </Box>
     </Box>
   );

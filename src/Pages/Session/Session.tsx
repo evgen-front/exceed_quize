@@ -45,7 +45,7 @@ export const Session = () => {
     () => SessionService.createSession(Number(testId)),
     {
       select: ({ data }) => {
-        const sortedQuestions = data.questions.sort((a, b) => b.ordering - a.ordering);
+        const sortedQuestions = data.questions.sort((a, b) => a.ordering - b.ordering);
         const result: {
           questions: QuestionResponse[];
           sessionId: number;

@@ -15,7 +15,7 @@ export const Switch: FC<SwitchProps> = ({ onSwitch, isActive, disabled }) => {
     onSwitch();
   };
   return (
-    <StyledLabel>
+    <StyledLabel disabled={disabled}>
       <input type='checkbox' checked={isActive} onChange={onClick} disabled={disabled} />
       <span />
     </StyledLabel>

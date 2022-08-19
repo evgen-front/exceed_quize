@@ -38,7 +38,6 @@ export interface User {
 export interface Question {
   text: string;
   ordering?: number;
-  is_true?: boolean;
   answers?: { id: number; text: string; is_true: boolean; image: string | null }[];
 }
 

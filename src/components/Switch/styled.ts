@@ -1,11 +1,16 @@
 import styled from 'styled-components';
 import { colors } from 'consts';
 
-export const StyledLabel = styled.label`
+interface StyledLabelProps {
+  disabled?: boolean;
+}
+
+export const StyledLabel = styled.label<StyledLabelProps>`
   position: relative;
   display: inline-block;
   width: 74px;
   height: 42px;
+  opacity: ${({ disabled }) => (disabled ? '0.4' : '1')};
   input {
     opacity: 0;
     width: 0;

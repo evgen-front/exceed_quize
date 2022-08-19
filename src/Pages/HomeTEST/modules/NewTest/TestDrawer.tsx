@@ -14,8 +14,6 @@ import { colors } from 'consts';
 import { NewTestDataType, questionsSubdrawerType } from './types';
 import { QuestionResponse, TestResponse } from 'types';
 import { testInDrawerType } from '../TestList';
-// import { useQuery } from 'react-query';
-// import { QuestionService } from 'api/services/QuestionService';
 
 interface DrawerProps {
   isVisible: boolean;
@@ -29,24 +27,11 @@ const initialTestState = {
   questions: [],
 };
 
-const initialStateQuestionDrawer = {
+const initialStateQuestionSubdrawer = {
   isCreating: true,
   index: null,
   data: null,
 };
-
-// export const useQuestions = (id: any) => {
-//   const {
-//     data: questions,
-//     isError,
-//     isLoading,
-//     refetch,
-//   } = useQuery('Questions', () => QuestionService.getQuestions(id), {
-//     select: ({ data }) => data.sort((a, b) => a.id - b.id),
-//     enabled: false,
-//   });
-//   return { questions, isError, refetch, isLoading };
-// };
 
 export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData }) => {
   const [isSubDrawerOpen, { setTrue: openSubDrawer, setFalse: closeSubDrawer }] =
@@ -55,7 +40,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
     initialTestState
   );
   const [questionSubdrawer, setQuestionSubdrawer] = useState<questionsSubdrawerType>(
-    initialStateQuestionDrawer
+    initialStateQuestionSubdrawer
   );
   const queryClient = useQueryClient();
 
@@ -64,7 +49,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
   // Для того что бы заблокировать кнопку Сохранить если отличий нет
   const testDataDifference = useMemo(() => {
     const isSame = JSON.stringify(currentTest) === JSON.stringify(testData.data);
-    return isSame || !currentTest.questions.length || !currentTest.title;
+    return isSame || !currentTest.title;
   }, [currentTest, testData.data]);
 
   // Запросы для создания/редактирования теста
@@ -88,53 +73,46 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
     }
   );
 
-  // Значение строки с количеством вопросов с парвильным склонением
+  // Значение строки с количеством вопросов с правильным склонением
   const questionAmount = useMemo(
     () => getQuestionAmount(currentTest.questions?.length),
     [currentTest.questions]
   );
 
-  const handleOpenSubDrawer = useCallback(
-    (data?: QuestionResponse, index?: number) => {
-      setQuestionSubdrawer(
-        data && index ? { isCreating: false, data, index } : initialStateQuestionDrawer
-      );
-      !currentTest.id && handleCreateTest();
-      openSubDrawer();
-    },
-    [currentTest, openSubDrawer]
-  );
-
-  const handleTitleChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      setCurrentTest((prevState) => ({
-        ...prevState,
-        title: e.target.value,
-      }));
-    },
-    [setCurrentTest]
-  );
-
-  const handlePublishChange = useCallback(() => {
-    setCurrentTest((prevState) => ({
-      ...prevState,
-      published: !prevState.published,
-    }));
-  }, [setCurrentTest]);
-
-  const handleCreateTest = useCallback(() => {
-    if (testData.isCreating) {
+  const handleSaveTest = useCallback(() => {
+    if (testData.isCreating && !testData.data?.id) {
       createTest();
     } else {
       updateTest();
       onClose();
     }
-  }, [testData.isCreating, createTest, updateTest, onClose]);
+  }, [testData, createTest, updateTest, onClose]);
 
-  // Обновление внутреннего состояния Drawer (сетим пустое значение если никаких данных нет)
+  const handleOpenSubDrawer = useCallback(
+    (data?: QuestionResponse, index?: number) => {
+      setQuestionSubdrawer(
+        data && index ? { isCreating: false, data, index } : initialStateQuestionSubdrawer
+      );
+      // Создаем тест если он не был создан для получения id
+      !currentTest.id && handleSaveTest();
+      openSubDrawer();
+    },
+    [currentTest, openSubDrawer, handleSaveTest]
+  );
+
+  // Обновление внутреннего состояния Drawer (устанавливаем значение по умолчанию если не передали данные)
   useEffect(() => {
     setCurrentTest(testData.data || initialTestState);
   }, [isVisible, testData.data]);
+
+  useEffect(() => {
+    if (currentTest) {
+      setQuestionSubdrawer((prevState) => ({
+        ...prevState,
+        data: currentTest.questions[currentTest.questions.length - 1],
+      }));
+    }
+  }, [currentTest]);
 
   return (
     <Drawer open={isVisible} onClose={onClose}>
@@ -152,7 +130,12 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
             name='title'
             type='text'
             value={currentTest.title}
-            onChange={handleTitleChange}
+            onChange={(e) =>
+              setCurrentTest((prevState) => ({
+                ...prevState,
+                title: e.target.value,
+              }))
+            }
           />
           <Space height={28} />
         </Box>
@@ -167,8 +150,13 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           </Text>
           <Switch
             isActive={currentTest.published}
-            onSwitch={handlePublishChange}
-            // disabled={true}
+            onSwitch={() =>
+              setCurrentTest((prevState) => ({
+                ...prevState,
+                published: !prevState.published,
+              }))
+            }
+            disabled={!currentTest.questions.length}
           />
         </Box>
         <Text color={colors.GREY} fontSize='16px' fontWeight={500}>
@@ -184,6 +172,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
                 question={question}
                 index={index}
                 handleOpenSubDrawer={handleOpenSubDrawer}
+                testId={currentTest.id!}
               />
             ))}
           </Box>
@@ -197,15 +186,18 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
         Добавить вопрос
       </Button>
       <Space height={20} />
-      <Button view='primary' onClick={handleCreateTest} disabled={testDataDifference}>
+      <Button view='primary' onClick={handleSaveTest} disabled={testDataDifference}>
         Сохранить и закрыть
       </Button>
 
-      <SubDrawer
-        open={isSubDrawerOpen}
-        onClose={closeSubDrawer}
-        questionData={questionSubdrawer}
-      />
+      {currentTest.id && (
+        <SubDrawer
+          open={isSubDrawerOpen}
+          onClose={closeSubDrawer}
+          questionData={questionSubdrawer}
+          testId={currentTest.id}
+        />
+      )}
     </Drawer>
   );
 });
