@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useMemo, useState, useCallback, memo } from 'react';
+import { FC, useEffect, useMemo, useState, useCallback, memo } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
@@ -14,6 +14,8 @@ import { colors } from 'consts';
 import { NewTestDataType, questionsSubdrawerType } from './types';
 import { QuestionResponse, TestResponse } from 'types';
 import { testInDrawerType } from '../TestList';
+
+import { RiArrowLeftLine } from 'react-icons/ri';
 
 interface DrawerProps {
   isVisible: boolean;
@@ -93,7 +95,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
       setQuestionSubdrawer(
         data && index ? { isCreating: false, data, index } : initialStateQuestionSubdrawer
       );
-      // Создаем тест если он не был создан для получения id
+      // Создаем тест если его нет и получаем id теста
       !currentTest.id && handleSaveTest();
       openSubDrawer();
     },
@@ -117,7 +119,9 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
   return (
     <Drawer open={isVisible} onClose={onClose}>
       <DrawerHeader>
-        <BackButton onClick={onClose}>{'<'}</BackButton>
+        <BackButton onClick={onClose}>
+          <RiArrowLeftLine />
+        </BackButton>
         <p>{testData.isCreating ? 'Создание Quiz' : 'Редактирование Quiz'}</p>
       </DrawerHeader>
       <DrawerContent>
@@ -178,11 +182,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           </Box>
         )}
       </DrawerContent>
-      <Button
-        view='ghost'
-        onClick={() => handleOpenSubDrawer()}
-        disabled={!currentTest.title}
-      >
+      <Button view='ghost' onClick={handleOpenSubDrawer} disabled={!currentTest.title}>
         Добавить вопрос
       </Button>
       <Space height={20} />

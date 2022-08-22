@@ -1,10 +1,10 @@
-import React, { ChangeEvent, FC, useCallback, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { RiCloseFill } from 'react-icons/ri';
+import { RiArrowLeftLine, RiCloseFill } from 'react-icons/ri';
 import { colors } from 'consts';
 import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { Answer, AnswerDrawer, AnswerResponse, Question, QuestionResponse } from 'types';
+import { Answer, AnswerDrawer, Question } from 'types';
 import { useAnswers } from 'hooks';
 import { useMutation, useQueryClient } from 'react-query';
 import { AnswerService } from 'api/services/AnswerService';
@@ -41,6 +41,24 @@ export const SubDrawer: FC<SubDrawerProps> = ({
 
   const queryClient = useQueryClient();
   const { isLoading, answers } = useAnswers(questionData.data?.id);
+
+  const { mutateAsync: updateQuestion } = useMutation(
+    'updateQuestion',
+    ({
+      test_id,
+      question_id,
+      data,
+    }: {
+      test_id: number;
+      question_id: number;
+      data: Question;
+    }) => QuestionService.updateQuestion(test_id, question_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
+  );
 
   const { mutateAsync: createQuestion } = useMutation(
     'createQuestion',
@@ -103,6 +121,20 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     open: openDropzone,
   } = useDropzone({ onDrop, multiple: false, noClick: true, noKeyboard: true });
 
+  const questionDataDifference = useMemo(() => {
+    const isSame = questionData.data?.text === currentQuestion.text;
+    return isSame || !currentQuestion.text;
+  }, [currentQuestion.text, questionData.data?.text]);
+
+  const handleSaveQuestion = useCallback(() => {
+    updateQuestion({
+      test_id: testId,
+      question_id: currentQuestion.id!,
+      data: { text: currentQuestion.text },
+    });
+    onClose();
+  }, [currentQuestion, onClose, testId, updateQuestion]);
+
   const handleDeleteAnswer = useCallback(
     (question_id: number, answer_id: number) => {
       deleteAnswer({
@@ -136,11 +168,11 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     [setCurrentQuestion]
   );
 
-  const handleEditAnswer = useCallback((e: ChangeEvent<HTMLInputElement>, id: number) => {
+  const handleEditAnswer = useCallback((value: string, id: number) => {
     setCurrentQuestion((prevState) => ({
       ...prevState,
       answers: prevState.answers.map((answer) => {
-        return answer.id === id ? { ...answer, text: e.target.value } : answer;
+        return answer.id === id ? { ...answer, text: value } : answer;
       }),
     }));
   }, []);
@@ -195,7 +227,9 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   return (
     <Drawer open={open} onClose={onClose}>
       <DrawerHeader>
-        <BackButton onClick={onClose}>{'<'}</BackButton>
+        <BackButton onClick={onClose}>
+          <RiArrowLeftLine />
+        </BackButton>
         <p>{questionData.index ? `Вопрос ${questionData.index}` : 'Новый вопрос'}</p>
       </DrawerHeader>
       <Box flex={1}>
@@ -261,8 +295,8 @@ export const SubDrawer: FC<SubDrawerProps> = ({
                       value={text}
                       onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
                       onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
-                      onChange={(e) => handleEditAnswer(e, id)}
-                      onSave={(e) =>
+                      onChange={(e) => handleEditAnswer(e.target.value, id)}
+                      onSave={() =>
                         handleSaveAnswer(index, { text, id, is_true, is_new }, id)
                       }
                     />
@@ -285,19 +319,15 @@ export const SubDrawer: FC<SubDrawerProps> = ({
       </Box>
 
       <Box justifySelf='end'>
-        <>
-          {/* {questionData.isCreating && (
-            <Button view='ghost' onClick={() => {}}>
-              Следующий вопрос
-            </Button>
-          )} */}
-
-          {currentQuestion.id && (
-            <Button view='primary' onClick={onClose}>
-              Сохранить и закрыть
-            </Button>
-          )}
-        </>
+        {currentQuestion.id && (
+          <Button
+            view='primary'
+            onClick={handleSaveQuestion}
+            disabled={questionDataDifference}
+          >
+            Сохранить и закрыть
+          </Button>
+        )}
       </Box>
     </Drawer>
   );

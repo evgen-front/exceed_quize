@@ -34,17 +34,23 @@ export const TestsList: FC = memo(() => {
     [openDrawer]
   );
 
-  // Когда мы сохраням тест при редактировании, то прокидываем новые данные от сервера в Drawer и получаем id для теста
+  // Когда мы сохраням тест при редактировании или создании, то прокидываем новые данные от сервера в Drawer и получаем id для теста
   // Так как добавленый тест всегда последний обращаемся к последнему элементу массива
+  // Если мы редактируем тест, то просто прокидываем данные
   // Это необходио для создания вопросов в тесте
   useEffect(() => {
-    if (testList) {
+    if (testList && isDrawerOpen) {
       setTestInDrawer((prevState) => ({
         ...prevState,
-        data: testList[testList?.length - 1],
+        data: testInDrawer.isCreating
+          ? testList[testList?.length - 1]
+          : (testList.find((test) => test.id === testInDrawer.data?.id) as TestResponse),
       }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testList]);
+
+  console.log('TestList Render');
 
   if (isLoading) {
     return <div>Загрузка</div>;
