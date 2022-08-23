@@ -166,10 +166,9 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
         <Text color={colors.GREY} fontSize='16px' fontWeight={500}>
           {questionAmount}
         </Text>
-
+        <Space height={33.5} />
         {!!currentTest.questions.length && (
-          <Box width='100%' mt='40px'>
-            <Space height={33.5} />
+          <Box width='100%' flex='1 1 auto' style={{ overflow: 'auto' }}>
             {currentTest.questions.map((question, index) => (
               <QuestionListItem
                 key={question.id}
@@ -182,13 +181,15 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           </Box>
         )}
       </DrawerContent>
-      <Button view='ghost' onClick={handleOpenSubDrawer} disabled={!currentTest.title}>
-        Добавить вопрос
-      </Button>
-      <Space height={20} />
-      <Button view='primary' onClick={handleSaveTest} disabled={testDataDifference}>
-        Сохранить и закрыть
-      </Button>
+      <Box>
+        <Button view='ghost' onClick={handleOpenSubDrawer} disabled={!currentTest.title}>
+          Добавить вопрос
+        </Button>
+        <Space height={20} />
+        <Button view='primary' onClick={handleSaveTest} disabled={testDataDifference}>
+          Сохранить и закрыть
+        </Button>
+      </Box>
 
       {currentTest.id && (
         <SubDrawer

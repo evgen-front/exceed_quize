@@ -50,8 +50,6 @@ export const TestsList: FC = memo(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [testList]);
 
-  console.log('TestList Render');
-
   if (isLoading) {
     return <div>Загрузка</div>;
   }

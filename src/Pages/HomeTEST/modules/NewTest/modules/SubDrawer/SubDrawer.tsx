@@ -22,7 +22,7 @@ interface NewQuestionType {
   id?: number;
   text: string;
   answers: AnswerDrawer[];
-  image?: string;
+  image?: string | null;
 }
 
 const initialQuestionState = {
@@ -111,8 +111,46 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     }
   );
 
+  const { mutateAsync: createImage } = useMutation(
+    'createImage',
+    ({
+      test_id,
+      question_id,
+      data,
+    }: {
+      test_id: number;
+      question_id: number;
+      data: any;
+    }) => QuestionService.createImage(test_id, question_id, data)
+  );
+
+  const addImage = useCallback((acceptedFiles: File[]) => {
+    const data = new FormData();
+    data.append('file', acceptedFiles[0]);
+
+    createImage({
+      test_id: testId,
+      question_id: currentQuestion.id!,
+      data,
+    });
+
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      image: acceptedFiles.map((file: File) => {
+        return URL.createObjectURL(file);
+      })[0],
+    }));
+  }, []);
+
+  const deleteImage = useCallback(() => {
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      image: null,
+    }));
+  }, []);
+
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    // addImage(currentIndex, acceptedFiles);
+    addImage(acceptedFiles);
   }, []);
 
   const {
@@ -263,7 +301,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
               alignItems='center'
               height='fit-content'
               mt={15.5}
-              // onClick={() => deleteImage(currentIndex)}
+              onClick={deleteImage}
             >
               <RiCloseFill color={colors.DANGER} size={20} />
               <Space width={5} />
