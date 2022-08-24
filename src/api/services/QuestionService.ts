@@ -45,7 +45,11 @@ export class QuestionService {
     test_id: number | null,
     question_id: number | null
   ): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}/questions/${question_id}/images/`);
+    return $api.get(`/tests/${test_id}/questions/${question_id}/images/`, {
+      headers: {
+        'Content-type': 'image/jpg',
+      },
+    });
   }
 
   static async deleteImage(

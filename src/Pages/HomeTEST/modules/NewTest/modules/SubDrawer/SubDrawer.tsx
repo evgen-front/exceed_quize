@@ -5,7 +5,7 @@ import { colors } from 'consts';
 import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
 import { Answer, AnswerDrawer, Question } from 'types';
-import { useAnswers } from 'hooks';
+import { useAnswers, useImage } from 'hooks';
 import { useMutation, useQueryClient } from 'react-query';
 import { AnswerService } from 'api/services/AnswerService';
 import { questionsSubdrawerType } from '../../types';
@@ -41,6 +41,10 @@ export const SubDrawer: FC<SubDrawerProps> = ({
 
   const queryClient = useQueryClient();
   const { isLoading, answers } = useAnswers(questionData.data?.id);
+  const { image } = useImage(testId, currentQuestion.id!);
+
+  // let html = iso88592.decode(response.data.toString('binary'));
+  console.log(image);
 
   const { mutateAsync: updateQuestion } = useMutation(
     'updateQuestion',
@@ -128,11 +132,13 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     const data = new FormData();
     data.append('file', acceptedFiles[0]);
 
-    createImage({
-      test_id: testId,
-      question_id: currentQuestion.id!,
-      data,
-    });
+    if (currentQuestion.id) {
+      createImage({
+        test_id: testId,
+        question_id: currentQuestion.id!,
+        data,
+      });
+    }
 
     setCurrentQuestion((prevState) => ({
       ...prevState,
@@ -293,31 +299,32 @@ export const SubDrawer: FC<SubDrawerProps> = ({
         )}
         <Space height={30.5} />
 
-        {currentQuestion.image ? (
-          <Box display='flex' width='100%' justifyContent='space-between'>
-            <QuestionImage src={currentQuestion.image} />
-            <Box
-              display='flex'
-              alignItems='center'
-              height='fit-content'
-              mt={15.5}
-              onClick={deleteImage}
-            >
-              <RiCloseFill color={colors.DANGER} size={20} />
-              <Space width={5} />
-              <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
-                Удалить
+        {currentQuestion.id &&
+          (currentQuestion.image ? (
+            <Box display='flex' width='100%' justifyContent='space-between'>
+              <QuestionImage src={currentQuestion.image} />
+              <Box
+                display='flex'
+                alignItems='center'
+                height='fit-content'
+                mt={15.5}
+                onClick={deleteImage}
+              >
+                <RiCloseFill color={colors.DANGER} size={20} />
+                <Space width={5} />
+                <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
+                  Удалить
+                </Text>
+              </Box>
+            </Box>
+          ) : (
+            <Box {...getRootProps()}>
+              <input {...getInputProps()} />
+              <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
+                + Добавить изображение
               </Text>
             </Box>
-          </Box>
-        ) : (
-          <Box {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
-              + Добавить изображение
-            </Text>
-          </Box>
-        )}
+          ))}
 
         {currentQuestion.id && (
           <Box mt={50.5}>
