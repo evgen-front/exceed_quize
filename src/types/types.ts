@@ -24,7 +24,7 @@ export interface TestResponse {
 export interface Test {
   title: string;
   published: boolean;
-  holder_id?: number;
+  holder_id?: number; // При создании теста можно не использовать, так как id создателя берется по токенам
 }
 
 export interface User {
@@ -38,7 +38,6 @@ export interface User {
 export interface Question {
   text: string;
   ordering?: number;
-  is_true?: boolean;
   answers?: { id: number; text: string; is_true: boolean; image: string | null }[];
 }
 
@@ -58,6 +57,10 @@ export interface AnswerResponse {
   id: number;
   text: string;
   is_true: boolean;
+}
+
+export interface AnswerDrawer extends AnswerResponse {
+  is_new?: boolean;
 }
 
 export interface UserAnswer {

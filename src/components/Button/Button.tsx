@@ -5,6 +5,7 @@ import { colors } from 'consts';
 const buttonColors = {
   primary: colors.PRIMARY,
   danger: colors.DANGER,
+  ghostdanger: colors.DANGER,
   secondary: colors.SECONDARY,
   ghost: colors.WHITE,
   grey: colors.GREY,
@@ -28,24 +29,43 @@ const StyledButton = styled.button<StyledButtonProps>`
   border-radius: 8px;
   font-weight: 700;
   font-size: 18px;
-  color: ${({ view }) =>
-    view === 'ghost'
-      ? buttonColors.primary
-      : view === 'ghostdanger'
-      ? buttonColors.danger
-      : '#FFFFFF'};
-  ${({ view }) =>
-    view === 'ghost'
-      ? `border: 1px solid ${buttonColors.primary}`
-      : view === 'ghostdanger'
-      ? `border: 1px solid ${buttonColors.danger}`
-      : 'border: none'};
-  background: ${({ view, disabled }) =>
-    view === 'ghost' || view === 'ghostdanger'
-      ? 'transparent'
-      : disabled
-      ? buttonColors.grey
-      : buttonColors[view]};
+  color: ${({ view, disabled }) => {
+    if (disabled) return '#FFFFFF';
+
+    switch (view) {
+      case 'ghost':
+        return buttonColors.primary;
+      case 'ghostdanger':
+        return buttonColors.danger;
+      default:
+        return '#FFFFFF';
+    }
+  }};
+
+  border: ${({ view, disabled }) => {
+    if (disabled) return `none`;
+
+    switch (view) {
+      case 'ghost':
+        return `1px solid ${buttonColors.primary}`;
+      case 'ghostdanger':
+        return `1px solid ${buttonColors.danger}`;
+      default:
+        return 'none';
+    }
+  }};
+
+  background: ${({ view, disabled }) => {
+    if (disabled) return buttonColors.grey;
+
+    switch (view) {
+      case 'ghost':
+      case 'ghostdanger':
+        return 'transparent';
+      default:
+        return buttonColors[view];
+    }
+  }};
 `;
 
 export const Button: FC<ButtonProps> = ({

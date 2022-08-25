@@ -4,9 +4,10 @@ import { StyledLabel } from './styled';
 interface SwitchProps {
   onSwitch: () => void;
   isActive: boolean;
+  disabled?: boolean;
 }
 
-export const Switch: FC<SwitchProps> = ({ onSwitch, isActive }) => {
+export const Switch: FC<SwitchProps> = ({ onSwitch, isActive, disabled }) => {
   const onClick = () => {
     if ('vibrate' in window.navigator) {
       window.navigator.vibrate(10);
@@ -14,8 +15,8 @@ export const Switch: FC<SwitchProps> = ({ onSwitch, isActive }) => {
     onSwitch();
   };
   return (
-    <StyledLabel>
-      <input type='checkbox' checked={isActive} onChange={onClick} />
+    <StyledLabel disabled={disabled}>
+      <input type='checkbox' checked={isActive} onChange={onClick} disabled={disabled} />
       <span />
     </StyledLabel>
   );

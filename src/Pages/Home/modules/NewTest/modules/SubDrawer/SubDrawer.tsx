@@ -1,88 +1,175 @@
-import React, { FC, useCallback, useState } from 'react';
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
-import { RiCloseFill } from 'react-icons/ri';
-import { BackButton, DrawerHeader } from 'components/Drawer/styles';
-import { colors } from 'consts';
+
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { Question } from '../../types';
+import { QuestionService } from 'api/services/QuestionService';
+import { AnswerService } from 'api/services/AnswerService';
+import { Answer, AnswerDrawer, Question } from 'types';
+import { questionsSubdrawerType } from '../../types';
+import { useAnswers } from 'hooks';
+
+import { BackButton, DrawerHeader } from 'components/Drawer/styles';
+import { RiArrowLeftLine, RiCloseFill } from 'react-icons/ri';
+import { colors } from 'consts';
 
 interface SubDrawerProps {
   open: boolean;
   onClose: () => void;
-  currentIndex: number;
-  currentQuestion: Question;
-  mode: 'create' | 'edit';
-  addAnswer: (index: number) => void;
-  deleteQuestion: (index: number) => void;
-  deleteAnswer: (index: number, id: number) => void;
-  handleAnswerValue: (index: number, id: number, value: string) => void;
-  handleQuestionTitle: (index: number, value: string) => void;
-  chooseRightAnswer: (index: number, id: number) => void;
-  goToNextQuestion: () => void;
-  goToPreviousQuestion: () => void;
-  addImage: (index: number, acceptedFiles: File[]) => void;
-  deleteImage: (index: number) => void;
+  questionData: questionsSubdrawerType;
+  testId: number;
 }
+
+interface NewQuestionType {
+  id?: number;
+  text: string;
+  answers: AnswerDrawer[];
+  image?: boolean;
+}
+
+const initialQuestionState = {
+  text: '',
+  answers: [],
+  image: false,
+};
 
 export const SubDrawer: FC<SubDrawerProps> = ({
   open,
   onClose,
-  currentQuestion,
-  currentIndex,
-  addAnswer,
-  deleteAnswer,
-  deleteQuestion,
-  handleAnswerValue,
-  handleQuestionTitle,
-  chooseRightAnswer,
-  goToNextQuestion,
-  goToPreviousQuestion,
-  addImage,
-  deleteImage,
-  mode,
+  questionData,
+  testId,
 }) => {
-  const [isError, setIsError] = useState<boolean>(false);
-  const withImage = !!currentQuestion.image;
-  const isCreatingTest = mode === 'create';
-  const inputsAreFilled =
-    currentQuestion.answers.every(({ text }) => !!text) && currentQuestion.text;
-  const onDrop = useCallback(
-    (acceptedFiles: File[]) => {
-      addImage(currentIndex, acceptedFiles);
-    },
-    [currentIndex]
+  const [currentQuestion, setCurrentQuestion] =
+    useState<NewQuestionType>(initialQuestionState);
+
+  const queryClient = useQueryClient();
+  const { isLoading, answers } = useAnswers(questionData.data?.id);
+
+  const { mutateAsync: updateQuestion } = useMutation(
+    'updateQuestion',
+    ({
+      test_id,
+      question_id,
+      data,
+    }: {
+      test_id: number;
+      question_id: number;
+      data: Question;
+    }) => QuestionService.updateQuestion(test_id, question_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
+    }
   );
 
-  const onClick = () => {
-    if (inputsAreFilled) {
-      if (isError) {
-        setIsError(false);
-      }
-      goToNextQuestion();
-      return;
+  const { mutateAsync: createQuestion } = useMutation(
+    'createQuestion',
+    ({ test_id, data }: { test_id: number; data: Question }) =>
+      QuestionService.createNewQuestion(test_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('testList');
+      },
     }
-    if (!isError) {
-      setIsError(true);
+  );
+
+  const { mutateAsync: updateAnswer } = useMutation(
+    'updateAnswer',
+    ({
+      question_id,
+      answer_id,
+      data,
+    }: {
+      question_id: number;
+      answer_id: number;
+      data: Answer;
+    }) => AnswerService.updateAnswer(question_id, answer_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('Answers');
+      },
     }
+  );
+
+  const { mutateAsync: deleteAnswer } = useMutation(
+    'deleteAnswer',
+    ({ question_id, answer_id }: { question_id: number; answer_id: number }) =>
+      AnswerService.deleteAnswer(question_id, answer_id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('Answers');
+      },
+    }
+  );
+
+  const { mutateAsync: createAnswer } = useMutation(
+    'createAnswer',
+    ({ question_id, data }: { question_id: number; data: Answer }) =>
+      AnswerService.createNewAnswer(question_id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('Answers');
+      },
+    }
+  );
+
+  const { mutateAsync: createImage } = useMutation(
+    'createImage',
+    ({
+      test_id,
+      question_id,
+      data,
+    }: {
+      test_id: number;
+      question_id: number;
+      data: any;
+    }) => QuestionService.createImage(test_id, question_id, data)
+  );
+
+  const { mutateAsync: deleteImage } = useMutation(
+    'deleteImage',
+    ({ test_id, question_id }: { test_id: number; question_id: number }) =>
+      QuestionService.deleteImage(test_id, question_id)
+  );
+
+  const addImage = (acceptedFiles: File[]) => {
+    const data = new FormData();
+    data.append('file', acceptedFiles[0]);
+
+    currentQuestion.id &&
+      createImage({
+        test_id: testId,
+        question_id: currentQuestion.id,
+        data,
+      });
+
+    setTimeout(
+      () =>
+        setCurrentQuestion((prevState) => ({
+          ...prevState,
+          image: true,
+        })),
+      1000
+    );
   };
 
-  const onBackClick = () => {
-    if (!inputsAreFilled && !!currentIndex) {
-      deleteQuestion(currentIndex);
+  const removeImage = () => {
+    if (currentQuestion.id) {
+      deleteImage({
+        test_id: testId,
+        question_id: currentQuestion.id,
+      });
     }
-    goToPreviousQuestion();
+
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      image: false,
+    }));
   };
 
-  const onSaveClick = () => {
-    if (inputsAreFilled) {
-      if (isError) {
-        setIsError(false);
-      }
-      return;
-    }
-    if (!isError) {
-      setIsError(true);
-    }
+  const onDrop = (acceptedFiles: File[]) => {
+    addImage(acceptedFiles);
   };
 
   const {
@@ -90,11 +177,122 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     getInputProps,
     open: openDropzone,
   } = useDropzone({ onDrop, multiple: false, noClick: true, noKeyboard: true });
+
+  const questionDataDifference = useMemo(() => {
+    const isSame = questionData.data?.text === currentQuestion.text;
+    return isSame || !currentQuestion.text;
+  }, [currentQuestion.text, questionData.data?.text]);
+
+  const handleSaveQuestion = useCallback(() => {
+    updateQuestion({
+      test_id: testId,
+      question_id: currentQuestion.id!,
+      data: { text: currentQuestion.text },
+    });
+    onClose();
+  }, [currentQuestion, onClose, testId, updateQuestion]);
+
+  const handleDeleteAnswer = useCallback(
+    (question_id: number, answer_id: number) => {
+      deleteAnswer({
+        question_id,
+        answer_id,
+      });
+    },
+    [deleteAnswer]
+  );
+
+  const handleCheckAnswer = useCallback(
+    (data: Answer) => {
+      if (questionData.data && data.id) {
+        updateAnswer({
+          question_id: questionData.data?.id,
+          answer_id: data.id,
+          data: data,
+        });
+      }
+    },
+    [questionData.data, updateAnswer]
+  );
+
+  const handleTextChange = useCallback((text: string) => {
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      text,
+    }));
+  }, []);
+
+  const handleEditAnswer = useCallback((value: string, id: number) => {
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      answers: prevState.answers.map((answer) => {
+        return answer.id === id ? { ...answer, text: value } : answer;
+      }),
+    }));
+  }, []);
+
+  const handleSaveAnswer = (index: number, data: AnswerDrawer, id?: number) => {
+    if (questionData.data) {
+      if (id && !data.is_new) {
+        updateAnswer({
+          question_id: questionData.data?.id,
+          answer_id: id,
+          data: {
+            text: currentQuestion.answers[index].text,
+          },
+        });
+      } else {
+        createAnswer({
+          question_id: questionData.data?.id,
+          data: {
+            text: currentQuestion.answers[index].text,
+          },
+        });
+      }
+    }
+  };
+
+  const handleCreateNewAnswer = () => {
+    // Задаем для только что созданного ответа уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
+    const uid = Math.floor(Math.random() * 1000);
+
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      answers: [
+        ...prevState.answers,
+        // Создаем внутри флаг что вопрос новый, при refetch это поле всё ровно удалится
+        { id: uid, text: '', is_true: false, is_new: true },
+      ],
+    }));
+  };
+
+  useEffect(() => {
+    setCurrentQuestion((prevState) => ({
+      ...prevState,
+      answers: answers || [],
+    }));
+  }, [answers]);
+
+  useEffect(() => {
+    setCurrentQuestion(
+      questionData.data
+        ? {
+            id: questionData.data.id,
+            text: questionData.data.text,
+            answers: [],
+            image: true,
+          }
+        : initialQuestionState
+    );
+  }, [open, questionData.data]);
+
   return (
     <Drawer open={open} onClose={onClose}>
       <DrawerHeader>
-        <BackButton onClick={onBackClick}>{'<'}</BackButton>
-        <p>Вопрос {currentIndex + 1}</p>
+        <BackButton onClick={onClose}>
+          <RiArrowLeftLine />
+        </BackButton>
+        <p>{questionData.index ? `Вопрос ${questionData.index}` : 'Новый вопрос'}</p>
       </DrawerHeader>
       <Box flex={1}>
         <Text fontWeight={500} fontSize={16}>
@@ -104,76 +302,108 @@ export const SubDrawer: FC<SubDrawerProps> = ({
         <Input
           placeholder='Ведите вопрос'
           value={currentQuestion.text}
-          errorMessage={!currentQuestion.text && isError ? 'Заполните поле' : ''}
-          onChange={({ target: { value } }) => handleQuestionTitle(currentIndex, value)}
+          onChange={(e) => handleTextChange(e.target.value)}
         />
+        <Space height={10} />
+        {!currentQuestion.id && (
+          <Button
+            onClick={() =>
+              createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
+            }
+            disabled={!currentQuestion.text}
+          >
+            Сохранить
+          </Button>
+        )}
         <Space height={30.5} />
-        {withImage ? (
-          <Box display='flex' width='100%' justifyContent='space-between'>
-            <QuestionImage src={currentQuestion.image} />
-            <Box
-              display='flex'
-              alignItems='center'
-              height='fit-content'
-              mt={15.5}
-              onClick={() => deleteImage(currentIndex)}
-            >
-              <RiCloseFill color={colors.DANGER} size={20} />
-              <Space width={5} />
-              <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
-                Удалить
+
+        {currentQuestion.id &&
+          (currentQuestion.image ? (
+            <Box display='flex' width='100%' justifyContent='space-between'>
+              <QuestionImage
+                src={`http://localhost/tests/${testId}/questions/${currentQuestion.id}/images/`}
+                onError={() =>
+                  setCurrentQuestion((prevState) => ({
+                    ...prevState,
+                    image: false,
+                  }))
+                }
+                onLoad={() =>
+                  setCurrentQuestion((prevState) => ({
+                    ...prevState,
+                    image: true,
+                  }))
+                }
+              />
+              <Box
+                display='flex'
+                alignItems='center'
+                height='fit-content'
+                mt={15.5}
+                onClick={removeImage}
+              >
+                <RiCloseFill color={colors.DANGER} size={20} />
+                <Space width={5} />
+                <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
+                  Удалить
+                </Text>
+              </Box>
+            </Box>
+          ) : (
+            <Box {...getRootProps()}>
+              <input {...getInputProps()} />
+              <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
+                + Добавить изображение
               </Text>
             </Box>
-          </Box>
-        ) : (
-          <Box {...getRootProps()}>
-            <input {...getInputProps()} />
-            <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
-              + Добавить изображение
-            </Text>
+          ))}
+
+        {currentQuestion.id && (
+          <Box mt={50.5}>
+            <Text>Варианты ответов</Text>
+            <Space height={12} />
+            <Box maxHeight={300} overflow='auto'>
+              {isLoading ||
+                currentQuestion.answers?.map(({ text, id, is_true, is_new }, index) => (
+                  <Fragment key={id}>
+                    <Input
+                      withAnswerControls
+                      isRight={is_true}
+                      value={text}
+                      onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
+                      onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
+                      onChange={(e) => handleEditAnswer(e.target.value, id)}
+                      onSave={() =>
+                        handleSaveAnswer(index, { text, id, is_true, is_new }, id)
+                      }
+                    />
+                    <Space height={20} />
+                  </Fragment>
+                ))}
+
+              {currentQuestion.answers.length < 4 && (
+                <Text
+                  fontSize={16}
+                  fontWeight={500}
+                  onClick={() => handleCreateNewAnswer()}
+                >
+                  + Добавить вариант ответа
+                </Text>
+              )}
+            </Box>
           </Box>
         )}
-
-        <Box mt={50.5}>
-          <Text>Варианты ответов</Text>
-          <Space height={12} />
-          <Box maxHeight={withImage ? 300 : 395} overflow='auto'>
-            {currentQuestion.answers.map(({ text, is_true, id }, i) => (
-              <React.Fragment key={id}>
-                <Input
-                  withAnswerControls
-                  isRight={is_true}
-                  value={currentQuestion.answers[i].text}
-                  errorMessage={!text && isError ? 'Заполните поле' : ''}
-                  onDelete={() => deleteAnswer(currentIndex, id)}
-                  onCheck={() => chooseRightAnswer(currentIndex, id)}
-                  onChange={({ target: { value } }) =>
-                    handleAnswerValue(currentIndex, id, value)
-                  }
-                />
-                <Space height={20} />
-              </React.Fragment>
-            ))}
-            <Text fontSize={16} fontWeight={500} onClick={() => addAnswer(currentIndex)}>
-              + Добавить вариант ответа
-            </Text>
-          </Box>
-        </Box>
       </Box>
 
       <Box justifySelf='end'>
-        {isCreatingTest ? (
-          <>
-            <Button view='ghost' onClick={onClick}>
-              Следующий вопрос
-            </Button>
-            <Space height={20} />
-            <Button view='primary' onClick={onSaveClick}>
-              Сохранить и закрыть
-            </Button>
-          </>
-        ) : (
-          <Button view='ghost'>Сохранить</Button>
+        {currentQuestion.id && (
+          <Button
+            view='primary'
+            onClick={handleSaveQuestion}
+            disabled={questionDataDifference}
+          >
+            Сохранить и закрыть
+          </Button>
         )}
       </Box>
     </Drawer>

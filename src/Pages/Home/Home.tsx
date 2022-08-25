@@ -6,11 +6,9 @@ import { Box, Space } from 'components';
 export const Home: FC = () => {
   return (
     <Main>
-      <Box>
-        <Box padding='46px 25px' height='100%'>
-          <Space height={36} />
-          <TestsList />
-        </Box>
+      <Box padding='46px 25px' height='100%'>
+        <Space height={36} />
+        <TestsList />
       </Box>
     </Main>
   );

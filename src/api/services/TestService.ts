@@ -15,8 +15,8 @@ export class TestService {
     return $api.get<TestResponse[]>('/tests/all/');
   }
 
-  static async createTest(data: Test): Promise<AxiosResponse> {
-    return $api.post('/tests/', data, {
+  static async createTest(data: Test): Promise<AxiosResponse<TestResponse>> {
+    return $api.post<TestResponse>('/tests/', data, {
       headers: { 'Content-Type': 'application/json' },
     });
   }

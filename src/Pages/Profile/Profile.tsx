@@ -60,7 +60,7 @@ export const Profile = () => {
               </Box>
             </Card>
             <Space height={32} />
-            {user?.is_admin && <Button view='primary'>Права администратора</Button>}
+            {/* {user?.is_admin && <Button view='primary'>Права администратора</Button>} */}
           </Box>
           <Button view='danger' onClick={openExitModal}>
             <Box display='flex' alignItems='center' justifyContent='center' width='100%'>
