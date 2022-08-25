@@ -31,7 +31,6 @@ export const CompletedTest: FC = () => {
   const state = location.state as CompletedTestState;
   const [isFirstRequest, setIsFirstRequest] = useState(true);
   const [isResultOpen, { setTrue: openResult, setFalse: closeResult }] = useBoolean();
-  const { textMessge, emoji, color } = resultMessage(state.rightAnswers, state.lenght);
   const { resultState, isLoading, refetch } = useUserAnswers(state && state.sessionId);
 
   useEffect(() => {
@@ -44,6 +43,7 @@ export const CompletedTest: FC = () => {
   if (!state) {
     return <Navigate to='/' />;
   }
+  const { textMessge, emoji, color } = resultMessage(state.rightAnswers, state.lenght);
 
   return (
     <Background>
