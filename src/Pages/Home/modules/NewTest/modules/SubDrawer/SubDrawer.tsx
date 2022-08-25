@@ -43,7 +43,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     useState<NewQuestionType>(initialQuestionState);
 
   const queryClient = useQueryClient();
-  const { isLoading, answers } = useAnswers(questionData.data?.id);
+  const { isLoading, answers } = useAnswers(Number(questionData.data?.id));
 
   const { mutateAsync: updateQuestion } = useMutation(
     'updateQuestion',
@@ -267,24 +267,17 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   };
 
   useEffect(() => {
-    setCurrentQuestion((prevState) => ({
-      ...prevState,
-      answers: answers || [],
-    }));
-  }, [answers]);
-
-  useEffect(() => {
     setCurrentQuestion(
       questionData.data
         ? {
             id: questionData.data.id,
             text: questionData.data.text,
-            answers: [],
+            answers: answers || [],
             image: true,
           }
         : initialQuestionState
     );
-  }, [open, questionData.data]);
+  }, [answers, open, questionData.data]);
 
   return (
     <Drawer open={open} onClose={onClose}>

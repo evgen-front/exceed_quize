@@ -5,8 +5,11 @@ export const Background = styled.div`
   background-color: black;
   height: 100%;
   min-height: 100vh;
-  padding: 140px 20px 40px;
+  padding: 20px 20px 50px;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 export const ResultCard = styled.div`
@@ -18,6 +21,9 @@ export const ResultCard = styled.div`
   flex-direction: column;
   justify-content: space-between;
   border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 600px;
 
   &::after,
   &::before {
