@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 interface QuestionImageProps {
   src: string | null;
+  onError?: (e?: any) => void;
+  onLoad?: (e?: any) => void;
 }
 
 const StyledImage = styled.img`
@@ -12,6 +14,6 @@ const StyledImage = styled.img`
   object-fit: cover;
 `;
 
-export const QuestionImage: FC<QuestionImageProps> = ({ src }) => {
-  return <StyledImage src={src || ''} alt='image' />;
+export const QuestionImage: FC<QuestionImageProps> = ({ src, onError, onLoad }) => {
+  return <StyledImage src={src || ''} alt='image' onError={onError} onLoad={onLoad} />;
 };

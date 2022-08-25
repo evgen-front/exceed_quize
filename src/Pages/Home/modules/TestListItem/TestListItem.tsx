@@ -1,17 +1,19 @@
 import { FC, memo, useMemo } from 'react';
-import { getSessionPath } from 'Router/routes';
-import { useMutation, useQueryClient } from 'react-query';
 import { useNavigate } from 'react-router-dom';
-import { TestService } from 'api/services/TestService';
+import { useMutation, useQueryClient } from 'react-query';
 import { useAtom } from 'jotai';
+
+import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
+import { Card, Box, Text, Space, Button } from 'components';
+import { TestService } from 'api/services/TestService';
+import { getQuestionAmount } from 'Pages/Home/utils';
+import { getSessionPath } from 'Router/routes';
+import { useBoolean } from 'hooks/useBoolean';
+import { userAtom } from 'atoms/userAtom';
+
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
 import { TestResponse } from 'types';
-import { Card, Box, Text, Space, Button } from 'components';
 import { colors } from 'consts';
-import { userAtom } from 'atoms/userAtom';
-import { getQuestionAmount } from 'Pages/Home/utils';
-import { useBoolean } from 'hooks/useBoolean';
-import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 
 interface TestListItemProps {
   test: TestResponse;
@@ -22,11 +24,14 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [user] = useAtom(userAtom);
-  const questionAmount = useMemo(() => getQuestionAmount(test.questions?.length), []);
+  const questionAmount = useMemo(
+    () => getQuestionAmount(test.questions?.length),
+    [test.questions.length]
+  );
   const [isDeleteModalOpen, { setTrue: openDeleteModal, setFalse: closeDeleteModal }] =
     useBoolean();
 
-  const { mutateAsync } = useMutation(
+  const { mutateAsync: deleteTestRequest } = useMutation(
     'deleteTest',
     (id: number) => TestService.deleteTest(id),
     {
@@ -38,7 +43,7 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
 
   const deleteTest = async () => {
     if (test.id) {
-      await mutateAsync(test.id);
+      await deleteTestRequest(test.id);
     }
     closeDeleteModal();
   };
@@ -46,16 +51,12 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
   return (
     <>
       <Card>
-        <Box
-          display='flex'
-          justifyContent={user?.is_admin ? 'space-between' : ''}
-          alignItems='center'
-        >
+        <Box display='flex' alignItems='center'>
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
           {user?.is_admin && (
-            <Box display='flex'>
+            <Box display='flex' marginLeft='auto' paddingLeft={20}>
               <RiPencilFill
                 color={colors.GREY}
                 size={20}
@@ -71,7 +72,11 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
           {questionAmount}
         </Text>
         <Space height={32} />
-        <Button view='primary' onClick={() => navigate(getSessionPath(test.id))}>
+        <Button
+          view='primary'
+          onClick={() => navigate(getSessionPath(test.id))}
+          disabled={!test.questions.length}
+        >
           Начать
         </Button>
       </Card>

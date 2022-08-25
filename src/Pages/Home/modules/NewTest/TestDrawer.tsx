@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
 import { Button, Switch, Drawer, Box, Space, Text } from 'components';
 import { QuestionListItem } from './modules/QuestionListItem';
-import { getQuestionAmount } from 'Pages/HomeTEST/utils';
+import { getQuestionAmount } from 'Pages/Home/utils';
 import { TestService } from 'api/services/TestService';
 import { Input } from 'components/Input';
 import { SubDrawer } from './modules';

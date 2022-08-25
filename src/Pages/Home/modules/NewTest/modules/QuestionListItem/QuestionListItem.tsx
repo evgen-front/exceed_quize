@@ -1,13 +1,13 @@
 import { FC } from 'react';
+import { useMutation, useQueryClient } from 'react-query';
+
+import { QuestionService } from 'api/services/QuestionService';
+import { Box, Space, Text } from 'components';
+import { QuestionResponse } from 'types';
 
 import { RiPencilFill, RiCloseFill } from 'react-icons/ri';
-import { Box, Space, Text } from 'components';
-import { colors } from 'consts';
 import { BoxWithEllipsis } from './styled';
-
-import { QuestionResponse } from 'types';
-import { useMutation, useQueryClient } from 'react-query';
-import { QuestionService } from 'api/services/QuestionService';
+import { colors } from 'consts';
 
 interface QuestionListItemProps {
   question: QuestionResponse;
@@ -43,7 +43,7 @@ export const QuestionListItem: FC<QuestionListItemProps> = ({
       justifyContent='space-between'
       mb={33.5}
     >
-      <Text fontSize={16} fontWeight={500}>
+      <Text fontSize={16} fontWeight={600}>
         Вопрос {index + 1}
       </Text>
       <BoxWithEllipsis>

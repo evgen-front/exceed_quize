@@ -2,7 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { Profile, Session, SignIn, SignUp, CompletedTest } from 'Pages';
 
-import { Home } from '../Pages/HomeTEST';
+import { Home } from '../Pages/Home';
 import { PrivateRoute } from './PrivateRoute';
 import { SINGIN, SIGNUP, HOME, PROFILE, SESSION, COMPLETED } from './routes';
 import { userAtom } from 'atoms/userAtom';
