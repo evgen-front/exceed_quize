@@ -88,3 +88,16 @@ export interface ResultItem {
   question: QuestionResponse;
   right_answer: AnswerResponse;
 }
+
+export interface NewTestDataType {
+  id?: number;
+  published: boolean;
+  title: string;
+  questions: QuestionResponse[];
+}
+
+export interface questionsSubdrawerType {
+  isCreating: boolean;
+  index: number | null;
+  data: QuestionResponse | null;
+}

@@ -2,19 +2,22 @@ import { FC, useEffect, useMemo, useState, useCallback, memo } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 
 import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
+import { createTestAction, updateTestAction } from 'api/action-creators';
 import { Button, Switch, Drawer, Box, Space, Text } from 'components';
 import { QuestionListItem } from './modules/QuestionListItem';
 import { getQuestionAmount } from 'Pages/Home/utils';
-import { TestService } from 'api/services/TestService';
 import { Input } from 'components/Input';
 import { SubDrawer } from './modules';
 import { useBoolean } from 'hooks';
 import { colors } from 'consts';
 
-import { NewTestDataType, questionsSubdrawerType } from './types';
-import { QuestionResponse, TestResponse } from 'types';
+import {
+  NewTestDataType,
+  QuestionResponse,
+  questionsSubdrawerType,
+  TestResponse,
+} from 'types';
 import { testInDrawerType } from '../TestList';
-
 import { RiArrowLeftLine } from 'react-icons/ri';
 
 interface DrawerProps {
@@ -54,26 +57,17 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
     return isSame || !currentTest.title;
   }, [currentTest, testData.data]);
 
-  // Запросы для создания/редактирования теста
-  const { mutateAsync: createTest } = useMutation(
-    'createTest',
-    () => TestService.createTest(currentTest),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('testList');
-      },
-    }
-  );
+  const { mutateAsync: createTest } = useMutation(createTestAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('testList');
+    },
+  });
 
-  const { mutateAsync: updateTest } = useMutation(
-    'updateTest',
-    () => TestService.updateTest(currentTest.id!, currentTest),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('testList');
-      },
-    }
-  );
+  const { mutateAsync: updateTest } = useMutation(updateTestAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('testList');
+    },
+  });
 
   // Значение строки с количеством вопросов с правильным склонением
   const questionAmount = useMemo(
@@ -83,12 +77,12 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
 
   const handleSaveTest = useCallback(() => {
     if (testData.isCreating && !testData.data?.id) {
-      createTest();
+      createTest({ currentTest });
     } else {
-      updateTest();
+      updateTest({ test_id: currentTest.id!, currentTest });
       onClose();
     }
-  }, [testData, createTest, updateTest, onClose]);
+  }, [testData, createTest, updateTest, onClose, currentTest]);
 
   const handleOpenSubDrawer = useCallback(
     (data?: QuestionResponse, index?: number) => {

@@ -1,44 +1,24 @@
 import { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
-import { SessionService } from 'api/services/SessionService';
 import { Box, Button, Text } from 'components';
 import { useAnswers } from 'hooks';
 import { API_URL } from 'api';
 
 import { SessionLayout } from 'Layouts/MainView/SessionLayout';
-import { AnswerResponse, QuestionResponse } from 'types';
+import { AnswerResponse } from 'types';
 import { PaginationBullet, AnswerItem } from './styled';
-
-type SessionPageParams = {
-  testId: string;
-};
+import { useSession } from 'hooks/useSession';
+import { createUserAnswerAction } from 'api/action-creators';
 
 export const Session = () => {
-  const { testId } = useParams<SessionPageParams>();
+  const { testId } = useParams() as { testId: string };
   const [selectedAnswer, setSelectedAnswer] = useState<null | AnswerResponse>(null);
   const [rightAnswers, setRightAnsers] = useState(0);
   const [countAnswers, setCountAnswers] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
-
-  const { isLoading: isSessionDataLoading, data: sessionData } = useQuery(
-    'createSession',
-    () => SessionService.createSession(Number(testId)),
-    {
-      select: ({ data }) => {
-        const sortedQuestions = data.questions.sort((a, b) => a.ordering - b.ordering);
-        const result: {
-          questions: QuestionResponse[];
-          sessionId: number;
-        } = { questions: sortedQuestions || [], sessionId: data.id };
-
-        return result;
-      },
-      enabled: !!testId,
-    }
-  );
-
+  const { isSessionDataLoading, sessionData } = useSession(Number(testId));
   const { questions, sessionId } = sessionData || { questions: [] };
   const [questionIndexState, setQuestionIndexState] = useState({
     currentQuestionIndex: 0,
@@ -52,15 +32,11 @@ export const Session = () => {
     useAnswers(currentQuestion?.id);
 
   const { isLoading: isNextQuestionAnswersLoading } = useAnswers(nextQuestion?.id);
-
-  const { mutateAsync: createUserAnswerAsync } = useMutation(
-    'createUserAnswer',
-    (answer_id: number) => SessionService.createUserAnswer(sessionId!, { answer_id })
-  );
+  const { mutateAsync: createUserAnswerAsync } = useMutation(createUserAnswerAction);
 
   const handleNext = () => {
     if (selectedAnswer) {
-      createUserAnswerAsync(selectedAnswer?.id);
+      createUserAnswerAsync({ session_id: sessionId!, answer_id: selectedAnswer?.id });
     }
 
     if (selectedAnswer?.is_true) {

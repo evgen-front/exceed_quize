@@ -3,16 +3,22 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
 
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { QuestionService } from 'api/services/QuestionService';
-import { AnswerService } from 'api/services/AnswerService';
-import { Answer, AnswerDrawer, Question } from 'types';
-import { questionsSubdrawerType } from '../../types';
+import { Answer, AnswerDrawer, Question, questionsSubdrawerType } from 'types';
 import { useAnswers } from 'hooks';
 import { API_URL } from 'api';
 
 import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { RiArrowLeftLine, RiCloseFill } from 'react-icons/ri';
 import { colors } from 'consts';
+import {
+  createAnswerAction,
+  createImageAction,
+  createQuestionAction,
+  deleteAnswerAction,
+  deleteImageAction,
+  updateAnswerAction,
+  updateQuestionAction,
+} from 'api/action-creators';
 
 interface SubDrawerProps {
   open: boolean;
@@ -38,93 +44,38 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   const [currentAnswers, setCurrentAnswers] = useState<AnswerDrawer[]>([]);
   const [isImage, setIsImage] = useState(true);
 
-  const { mutateAsync: updateQuestion } = useMutation(
-    'updateQuestion',
-    ({
-      test_id,
-      question_id,
-      data,
-    }: {
-      test_id: number;
-      question_id: number;
-      data: Question;
-    }) => QuestionService.updateQuestion(test_id, question_id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('testList');
-      },
-    }
-  );
+  const { mutateAsync: createImage } = useMutation(createImageAction);
+  const { mutateAsync: deleteImage } = useMutation(deleteImageAction);
 
-  const { mutateAsync: createQuestion } = useMutation(
-    'createQuestion',
-    ({ test_id, data }: { test_id: number; data: Question }) =>
-      QuestionService.createNewQuestion(test_id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('testList');
-      },
-    }
-  );
+  const { mutateAsync: updateQuestion } = useMutation(updateQuestionAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('testList');
+    },
+  });
 
-  const { mutateAsync: updateAnswer } = useMutation(
-    'updateAnswer',
-    ({
-      question_id,
-      answer_id,
-      data,
-    }: {
-      question_id: number;
-      answer_id: number;
-      data: Answer;
-    }) => AnswerService.updateAnswer(question_id, answer_id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('Answers');
-      },
-    }
-  );
+  const { mutateAsync: createQuestion } = useMutation(createQuestionAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('testList');
+    },
+  });
 
-  const { mutateAsync: deleteAnswer } = useMutation(
-    'deleteAnswer',
-    ({ question_id, answer_id }: { question_id: number; answer_id: number }) =>
-      AnswerService.deleteAnswer(question_id, answer_id),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('Answers');
-      },
-    }
-  );
+  const { mutateAsync: updateAnswer } = useMutation(updateAnswerAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('Answers');
+    },
+  });
 
-  const { mutateAsync: createAnswer } = useMutation(
-    'createAnswer',
-    ({ question_id, data }: { question_id: number; data: Answer }) =>
-      AnswerService.createNewAnswer(question_id, data),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries('Answers');
-      },
-    }
-  );
+  const { mutateAsync: deleteAnswer } = useMutation(deleteAnswerAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('Answers');
+    },
+  });
 
-  const { mutateAsync: createImage } = useMutation(
-    'createImage',
-    ({
-      test_id,
-      question_id,
-      data,
-    }: {
-      test_id: number;
-      question_id: number;
-      data: any;
-    }) => QuestionService.createImage(test_id, question_id, data)
-  );
-
-  const { mutateAsync: deleteImage } = useMutation(
-    'deleteImage',
-    ({ test_id, question_id }: { test_id: number; question_id: number }) =>
-      QuestionService.deleteImage(test_id, question_id)
-  );
+  const { mutateAsync: createAnswer } = useMutation(createAnswerAction, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('Answers');
+    },
+  });
 
   const addImage = (acceptedFiles: File[]) => {
     const data = new FormData();
