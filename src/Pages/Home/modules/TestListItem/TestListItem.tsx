@@ -12,8 +12,11 @@ import { useBoolean } from 'hooks/useBoolean';
 import { userAtom } from 'atoms/userAtom';
 
 import { RiPencilFill, RiDeleteBin6Fill } from 'react-icons/ri';
+import EyeIcon from 'public/icons/eye-fill.svg';
+import EyeCloseIcon from 'public/icons/eye-off-fill.svg';
 import { TestResponse } from 'types';
 import { colors } from 'consts';
+import { Icon } from 'components/Input/styled';
 
 interface TestListItemProps {
   test: TestResponse;
@@ -56,15 +59,24 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
             {test.title}
           </Text>
           {user?.is_admin && (
-            <Box display='flex' marginLeft='auto' paddingLeft={20}>
-              <RiPencilFill
-                color={colors.GREY}
-                size={20}
-                onClick={() => openDrawer(test)}
-              />
-              <Space width={17} />
-              <RiDeleteBin6Fill color={colors.GREY} size={20} onClick={openDeleteModal} />
-            </Box>
+            <>
+              <Box width={20} height={24} ml={15} color={colors.GREY}>
+                <Icon src={test.published ? EyeIcon : EyeCloseIcon} alt='visible' />
+              </Box>
+              <Box display='flex' marginLeft='auto' paddingLeft={20}>
+                <RiPencilFill
+                  color={colors.GREY}
+                  size={20}
+                  onClick={() => openDrawer(test)}
+                />
+                <Space width={17} />
+                <RiDeleteBin6Fill
+                  color={colors.GREY}
+                  size={20}
+                  onClick={openDeleteModal}
+                />
+              </Box>
+            </>
           )}
         </Box>
         <Space height={12} />

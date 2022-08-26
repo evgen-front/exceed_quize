@@ -1,8 +1,8 @@
-import React from 'react';
+import { ReactNode } from 'react';
 import { HeaderContentHome, HeaderContentProfile, HeaderContentSign } from './modules';
 
 interface HeaderContent {
-  [key: string]: React.ReactNode;
+  [key: string]: ReactNode;
 }
 
 export const headerContentJSX: HeaderContent = {

@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Formik, Form as FormikForm } from 'formik';
 import styled from 'styled-components';
 import { SINGIN, SIGNUP } from 'Router/routes';
-import { Box, Input, Button, Text, Space, Switch } from 'components';
+import { Box, Input, Button, Text, Space } from 'components';
 import { colors } from 'consts';
 import { validateInputs } from './validator';
 
@@ -27,7 +27,7 @@ const StyledLink = styled(Link)`
 export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
   const initialValues = useMemo(
     () => inputs.reduce((prev, { name }) => ({ ...prev, [name]: '' }), {}),
-    []
+    [inputs]
   );
   const { pathname } = useLocation();
   const isSignInPage = pathname === SINGIN;
@@ -79,6 +79,7 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
               <Button view='primary' type='submit'>
                 {buttonText}
               </Button>
+              <Space height={20} />
             </Box>
           </StyledForm>
         )}

@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 import styled from 'styled-components';
 
 interface StyledPProps {
@@ -34,7 +34,7 @@ interface StyledSpanProps {
 }
 
 interface TextProps {
-  children: React.ReactNode;
+  children: ReactNode;
   color?: string;
   fontSize?: string;
   fontStyle?: string;
@@ -85,7 +85,7 @@ const StyledSpan = styled.span<StyledSpanProps>`
   ${({ center }) => (center ? `text-align: center;` : '')}
 `;
 
-export const Text: React.FC<TextProps> = ({
+export const Text: FC<TextProps> = ({
   children,
   color,
   fontWeight,

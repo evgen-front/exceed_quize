@@ -75,7 +75,7 @@ export const CompletedTest: FC = () => {
         <Space height='40px' style={{ flexShrink: '0' }} />
         <Box flex={'1 1 auto'} overflow={'auto'}>
           {!isLoading && resultState
-            ? resultState.map(({ question, right_answer, answer }, index) => (
+            ? resultState.reverse().map(({ question, right_answer, answer }, index) => (
                 <Fragment key={index}>
                   <ResultItem isTrue={answer.is_true}>
                     <Text fontSize={16}>

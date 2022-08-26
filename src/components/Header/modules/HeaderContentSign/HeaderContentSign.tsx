@@ -1,4 +1,3 @@
-import React from 'react';
 import { Box, Text } from 'components';
 import logo from 'public/images/favicon.svg';
 

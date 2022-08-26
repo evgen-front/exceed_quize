@@ -36,9 +36,9 @@ export interface User {
 }
 
 export interface Question {
+  id?: number;
   text: string;
   ordering?: number;
-  answers?: { id: number; text: string; is_true: boolean; image: string | null }[];
 }
 
 export interface QuestionResponse {

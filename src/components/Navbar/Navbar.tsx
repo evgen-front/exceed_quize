@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { useAtom } from 'jotai';
 import { Box } from 'components/StyledSystem';
 import { HOME, PROFILE } from '../../Router/routes';
@@ -24,7 +24,7 @@ const navLinks: {
   },
 ];
 
-export const Navbar: React.FC = () => {
+export const Navbar: FC = () => {
   const [user] = useAtom(userAtom);
   const shouldDisplayNavbar = !!user;
 

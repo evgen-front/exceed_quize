@@ -1,9 +1,9 @@
-import React, { FC } from 'react';
+import { ReactNode, FC } from 'react';
 import { Box } from 'components';
 import { colors } from 'consts';
 
 interface CardProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   height?: string;
   width?: string;
   padding?: string;

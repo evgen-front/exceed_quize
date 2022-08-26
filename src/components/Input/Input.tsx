@@ -1,5 +1,5 @@
-import React, { FC, useState } from 'react';
-import { Box, Space, Button } from 'components';
+import { FC, useState } from 'react';
+import { Box, Space } from 'components';
 import { colors } from 'consts';
 import EyeIcon from 'public/icons/eye-fill.svg';
 import EyeCloseIcon from 'public/icons/eye-off-fill.svg';

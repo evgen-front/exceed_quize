@@ -25,4 +25,8 @@ export const AnswerItem = styled.div<AnswerItemProps>`
   ${({ selected }) => selected && `background: ${colors.PALEPRIMARY}`};
   cursor: pointer;
   transition: 0.2s ease-in-out;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+  }
 `;

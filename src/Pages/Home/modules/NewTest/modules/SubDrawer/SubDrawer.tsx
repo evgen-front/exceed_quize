@@ -8,6 +8,7 @@ import { AnswerService } from 'api/services/AnswerService';
 import { Answer, AnswerDrawer, Question } from 'types';
 import { questionsSubdrawerType } from '../../types';
 import { useAnswers } from 'hooks';
+import { API_URL } from 'api';
 
 import { BackButton, DrawerHeader } from 'components/Drawer/styles';
 import { RiArrowLeftLine, RiCloseFill } from 'react-icons/ri';
@@ -20,17 +21,8 @@ interface SubDrawerProps {
   testId: number;
 }
 
-interface NewQuestionType {
-  id?: number;
-  text: string;
-  answers: AnswerDrawer[];
-  image?: boolean;
-}
-
 const initialQuestionState = {
   text: '',
-  answers: [],
-  image: false,
 };
 
 export const SubDrawer: FC<SubDrawerProps> = ({
@@ -39,11 +31,12 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   questionData,
   testId,
 }) => {
-  const [currentQuestion, setCurrentQuestion] =
-    useState<NewQuestionType>(initialQuestionState);
-
-  const queryClient = useQueryClient();
   const { isLoading, answers } = useAnswers(Number(questionData.data?.id));
+  const queryClient = useQueryClient();
+
+  const [currentQuestion, setCurrentQuestion] = useState<Question>(initialQuestionState);
+  const [currentAnswers, setCurrentAnswers] = useState<AnswerDrawer[]>([]);
+  const [isImage, setIsImage] = useState(true);
 
   const { mutateAsync: updateQuestion } = useMutation(
     'updateQuestion',
@@ -222,14 +215,13 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     }));
   }, []);
 
-  const handleEditAnswer = useCallback((value: string, id: number) => {
-    setCurrentQuestion((prevState) => ({
-      ...prevState,
-      answers: prevState.answers.map((answer) => {
+  const handleEditAnswer = (value: string, id: number) => {
+    setCurrentAnswers(
+      currentAnswers.map((answer) => {
         return answer.id === id ? { ...answer, text: value } : answer;
-      }),
-    }));
-  }, []);
+      })
+    );
+  };
 
   const handleSaveAnswer = (index: number, data: AnswerDrawer, id?: number) => {
     if (questionData.data) {
@@ -238,14 +230,14 @@ export const SubDrawer: FC<SubDrawerProps> = ({
           question_id: questionData.data?.id,
           answer_id: id,
           data: {
-            text: currentQuestion.answers[index].text,
+            text: currentAnswers[index].text,
           },
         });
       } else {
         createAnswer({
           question_id: questionData.data?.id,
           data: {
-            text: currentQuestion.answers[index].text,
+            text: currentAnswers[index].text,
           },
         });
       }
@@ -256,15 +248,15 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     // Задаем для только что созданного ответа уникальный id, потому что после сохраниения новый "рабочий" id придет с сервера и перерисует наш список
     const uid = Math.floor(Math.random() * 1000);
 
-    setCurrentQuestion((prevState) => ({
+    setCurrentAnswers((prevState) => [
       ...prevState,
-      answers: [
-        ...prevState.answers,
-        // Создаем внутри флаг что вопрос новый, при refetch это поле всё ровно удалится
-        { id: uid, text: '', is_true: false, is_new: true },
-      ],
-    }));
+      { id: uid, text: '', is_true: false, is_new: true },
+    ]);
   };
+
+  useEffect(() => {
+    setCurrentAnswers(answers || []);
+  }, [answers, open]);
 
   useEffect(() => {
     setCurrentQuestion(
@@ -272,12 +264,11 @@ export const SubDrawer: FC<SubDrawerProps> = ({
         ? {
             id: questionData.data.id,
             text: questionData.data.text,
-            answers: answers || [],
-            image: true,
           }
         : initialQuestionState
     );
-  }, [answers, open, questionData.data]);
+    setIsImage(true);
+  }, [open, questionData.data]);
 
   return (
     <Drawer open={open} onClose={onClose}>
@@ -311,22 +302,11 @@ export const SubDrawer: FC<SubDrawerProps> = ({
         <Space height={30.5} />
 
         {currentQuestion.id &&
-          (currentQuestion.image ? (
+          (isImage ? (
             <Box display='flex' width='100%' justifyContent='space-between'>
               <QuestionImage
-                src={`http://localhost/tests/${testId}/questions/${currentQuestion.id}/images/`}
-                onError={() =>
-                  setCurrentQuestion((prevState) => ({
-                    ...prevState,
-                    image: false,
-                  }))
-                }
-                onLoad={() =>
-                  setCurrentQuestion((prevState) => ({
-                    ...prevState,
-                    image: true,
-                  }))
-                }
+                src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
+                onError={() => setIsImage(false)}
               />
               <Box
                 display='flex'
@@ -357,7 +337,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
             <Space height={12} />
             <Box maxHeight={300} overflow='auto'>
               {isLoading ||
-                currentQuestion.answers?.map(({ text, id, is_true, is_new }, index) => (
+                currentAnswers?.map(({ text, id, is_true, is_new }, index) => (
                   <Fragment key={id}>
                     <Input
                       withAnswerControls
@@ -374,14 +354,17 @@ export const SubDrawer: FC<SubDrawerProps> = ({
                   </Fragment>
                 ))}
 
-              {currentQuestion.answers.length < 4 && (
-                <Text
-                  fontSize={16}
-                  fontWeight={500}
-                  onClick={() => handleCreateNewAnswer()}
-                >
-                  + Добавить вариант ответа
-                </Text>
+              {currentAnswers.length < 4 && (
+                <>
+                  <Text
+                    fontSize={16}
+                    fontWeight={500}
+                    onClick={() => handleCreateNewAnswer()}
+                  >
+                    + Добавить вариант ответа
+                  </Text>
+                  <Space height={10} />
+                </>
               )}
             </Box>
           </Box>

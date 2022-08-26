@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { ReactNode, FC } from 'react';
 import styled from 'styled-components';
 import { colors } from 'consts';
 
@@ -15,7 +15,7 @@ interface ButtonProps {
   onClick?: () => void;
   type?: 'submit';
   view?: 'primary' | 'secondary' | 'danger' | 'ghost' | 'ghostdanger';
-  children?: React.ReactNode;
+  children?: ReactNode;
   disabled?: boolean;
 }
 

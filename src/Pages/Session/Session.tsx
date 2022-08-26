@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { SessionService } from 'api/services/SessionService';
 import { Box, Button, Text } from 'components';
 import { useAnswers } from 'hooks';
+import { API_URL } from 'api';
 
 import { SessionLayout } from 'Layouts/MainView/SessionLayout';
 import { AnswerResponse, QuestionResponse } from 'types';
@@ -123,7 +124,7 @@ export const Session = () => {
         <Box backgroundColor='#F2F3F4' height={240} style={{ textAlign: 'center' }}>
           <img
             height={240}
-            src={`http://localhost/tests/${testId}/questions/${currentQuestion.id}/images/`}
+            src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
             alt='question_image'
           />
         </Box>
@@ -135,7 +136,12 @@ export const Session = () => {
             currentQuestionAnswers.map((answer) => (
               <AnswerItem
                 key={answer.id}
-                onClick={() => setSelectedAnswer(answer)}
+                onClick={() => {
+                  if ('vibrate' in window.navigator) {
+                    window.navigator.vibrate(10);
+                  }
+                  setSelectedAnswer(answer);
+                }}
                 selected={selectedAnswer?.id === answer.id}
               >
                 {answer.text}

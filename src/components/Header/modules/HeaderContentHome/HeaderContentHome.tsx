@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useAtom } from 'jotai';
 import { Box, Text, Avatar } from 'components';
 import { userAtom } from 'atoms/userAtom';

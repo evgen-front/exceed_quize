@@ -23,8 +23,8 @@ export const Main: FC<ReactChildrenProps> = ({ children }) => {
       <Header isNavbarDisplayed={isNavbarDisplayed} />
       <Box
         height={`calc(100% - ${isNavbarDisplayed ? '179px' : '114px'})`}
-        margin={isNavbarDisplayed ? `114px auto 65px` : ''}
-        overflow={isNavbarDisplayed ? 'auto' : ''}
+        margin={isNavbarDisplayed ? `114px auto 65px` : '0 auto'}
+        overflow='auto'
         width='100%'
         maxWidth='500px'
       >

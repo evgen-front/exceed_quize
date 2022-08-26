@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { useLocation } from 'react-router-dom';
 import { headerContentJSX } from './headerContentJSX';
 import { Box } from 'components';
