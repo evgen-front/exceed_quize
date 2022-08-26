@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import { FC } from 'react';
 import { colors } from 'consts';
 import { Box } from 'components';
 import { RiAddFill } from 'react-icons/ri';

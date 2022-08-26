@@ -1,4 +1,4 @@
-import React, { FC, ReactNode } from 'react';
+import { FC, ReactNode } from 'react';
 import { Button, Modal } from 'components';
 import attention from 'public/icons/information-fill.svg';
 import { ModalContent, ModalControls } from 'components/Modal/styles';
