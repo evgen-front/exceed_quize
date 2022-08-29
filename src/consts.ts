@@ -10,8 +10,8 @@ export const colors = {
 };
 
 export const backGroundColor: { [key: string]: string } = {
-  '/signin': '#FFFFFF',
-  '/signup': '#FFFFFF',
+  '/signin': colors.WHITE,
+  '/signup': colors.WHITE,
   '/': colors.SILVERSPRINGS,
   '/profile': colors.SILVERSPRINGS,
 };

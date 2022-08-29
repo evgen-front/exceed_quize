@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { colors } from 'consts';
 
 export const Background = styled.div`
   position: relative;
@@ -59,6 +60,6 @@ export const ResultItem = styled.div<ResultItemsProps>`
   position: relative;
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid ${({ isTrue }) => (isTrue ? '#10B981' : '#EF4444')};
+  border: 1px solid ${({ isTrue }) => (isTrue ? colors.GREEN : colors.DANGER)};
   background-color: ${({ isTrue }) => (isTrue ? '#E4F2EB' : '#FBE6E6')};
 `;

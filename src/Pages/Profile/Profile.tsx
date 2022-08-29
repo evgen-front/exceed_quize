@@ -59,9 +59,11 @@ export const Profile = () => {
                 </Text>
               </Box>
             </Card>
-            <Space height={32} />
+            {/* <Space height={32} /> */}
             {/* {user?.is_admin && <Button view='primary'>Права администратора</Button>} */}
           </Box>
+          <Space height={320} />
+
           <Button view='danger' onClick={openExitModal}>
             <Box display='flex' alignItems='center' justifyContent='center' width='100%'>
               <StyledImg src={IconExit} alt='icon' />

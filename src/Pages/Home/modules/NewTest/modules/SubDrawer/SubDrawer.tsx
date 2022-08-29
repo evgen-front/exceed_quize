@@ -1,4 +1,4 @@
-import { FC, Fragment, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, Fragment, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
 
@@ -43,6 +43,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
   const [currentQuestion, setCurrentQuestion] = useState<Question>(initialQuestionState);
   const [currentAnswers, setCurrentAnswers] = useState<AnswerDrawer[]>([]);
   const [isImage, setIsImage] = useState(true);
+  const AnswerList = useRef<HTMLDivElement>(null);
 
   const { mutateAsync: createImage } = useMutation(createImageAction);
   const { mutateAsync: deleteImage } = useMutation(deleteImageAction);
@@ -127,6 +128,10 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     return isSame || !currentQuestion.text;
   }, [currentQuestion.text, questionData.data?.text]);
 
+  const newQuestionExist = useMemo(() => {
+    return !currentAnswers.map((answer) => answer.is_new).includes(true);
+  }, [currentAnswers]);
+
   const handleSaveQuestion = useCallback(() => {
     updateQuestion({
       test_id: testId,
@@ -203,6 +208,13 @@ export const SubDrawer: FC<SubDrawerProps> = ({
       ...prevState,
       { id: uid, text: '', is_true: false, is_new: true },
     ]);
+
+    setTimeout(() => {
+      if (AnswerList.current) {
+        const nodeLenght = AnswerList.current.children.length;
+        AnswerList.current.children[nodeLenght - 2].querySelector('input')?.focus();
+      }
+    }, 0);
   };
 
   useEffect(() => {
@@ -229,7 +241,7 @@ export const SubDrawer: FC<SubDrawerProps> = ({
         </BackButton>
         <p>{questionData.index ? `Вопрос ${questionData.index}` : 'Новый вопрос'}</p>
       </DrawerHeader>
-      <Box flex={1}>
+      <Box>
         <Text fontWeight={500} fontSize={16}>
           Вопрос
         </Text>
@@ -239,90 +251,94 @@ export const SubDrawer: FC<SubDrawerProps> = ({
           value={currentQuestion.text}
           onChange={(e) => handleTextChange(e.target.value)}
         />
-        <Space height={10} />
-        {!currentQuestion.id && (
-          <Button
-            onClick={() =>
-              createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
-            }
-            disabled={!currentQuestion.text}
-          >
-            Сохранить
-          </Button>
-        )}
-        <Space height={30.5} />
+      </Box>
+      {!currentQuestion.id && (
+        <Button
+          onClick={() =>
+            createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
+          }
+          disabled={!currentQuestion.text}
+        >
+          Сохранить
+        </Button>
+      )}
 
-        {currentQuestion.id &&
-          (isImage ? (
-            <Box display='flex' width='100%' justifyContent='space-between'>
-              <QuestionImage
-                src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
-                onError={() => setIsImage(false)}
-              />
-              <Box
-                display='flex'
-                alignItems='center'
-                height='fit-content'
-                mt={15.5}
-                onClick={removeImage}
-              >
-                <RiCloseFill color={colors.DANGER} size={20} />
-                <Space width={5} />
-                <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
-                  Удалить
-                </Text>
-              </Box>
-            </Box>
-          ) : (
-            <Box {...getRootProps()}>
-              <input {...getInputProps()} />
-              <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
-                + Добавить изображение
+      {currentQuestion.id &&
+        (isImage ? (
+          <Box
+            display='flex'
+            width='100%'
+            justifyContent='space-between'
+            m={'20px 0 50px'}
+          >
+            <QuestionImage
+              src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
+              onError={() => setIsImage(false)}
+            />
+            <Box
+              display='flex'
+              alignItems='center'
+              height='fit-content'
+              mt={15.5}
+              onClick={removeImage}
+            >
+              <RiCloseFill color={colors.DANGER} size={20} />
+              <Space width={5} />
+              <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
+                Удалить
               </Text>
             </Box>
-          ))}
-
-        {currentQuestion.id && (
-          <Box mt={50.5}>
-            <Text>Варианты ответов</Text>
-            <Space height={12} />
-            <Box maxHeight={300} overflow='auto'>
-              {isLoading ||
-                currentAnswers?.map(({ text, id, is_true, is_new }, index) => (
-                  <Fragment key={id}>
-                    <Input
-                      withAnswerControls
-                      isRight={is_true}
-                      value={text}
-                      onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
-                      onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
-                      onChange={(e) => handleEditAnswer(e.target.value, id)}
-                      onSave={() =>
-                        handleSaveAnswer(index, { text, id, is_true, is_new }, id)
-                      }
-                    />
-                    <Space height={20} />
-                  </Fragment>
-                ))}
-
-              {currentAnswers.length < 4 && (
-                <>
-                  <Text
-                    fontSize={16}
-                    fontWeight={500}
-                    onClick={() => handleCreateNewAnswer()}
-                  >
-                    + Добавить вариант ответа
-                  </Text>
-                  <Space height={10} />
-                </>
-              )}
-            </Box>
           </Box>
-        )}
-      </Box>
+        ) : (
+          <Box {...getRootProps()}>
+            <input {...getInputProps()} />
+            <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
+              + Добавить изображение
+            </Text>
+          </Box>
+        ))}
+
+      {currentQuestion.id && (
+        <>
+          <Text>Варианты ответов</Text>
+          <Box mt={12} overflow='auto' ref={AnswerList} flex='1 1 auto'>
+            {isLoading ||
+              currentAnswers?.map(({ text, id, is_true, is_new }, index) => (
+                <Fragment key={id}>
+                  <Input
+                    withAnswerControls
+                    isRight={is_true}
+                    value={text}
+                    onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
+                    onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
+                    onChange={(e) => handleEditAnswer(e.target.value, id)}
+                    onSave={() =>
+                      handleSaveAnswer(index, { text, id, is_true, is_new }, id)
+                    }
+                    onBlur={() => answers && setCurrentAnswers(answers)}
+                  />
+                  <Space height={20} />
+                </Fragment>
+              ))}
+
+            {currentAnswers.length < 4 && newQuestionExist && (
+              <>
+                <Text
+                  fontSize={16}
+                  fontWeight={500}
+                  onClick={() => handleCreateNewAnswer()}
+                >
+                  + Добавить вариант ответа
+                </Text>
+                <Space height={10} />
+              </>
+            )}
+          </Box>
+        </>
+      )}
 
       <Box justifySelf='end'>
+        <Space height={10} />
         {currentQuestion.id && (
           <Button
             view='primary'

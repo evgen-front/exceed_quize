@@ -24,7 +24,6 @@ export interface TestResponse {
 export interface Test {
   title: string;
   published: boolean;
-  holder_id?: number; // При создании теста можно не использовать, так как id создателя берется по токенам
 }
 
 export interface User {

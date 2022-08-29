@@ -1,3 +1,5 @@
+import { colors } from 'consts';
+
 export const resultMessage = (rightAnswers: number, countOfQuestions: number) => {
   const percentOfRight = (rightAnswers / countOfQuestions) * 100;
 
@@ -6,19 +8,19 @@ export const resultMessage = (rightAnswers: number, countOfQuestions: number) =>
       return {
         textMessge: 'Да ты хорош!',
         emoji: '😎',
-        color: '#10B981',
+        color: colors.GREEN,
       };
     case percentOfRight >= 40:
       return {
         textMessge: 'Неплохо!',
         emoji: '🤓',
-        color: '#FF6B00',
+        color: colors.PRIMARY,
       };
     default:
       return {
         textMessge: 'Получится в другой раз!!',
         emoji: '😅',
-        color: '#EF4444',
+        color: colors.DANGER,
       };
   }
 };

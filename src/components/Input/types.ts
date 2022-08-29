@@ -10,6 +10,7 @@ export interface InputProps {
   onCheck?: () => void;
   onDelete?: () => void;
   onSave?: (event: any) => void;
+  onBlur?: () => void;
   isRight?: boolean;
   errorMessage?: string | FormikErrors<any> | string[] | FormikErrors<any>[] | undefined;
 }

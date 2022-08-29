@@ -30,7 +30,7 @@ const StyledButton = styled.button<StyledButtonProps>`
   font-weight: 700;
   font-size: 18px;
   color: ${({ view, disabled }) => {
-    if (disabled) return '#FFFFFF';
+    if (disabled) return colors.WHITE;
 
     switch (view) {
       case 'ghost':
@@ -38,7 +38,7 @@ const StyledButton = styled.button<StyledButtonProps>`
       case 'ghostdanger':
         return buttonColors.danger;
       default:
-        return '#FFFFFF';
+        return colors.WHITE;
     }
   }};
 

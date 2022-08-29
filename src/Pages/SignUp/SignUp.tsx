@@ -2,8 +2,11 @@ import { useNavigate } from 'react-router-dom';
 import { Form } from 'components';
 import { SignInUp, Input } from 'types';
 import { AuthService } from 'api/services/AuthService';
-import { SINGIN } from 'Router/routes';
+import { HOME } from 'Router/routes';
 import { Main } from 'Layouts/MainView/Main';
+import { UserService } from 'api/services/UserService';
+import { useAtom } from 'jotai';
+import { userAtom } from 'atoms/userAtom';
 
 const inputs: Input[] = [
   { title: 'Имя пользователя', name: 'username', type: 'text' },
@@ -14,18 +17,23 @@ const inputs: Input[] = [
 
 export const SignUp = () => {
   const navigate = useNavigate();
+  const [, setUser] = useAtom(userAtom);
   const onSubmit = ({ username, password, email }: SignInUp) => {
     AuthService.signup({ username, password, email })
       .then((result) => {
-        console.log(result);
-
         if (result.status === 201) {
-          navigate(SINGIN);
+          AuthService.signin({ username, password }).then((r) => {
+            if (r.status === 200) {
+              UserService.getMe().then((r) => {
+                let user = r.data;
+                setUser(user);
+                navigate(HOME);
+              });
+            }
+          });
         }
       })
       .catch((error) => {
-        console.log(error.response); //!!!
-
         switch (error.response.status) {
           case 422:
             alert('Incorrect email');

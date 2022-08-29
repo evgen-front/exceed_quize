@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useParams, Navigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
-import { Box, Button, Text } from 'components';
+import { Box, Button, Space, Text } from 'components';
 import { useAnswers } from 'hooks';
 import { API_URL } from 'api';
 
@@ -11,6 +11,7 @@ import { AnswerResponse } from 'types';
 import { PaginationBullet, AnswerItem } from './styled';
 import { useSession } from 'hooks/useSession';
 import { createUserAnswerAction } from 'api/action-creators';
+import { colors } from 'consts';
 
 export const Session = () => {
   const { testId } = useParams() as { testId: string };
@@ -41,13 +42,14 @@ export const Session = () => {
 
     if (selectedAnswer?.is_true) {
       setRightAnsers(rightAnswers + 1);
-      setSelectedAnswer(null);
     }
 
     if (questionIndexState.currentQuestionIndex === questions.length - 1) {
       setIsComplete(true);
       return;
     }
+
+    setSelectedAnswer(null);
     setCountAnswers(countAnswers + 1);
 
     setQuestionIndexState(({ nextQuestionIndex }) => {
@@ -97,7 +99,11 @@ export const Session = () => {
         marginTop={20}
         style={{ gap: 20 }}
       >
-        <Box backgroundColor='#F2F3F4' height={240} style={{ textAlign: 'center' }}>
+        <Box
+          backgroundColor={colors.SILVERSPRINGS}
+          height={240}
+          style={{ textAlign: 'center' }}
+        >
           <img
             height={240}
             src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
@@ -126,14 +132,18 @@ export const Session = () => {
           )}
         </Box>
       </Box>
-      <Button
-        disabled={!selectedAnswer || isNextQuestionAnswersLoading}
-        onClick={handleNext}
-      >
-        {questionIndexState.currentQuestionIndex + 1 === questions.length
-          ? 'Завершить'
-          : 'Следующий вопрос'}
-      </Button>
+
+      <Box>
+        <Space height={20} />
+        <Button
+          disabled={!selectedAnswer || isNextQuestionAnswersLoading}
+          onClick={handleNext}
+        >
+          {questionIndexState.currentQuestionIndex + 1 === questions.length
+            ? 'Завершить'
+            : 'Следующий вопрос'}
+        </Button>
+      </Box>
     </SessionLayout>
   );
 };

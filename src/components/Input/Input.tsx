@@ -20,6 +20,7 @@ export const Input: FC<InputProps> = ({
   onDelete,
   onCheck,
   onSave,
+  onBlur,
   isRight,
   errorMessage,
   withAnswerControls,
@@ -33,10 +34,11 @@ export const Input: FC<InputProps> = ({
       setIsInputFocus(true);
     }
   };
-  const onBlur = () => {
+  const onBlurBasic = () => {
     if (isInputFocus) {
       setIsInputFocus(false);
     }
+    onBlur && onBlur();
   };
 
   const isError = !!errorMessage;
@@ -46,7 +48,7 @@ export const Input: FC<InputProps> = ({
       <InputWrapper
         isError={isError}
         onFocus={onFocus}
-        onBlur={onBlur}
+        onBlur={onBlurBasic}
         isBorderLighted={isInputFocus}
       >
         <StyledInput
