@@ -24,6 +24,7 @@ export const Input: FC<InputProps> = ({
   isRight,
   errorMessage,
   withAnswerControls,
+  innerRef,
 }) => {
   const [shouldDisplayPassword, setShouldDisplayPassword] = useState<boolean>(false);
   const [isInputFocus, setIsInputFocus] = useState<boolean>(false);
@@ -58,6 +59,7 @@ export const Input: FC<InputProps> = ({
           value={value}
           onChange={onChange}
           className={isError ? 'error' : ''}
+          ref={innerRef}
         />
         {isPassword && (
           <Box width='22px' ml='10px' color={colors.GREY} onClick={handleDisplayPassword}>

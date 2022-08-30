@@ -36,11 +36,11 @@ export const Session = () => {
   const { mutateAsync: createUserAnswerAsync } = useMutation(createUserAnswerAction);
 
   const handleNext = () => {
-    if (selectedAnswer) {
-      createUserAnswerAsync({ session_id: sessionId!, answer_id: selectedAnswer?.id });
-    }
+    if (!selectedAnswer) return;
 
-    if (selectedAnswer?.is_true) {
+    createUserAnswerAsync({ session_id: sessionId!, answer_id: selectedAnswer?.id });
+
+    if (selectedAnswer.is_true) {
       setRightAnsers(rightAnswers + 1);
     }
 
