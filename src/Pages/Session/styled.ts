@@ -32,7 +32,7 @@ export const AnswerItem = styled.div<AnswerItemProps>`
 `;
 
 export const Timer = styled.div`
-  width: 90px;
+  /* width: 90px; */
   display: flex;
   flex-direction: row;
   justify-content: space-between;

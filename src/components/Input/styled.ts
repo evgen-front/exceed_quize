@@ -47,7 +47,8 @@ export const Icon = styled.img`
 
 export const ErrorWrapper = styled.div`
   position: absolute;
-  left: 14px;
+  left: 0;
+  top: 50px;
 `;
 
 export const ErrorMessage = styled.p`

@@ -1,4 +1,4 @@
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Formik, Form as FormikForm } from 'formik';
 import styled from 'styled-components';
@@ -6,9 +6,7 @@ import { SINGIN, SIGNUP, RESET } from 'Router/routes';
 import { Box, Input, Button, Text, Space } from 'components';
 import { colors } from 'consts';
 import { FormikValues } from 'formik';
-
-import { validateInputs } from './validator';
-import { signInScheme } from './validations/scheme';
+import { resetScheme, signInScheme, signUpScheme } from './validations/scheme';
 
 interface FormProps {
   inputs: { title: string; name: string; type: 'email' | 'password' | 'text' }[];
@@ -37,15 +35,22 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
   const isResetPage = pathname === RESET;
   const to = isSignInPage ? SIGNUP : SINGIN;
 
-  const validateScheme = (values: FormikValues) => {
-    switch (pathname) {
-      case SINGIN:
-        return signInScheme(values);
+  const validateScheme = useCallback(
+    (values: FormikValues) => {
+      switch (pathname) {
+        case SINGIN:
+          return signInScheme(values);
+        case SIGNUP:
+          return signUpScheme(values);
+        case RESET:
+          return resetScheme(values);
 
-      default:
-        break;
-    }
-  };
+        default:
+          return;
+      }
+    },
+    [pathname]
+  );
 
   return (
     <Box padding='46px 20px' height='100%' display='flex' flexDirection='column'>
@@ -55,8 +60,7 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
       <Space height={46} style={{ flexShrink: 0 }} />
       <Formik
         initialValues={initialValues as any}
-        // validate={(values) => validateScheme(values)}
-        validate={(values) => validateInputs(values, isSignInPage, isResetPage)}
+        validate={(values) => validateScheme(values)}
         onSubmit={(values) => onSubmit(values)}
       >
         {({ errors, values, touched, handleChange }) => (
@@ -75,7 +79,7 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
                     onChange={handleChange}
                     errorMessage={touched[name] ? errors[name] : ''}
                   />
-                  <Space height='28px' />
+                  <Space height='35px' />
                 </Box>
               ))}
             </Box>

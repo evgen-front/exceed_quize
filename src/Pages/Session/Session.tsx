@@ -1,9 +1,9 @@
 import { useCallback, useState } from 'react';
-import { useParams, Navigate, useLocation } from 'react-router-dom';
+import { useParams, Navigate, useLocation, NavLink, useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
 import { Box, Button, Space, Text } from 'components';
-import { useAnswers, useInterval } from 'hooks';
+import { useAnswers, useBoolean, useInterval } from 'hooks';
 import { API_URL } from 'api';
 
 import { SessionLayout } from 'Layouts/SessionLayout';
@@ -14,13 +14,14 @@ import { createUserAnswerAction } from 'api/action-creators';
 import { RiCloseFill, RiTimeFill } from 'react-icons/ri';
 
 import { colors } from 'consts';
-import { BackButton } from 'components/Drawer/styles';
 import { timeCounter } from './utils/timeCounter';
-import { Icon } from 'components/Input/styled';
+import { HOME } from 'Router/routes';
+import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 
 export const Session = () => {
   const { testId } = useParams() as { testId: string };
   const location = useLocation();
+  const navigate = useNavigate();
   const locationState = location.state as { duration: number };
   const [selectedAnswer, setSelectedAnswer] = useState<null | AnswerResponse>(null);
   const [rightAnswers, setRightAnsers] = useState(0);
@@ -33,6 +34,7 @@ export const Session = () => {
     nextQuestionIndex: 1,
   });
   const [timeLeft, setTimeLeft] = useState(locationState.duration);
+  const [isModalOpen, { setTrue: openModal, setFalse: closeModal }] = useBoolean();
 
   const currentQuestion = questions[questionIndexState.currentQuestionIndex];
   const nextQuestion = questions[questionIndexState.nextQuestionIndex];
@@ -95,79 +97,95 @@ export const Session = () => {
   }
 
   return (
-    <SessionLayout>
-      <Box display='flex' alignItems='center' justifyContent='space-between'>
-        <Text fontSize={20} fontWeight={700}>
-          Вопрос {questionIndexState.currentQuestionIndex + 1}
-        </Text>
-        {/* <BackButton>
-          <RiCloseFill />
-        </BackButton> */}
-        <Timer>
-          <RiTimeFill color={colors.GREY} size={20} />
-          {timeCounter(timeLeft)}
-        </Timer>
-      </Box>
-      <Box display='flex' style={{ gap: '4px' }} margin='30px 0'>
-        {questions.map(({ id }, index) => (
-          <PaginationBullet key={id} isComplete={countAnswers > index} />
-        ))}
-      </Box>
-      <Text fontSize={20} fontWeight={500}>
-        {currentQuestion?.text}
-      </Text>
-      <Box
-        display='flex'
-        flexDirection='column'
-        flex='1 1 auto'
-        marginTop={20}
-        style={{ gap: 20 }}
-      >
-        <Box
-          backgroundColor={colors.SILVERSPRINGS}
-          height={240}
-          style={{ textAlign: 'center' }}
-        >
-          <img
-            height={240}
-            src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
-            alt='question_image'
-          />
-        </Box>
-        <Box display='flex' flexDirection='column' style={{ gap: 20 }}>
-          {isCurrentQuestionAnswersLoading ? (
-            <div>Загрузка</div>
-          ) : (
-            currentQuestionAnswers &&
-            currentQuestionAnswers.map((answer) => (
-              <AnswerItem
-                key={answer.id}
-                onClick={() => {
-                  if ('vibrate' in window.navigator) {
-                    window.navigator.vibrate(10);
-                  }
-                  setSelectedAnswer(answer);
-                }}
-                selected={selectedAnswer?.id === answer.id}
-              >
-                {answer.text}
-              </AnswerItem>
-            ))
-          )}
-        </Box>
-      </Box>
+    <>
+      <SessionLayout>
+        <Box display='flex' alignItems='center' justifyContent='space-between'>
+          <Box display='flex' alignItems='center'>
+            <Timer onClick={openModal}>
+              <RiCloseFill size={20} />
+            </Timer>
 
-      <Box>
-        <Space height={20} />
-        <Button
-          disabled={!selectedAnswer || isNextQuestionAnswersLoading}
-          onClick={handleNext}
+            <Space width={10} />
+            <Text fontSize={20} fontWeight={700}>
+              Вопрос {questionIndexState.currentQuestionIndex + 1}
+            </Text>
+          </Box>
+          <Timer>
+            <RiTimeFill color={colors.GREY} size={20} />
+            <Box width={45} style={{ textAlign: 'right' }}>
+              {timeCounter(timeLeft)}
+            </Box>
+          </Timer>
+        </Box>
+        <Box display='flex' style={{ gap: '4px' }} margin='30px 0'>
+          {questions.map(({ id }, index) => (
+            <PaginationBullet key={id} isComplete={countAnswers > index} />
+          ))}
+        </Box>
+        <Text fontSize={20} fontWeight={500}>
+          {currentQuestion?.text}
+        </Text>
+        <Box
+          display='flex'
+          flexDirection='column'
+          flex='1 1 auto'
+          marginTop={20}
+          style={{ gap: 20 }}
         >
-          {questionIndexState.currentQuestionIndex + 1 === questions.length
-            ? 'Завершить'
-            : 'Следующий вопрос'}
-        </Button>
-      </Box>
-    </SessionLayout>
+          <Box
+            backgroundColor={colors.SILVERSPRINGS}
+            height={240}
+            style={{ textAlign: 'center' }}
+          >
+            <img
+              height={240}
+              src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
+              alt='question_image'
+            />
+          </Box>
+          <Box display='flex' flexDirection='column' style={{ gap: 20 }}>
+            {isCurrentQuestionAnswersLoading ? (
+              <div>Загрузка</div>
+            ) : (
+              currentQuestionAnswers &&
+              currentQuestionAnswers.map((answer) => (
+                <AnswerItem
+                  key={answer.id}
+                  onClick={() => {
+                    if ('vibrate' in window.navigator) {
+                      window.navigator.vibrate(10);
+                    }
+                    setSelectedAnswer(answer);
+                  }}
+                  selected={selectedAnswer?.id === answer.id}
+                >
+                  {answer.text}
+                </AnswerItem>
+              ))
+            )}
+          </Box>
+        </Box>
+
+        <Box>
+          <Space height={20} />
+          <Button
+            disabled={!selectedAnswer || isNextQuestionAnswersLoading}
+            onClick={handleNext}
+          >
+            {questionIndexState.currentQuestionIndex + 1 === questions.length
+              ? 'Завершить'
+              : 'Следующий вопрос'}
+          </Button>
+        </Box>
+      </SessionLayout>
+
+      <AtentionModal
+        isVisible={isModalOpen}
+        onClose={closeModal}
+        onSubmit={() => navigate(HOME)}
+        submitText='Выйти'
+        text='Хотите покинуть тест?'
+      ></AtentionModal>
+    </>
   );
 };

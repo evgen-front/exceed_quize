@@ -20,6 +20,14 @@ export interface ISignUp {
   password: string;
 }
 
+export interface UserResponse {
+  id: number;
+  username: string;
+  email: string;
+  is_admin: boolean;
+  is_moderator: boolean;
+}
+
 export interface TestResponse {
   created_at: Date;
   holder_id: number;
