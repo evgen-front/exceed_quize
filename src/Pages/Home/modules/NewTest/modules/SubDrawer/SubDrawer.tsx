@@ -16,8 +16,8 @@ import { Answer, AnswerDrawer, Question, questionsSubdrawerType } from 'types';
 import { useAnswers } from 'hooks';
 import { API_URL } from 'api';
 
-import { BackButton, DrawerHeader } from 'components/Drawer/styles';
-import { RiArrowLeftLine, RiCloseFill } from 'react-icons/ri';
+import { BackButton, DrawerContent, DrawerHeader } from 'components/Drawer/styles';
+import { RiArrowLeftSLine, RiCloseFill } from 'react-icons/ri';
 import { colors } from 'consts';
 import {
   createAnswerAction,
@@ -245,134 +245,136 @@ export const SubDrawer: FC<SubDrawerProps> = ({
     <Drawer open={open} onClose={onClose}>
       <DrawerHeader>
         <BackButton onClick={onClose}>
-          <RiArrowLeftLine />
+          <RiArrowLeftSLine />
         </BackButton>
         <p>{questionData.index ? `Вопрос ${questionData.index}` : 'Новый вопрос'}</p>
       </DrawerHeader>
-      <Box>
-        <Text fontWeight={500} fontSize={16}>
-          Вопрос
-        </Text>
-        <Space height={12} />
-        <Input
-          placeholder='Ведите вопрос'
-          value={currentQuestion.text}
-          onChange={(e) => handleTextChange(e.target.value)}
-        />
-        <Space height={12} />
-        {!currentQuestion.id && (
-          <Button
-            onClick={() =>
-              createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
-            }
-            disabled={!currentQuestion.text}
-          >
-            Сохранить
-          </Button>
-        )}
-      </Box>
+      <DrawerContent>
+        <Box width='100%'>
+          <Text fontWeight={500} fontSize={16}>
+            Вопрос
+          </Text>
+          <Space height={12} />
+          <Input
+            placeholder='Ведите вопрос'
+            value={currentQuestion.text}
+            onChange={(e) => handleTextChange(e.target.value)}
+          />
+          <Space height={12} />
+          {!currentQuestion.id && (
+            <Button
+              onClick={() =>
+                createQuestion({ test_id: testId, data: { text: currentQuestion.text } })
+              }
+              disabled={!currentQuestion.text}
+            >
+              Сохранить
+            </Button>
+          )}
+        </Box>
 
-      <Box display='flex' width='100%' justifyContent='space-between' m={'20px 0 50px'}>
-        {currentQuestion.id &&
-          (isImage ? (
-            <>
-              <QuestionImage
-                src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
-                onError={() => setIsImage(false)}
-              />
+        <Box display='flex' width='100%' justifyContent='space-between' m={'20px 0 50px'}>
+          {currentQuestion.id &&
+            (isImage ? (
+              <>
+                <QuestionImage
+                  src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
+                  onError={() => setIsImage(false)}
+                />
 
-              <Box
-                display='flex'
-                alignItems='center'
-                height='fit-content'
-                mt={15.5}
-                onClick={removeImage}
-              >
-                <RiCloseFill color={colors.DANGER} size={20} />
-                <Space width={5} />
-                <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
-                  Удалить
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  height='fit-content'
+                  mt={15.5}
+                  onClick={removeImage}
+                >
+                  <RiCloseFill color={colors.DANGER} size={20} />
+                  <Space width={5} />
+                  <Text color={colors.DANGER} fontSize={16} fontWeight={500}>
+                    Удалить
+                  </Text>
+                </Box>
+              </>
+            ) : (
+              <Box {...getRootProps()}>
+                <input {...getInputProps()} />
+                <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
+                  + Добавить изображение
                 </Text>
               </Box>
-            </>
-          ) : (
-            <Box {...getRootProps()}>
-              <input {...getInputProps()} />
-              <Text fontSize={16} fontWeight={500} onClick={openDropzone}>
-                + Добавить изображение
-              </Text>
-            </Box>
-          ))}
-      </Box>
+            ))}
+        </Box>
 
-      {currentQuestion.id && (
-        <>
-          <Text>Варианты ответов</Text>
+        {currentQuestion.id && (
+          <>
+            <Text>Варианты ответов</Text>
 
-          {isLoading || isRefetching ? (
-            <Box m='20px 0' flex='1 1 auto'>
-              Загрузка
-            </Box>
-          ) : (
-            <Box mt={12} overflow='auto' flex='1 1 auto'>
-              {isLoading ||
-                currentAnswers?.map(({ text, id, is_true, is_new }, index) => (
-                  <Fragment key={id}>
-                    <Input
-                      withAnswerControls
-                      isRight={is_true}
-                      value={text}
-                      onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
-                      onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
-                      onChange={(e) => handleEditAnswer(e.target.value, id)}
-                      onSave={() =>
-                        handleSaveAnswer(index, { text, id, is_true, is_new }, id)
-                      }
-                      onBlur={() => answers && setCurrentAnswers(answers)}
-                    />
-                    <Space height={20} />
-                  </Fragment>
-                ))}
+            {isLoading || isRefetching ? (
+              <Box m='20px 0' flex='1 0 auto'>
+                Загрузка
+              </Box>
+            ) : (
+              <Box mt={12}>
+                {isLoading ||
+                  currentAnswers?.map(({ text, id, is_true, is_new }, index) => (
+                    <Fragment key={id}>
+                      <Input
+                        withAnswerControls
+                        isRight={is_true}
+                        value={text}
+                        onDelete={() => handleDeleteAnswer(currentQuestion.id!, id)}
+                        onCheck={() => handleCheckAnswer({ text, id, is_true: !is_true })}
+                        onChange={(e) => handleEditAnswer(e.target.value, id)}
+                        onSave={() =>
+                          handleSaveAnswer(index, { text, id, is_true, is_new }, id)
+                        }
+                        onBlur={() => answers && setCurrentAnswers(answers)}
+                      />
+                      <Space height={20} />
+                    </Fragment>
+                  ))}
 
-              {newAnswer.isCreating && (
-                <EditAnswerInput
-                  ref={AnswerCreator}
-                  onBlur={() => setNewAnswer(initialNewAnswerState)}
-                  value={newAnswer.text}
-                  onChange={(e: any) =>
-                    setNewAnswer((prev) => ({
-                      ...prev,
-                      text: e.target.value,
-                    }))
-                  }
-                  onSave={handleCreateNewAnswer}
-                />
-              )}
-
-              {currentAnswers.length < 4 && newQuestionExist && (
-                <>
-                  <Space height={10} />
-                  <Text
-                    fontSize={16}
-                    fontWeight={500}
-                    onClick={() =>
+                {newAnswer.isCreating && (
+                  <EditAnswerInput
+                    ref={AnswerCreator}
+                    onBlur={() => setNewAnswer(initialNewAnswerState)}
+                    value={newAnswer.text}
+                    onChange={(e: any) =>
                       setNewAnswer((prev) => ({
                         ...prev,
-                        isCreating: true,
+                        text: e.target.value,
                       }))
                     }
-                  >
-                    + Добавить вариант ответа
-                  </Text>
-                  <Space height={10} />
-                </>
-              )}
-            </Box>
-          )}
-        </>
-      )}
+                    onSave={handleCreateNewAnswer}
+                  />
+                )}
 
-      <Box justifySelf='end'>
+                {currentAnswers.length < 4 && newQuestionExist && (
+                  <>
+                    <Space height={10} />
+                    <Text
+                      fontSize={16}
+                      fontWeight={500}
+                      onClick={() =>
+                        setNewAnswer((prev) => ({
+                          ...prev,
+                          isCreating: true,
+                        }))
+                      }
+                    >
+                      + Добавить вариант ответа
+                    </Text>
+                    <Space height={10} />
+                  </>
+                )}
+              </Box>
+            )}
+          </>
+        )}
+      </DrawerContent>
+
+      <Box>
         <Space height={10} />
         {currentQuestion.id && (
           <Button

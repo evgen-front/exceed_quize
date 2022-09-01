@@ -3,6 +3,14 @@ import { useAtom } from 'jotai';
 import { Box, Text, Avatar } from 'components';
 import { userAtom } from 'atoms/userAtom';
 import { colors } from 'consts';
+import { Link } from 'react-router-dom';
+import { PROFILE } from 'Router/routes';
+import styled from 'styled-components';
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+`;
 
 export const HeaderContentHome: FC = () => {
   const [user] = useAtom(userAtom);
@@ -17,7 +25,9 @@ export const HeaderContentHome: FC = () => {
           {user?.username}
         </Text>
       </Box>
-      <Avatar name={user?.username} />
+      <StyledLink to={PROFILE}>
+        <Avatar name={user?.username} />
+      </StyledLink>
     </Box>
   );
 };

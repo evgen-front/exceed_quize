@@ -1,15 +1,18 @@
-import React, { FC, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Formik, Form as FormikForm } from 'formik';
 import styled from 'styled-components';
-import { SINGIN, SIGNUP } from 'Router/routes';
+import { SINGIN, SIGNUP, RESET } from 'Router/routes';
 import { Box, Input, Button, Text, Space } from 'components';
 import { colors } from 'consts';
+import { FormikValues } from 'formik';
+
 import { validateInputs } from './validator';
+import { signInScheme } from './validations/scheme';
 
 interface FormProps {
   inputs: { title: string; name: string; type: 'email' | 'password' | 'text' }[];
-  onSubmit: (values: { password: string; username: string }) => void;
+  onSubmit: (values: any) => void;
   buttonText: string;
 }
 
@@ -31,17 +34,29 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
   );
   const { pathname } = useLocation();
   const isSignInPage = pathname === SINGIN;
+  const isResetPage = pathname === RESET;
   const to = isSignInPage ? SIGNUP : SINGIN;
+
+  const validateScheme = (values: FormikValues) => {
+    switch (pathname) {
+      case SINGIN:
+        return signInScheme(values);
+
+      default:
+        break;
+    }
+  };
 
   return (
     <Box padding='46px 20px' height='100%' display='flex' flexDirection='column'>
       <Text fontSize={24} fontWeight={700}>
-        {isSignInPage ? 'Вход' : 'Регистрация'}
+        {isResetPage ? 'Восстановление пароля' : isSignInPage ? 'Вход' : 'Регистрация'}
       </Text>
-      <Space height={46} />
+      <Space height={46} style={{ flexShrink: 0 }} />
       <Formik
         initialValues={initialValues as any}
-        validate={(values) => validateInputs(values, isSignInPage)}
+        // validate={(values) => validateScheme(values)}
+        validate={(values) => validateInputs(values, isSignInPage, isResetPage)}
         onSubmit={(values) => onSubmit(values)}
       >
         {({ errors, values, touched, handleChange }) => (
@@ -64,6 +79,7 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
                 </Box>
               ))}
             </Box>
+
             <Box>
               <Box margin='0 auto' width='fit-content'>
                 <Text fontSize={17} fontWeight={700}>
@@ -80,6 +96,19 @@ export const Form: FC<FormProps> = ({ inputs, onSubmit, buttonText }) => {
                 {buttonText}
               </Button>
               <Space height={20} />
+              {isSignInPage && (
+                <Box margin='0 auto' width='fit-content'>
+                  <Text fontSize={14} fontWeight={400}>
+                    Забыли пароль?
+                  </Text>
+                  &nbsp;
+                  <StyledLink to={RESET}>
+                    <Text fontSize={14} fontWeight={400} color={colors.PRIMARY}>
+                      Восстановить
+                    </Text>
+                  </StyledLink>
+                </Box>
+              )}
             </Box>
           </StyledForm>
         )}

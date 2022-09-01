@@ -11,6 +11,7 @@ export const StyledLabel = styled.label<StyledLabelProps>`
   width: 74px;
   height: 42px;
   opacity: ${({ disabled }) => (disabled ? '0.4' : '1')};
+  -webkit-tap-highlight-color: transparent;
   input {
     opacity: 0;
     width: 0;

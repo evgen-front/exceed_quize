@@ -59,7 +59,7 @@ export const TestsList: FC = memo(() => {
   }
 
   return (
-    <>
+    <Box padding='46px 25px 0'>
       <Text fontSize={24} fontWeight={700}>
         {!!testList?.length ? 'Доступные тесты :' : 'Нет доступных тестов'}
       </Text>
@@ -86,6 +86,6 @@ export const TestsList: FC = memo(() => {
         onClose={closeDrawer}
         testData={testInDrawer}
       />
-    </>
+    </Box>
   );
 });

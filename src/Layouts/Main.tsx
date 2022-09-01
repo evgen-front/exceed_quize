@@ -5,18 +5,20 @@ import { Header, Navbar, Box } from 'components';
 import { useLocation } from 'react-router-dom';
 import { useAtom } from 'jotai';
 import { userAtom } from 'atoms/userAtom';
+import { useWindowSize } from 'hooks';
 
 export const Main: FC<ReactChildrenProps> = ({ children }) => {
   const [user] = useAtom(userAtom);
   const { pathname } = useLocation();
   const isNavbarDisplayed = !!user;
+  const height = useWindowSize();
 
   return (
     <Box
       backgroundColor={backGroundColor[pathname]}
       display='flex'
       flexDirection='column'
-      height='100vh'
+      height={`${height}px`}
       position='relative'
       overflow='hidden'
     >

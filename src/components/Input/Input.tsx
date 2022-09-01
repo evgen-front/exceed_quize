@@ -42,6 +42,12 @@ export const Input: FC<InputProps> = ({
     onBlur && onBlur();
   };
 
+  const OnEnter = (event: any) => {
+    if (onSave && event.key === 'Enter') {
+      onSave(event);
+    }
+  };
+
   const isError = !!errorMessage;
   const isPassword = type === 'password';
   return (
@@ -60,6 +66,7 @@ export const Input: FC<InputProps> = ({
           onChange={onChange}
           className={isError ? 'error' : ''}
           ref={innerRef}
+          onKeyDown={(e) => OnEnter(e)}
         />
         {isPassword && (
           <Box width='22px' ml='10px' color={colors.GREY} onClick={handleDisplayPassword}>
@@ -69,7 +76,6 @@ export const Input: FC<InputProps> = ({
         {withAnswerControls && (
           <Box display='flex' alignItems='center'>
             {isInputFocus ? (
-              // <Button onClick={onSave}>Save</Button>
               <Box onMouseDown={onSave} display='flex'>
                 <RiCheckboxCircleLine color={colors.PRIMARY} size={30} />
               </Box>

@@ -1,9 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { Form } from 'components';
-import { SignInUp, Input } from 'types';
+import { ISignUp, Input } from 'types';
 import { AuthService } from 'api/services/AuthService';
 import { HOME } from 'Router/routes';
-import { Main } from 'Layouts/MainView/Main';
+import { Main } from 'Layouts/Main';
 import { UserService } from 'api/services/UserService';
 import { useAtom } from 'jotai';
 import { userAtom } from 'atoms/userAtom';
@@ -18,7 +18,7 @@ const inputs: Input[] = [
 export const SignUp = () => {
   const navigate = useNavigate();
   const [, setUser] = useAtom(userAtom);
-  const onSubmit = ({ username, password, email }: SignInUp) => {
+  const onSubmit = ({ username, password, email }: ISignUp) => {
     AuthService.signup({ username, password, email })
       .then((result) => {
         if (result.status === 201) {

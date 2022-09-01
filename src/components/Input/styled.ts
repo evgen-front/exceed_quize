@@ -11,6 +11,16 @@ export const StyledInput = styled.input`
   flex: 1;
 `;
 
+export const StyledSelect = styled.select`
+  width: 100%;
+  height: 46px;
+  border-radius: 8px;
+  padding: 11px 14px;
+  display: flex;
+  border: 1px solid ${colors.GREY};
+  outline: none;
+`;
+
 export const InputWrapper = styled.div<InputWrapperProps>`
   width: 100%;
   height: 46px;

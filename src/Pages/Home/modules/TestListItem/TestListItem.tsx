@@ -1,5 +1,5 @@
 import { FC, memo, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAtom } from 'jotai';
 
@@ -86,7 +86,9 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
         <Space height={32} />
         <Button
           view='primary'
-          onClick={() => navigate(getSessionPath(test.id))}
+          onClick={() =>
+            navigate(getSessionPath(test.id), { state: { duration: test.duration } })
+          }
           disabled={!test.questions.length}
         >
           Начать

@@ -37,10 +37,10 @@ export const DrawerModel = styled.div<{ closing: boolean; isClose: boolean }>`
   transition: background-color 0.3s ease-in-out;
 `;
 
-export const DrawerContainer = styled.div<{ closing: boolean }>`
+export const DrawerContainer = styled.div<{ closing: boolean; height: number }>`
   width: 100vw;
   max-width: 600px;
-  height: 100vh;
+  height: ${({ height }) => `${height}px`};
   padding: 35px 20px;
   background: white;
   position: relative;
@@ -61,9 +61,10 @@ export const DrawerContent = styled.div`
   column-gap: 8px;
   font-size: 20px;
   line-height: 28px;
-  margin-bottom: 30px;
-  align-items: flex-start;
+  margin: 30px 0;
+  align-items: stretch;
   width: 100%;
+  min-height: 300px;
   overflow: auto;
 `;
 
@@ -89,11 +90,11 @@ export const BackButton = styled.button`
   background: none;
   width: 32px;
   height: 32px;
-  margin-bottom: 38px;
   font-weight: 700;
   font-size: 24px;
   line-height: 29px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 `;
 
 export const QuestionsList = styled.div`

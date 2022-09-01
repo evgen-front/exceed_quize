@@ -1,3 +1,4 @@
+import { useWindowSize } from 'hooks';
 import { FC, ReactNode, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { DrawerModel, DrawerContainer } from './styles';
@@ -13,6 +14,7 @@ const body = document.querySelector('body') as HTMLElement;
 export const Drawer: FC<DrawerProps> = ({ open, onClose, children }) => {
   const [isClose, setIsClose] = useState(true);
   const [firstInit, setFirstInit] = useState(true);
+  const height = useWindowSize();
 
   useEffect(() => {
     if (open) {
@@ -34,7 +36,11 @@ export const Drawer: FC<DrawerProps> = ({ open, onClose, children }) => {
 
   return createPortal(
     <DrawerModel closing={open} isClose={isClose} onClick={onClose}>
-      <DrawerContainer closing={open} onClick={(e) => e.stopPropagation()}>
+      <DrawerContainer
+        closing={open}
+        onClick={(e) => e.stopPropagation()}
+        height={height}
+      >
         {children}
       </DrawerContainer>
     </DrawerModel>,

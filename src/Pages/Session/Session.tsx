@@ -1,20 +1,27 @@
-import { useState } from 'react';
-import { useParams, Navigate } from 'react-router-dom';
+import { useCallback, useState } from 'react';
+import { useParams, Navigate, useLocation } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
 import { Box, Button, Space, Text } from 'components';
-import { useAnswers } from 'hooks';
+import { useAnswers, useInterval } from 'hooks';
 import { API_URL } from 'api';
 
-import { SessionLayout } from 'Layouts/MainView/SessionLayout';
+import { SessionLayout } from 'Layouts/SessionLayout';
 import { AnswerResponse } from 'types';
-import { PaginationBullet, AnswerItem } from './styled';
+import { PaginationBullet, AnswerItem, Timer } from './styled';
 import { useSession } from 'hooks/useSession';
 import { createUserAnswerAction } from 'api/action-creators';
+import { RiCloseFill, RiTimeFill } from 'react-icons/ri';
+
 import { colors } from 'consts';
+import { BackButton } from 'components/Drawer/styles';
+import { timeCounter } from './utils/timeCounter';
+import { Icon } from 'components/Input/styled';
 
 export const Session = () => {
   const { testId } = useParams() as { testId: string };
+  const location = useLocation();
+  const locationState = location.state as { duration: number };
   const [selectedAnswer, setSelectedAnswer] = useState<null | AnswerResponse>(null);
   const [rightAnswers, setRightAnsers] = useState(0);
   const [countAnswers, setCountAnswers] = useState(0);
@@ -25,6 +32,7 @@ export const Session = () => {
     currentQuestionIndex: 0,
     nextQuestionIndex: 1,
   });
+  const [timeLeft, setTimeLeft] = useState(locationState.duration);
 
   const currentQuestion = questions[questionIndexState.currentQuestionIndex];
   const nextQuestion = questions[questionIndexState.nextQuestionIndex];
@@ -64,6 +72,15 @@ export const Session = () => {
     });
   };
 
+  const setComplete = useCallback(() => {
+    timeLeft < 2 && setIsComplete(true);
+  }, [timeLeft]);
+
+  useInterval(() => {
+    setComplete();
+    setTimeLeft(timeLeft - 1);
+  }, 1000);
+
   if (isSessionDataLoading) {
     return <div>Загрузка</div>;
   }
@@ -79,10 +96,17 @@ export const Session = () => {
 
   return (
     <SessionLayout>
-      <Box>
+      <Box display='flex' alignItems='center' justifyContent='space-between'>
         <Text fontSize={20} fontWeight={700}>
           Вопрос {questionIndexState.currentQuestionIndex + 1}
         </Text>
+        {/* <BackButton>
+          <RiCloseFill />
+        </BackButton> */}
+        <Timer>
+          <RiTimeFill color={colors.GREY} size={20} />
+          {timeCounter(timeLeft)}
+        </Timer>
       </Box>
       <Box display='flex' style={{ gap: '4px' }} margin='30px 0'>
         {questions.map(({ id }, index) => (

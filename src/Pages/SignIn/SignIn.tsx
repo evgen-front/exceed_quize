@@ -3,10 +3,10 @@ import { useAtom } from 'jotai';
 import { AuthService } from 'api/services/AuthService';
 import { UserService } from 'api/services/UserService';
 import { userAtom } from 'atoms/userAtom';
-import { Input, SignInUp } from 'types';
+import { Input, ISignIn } from 'types';
 import { Form } from 'components';
 import { HOME } from 'Router/routes';
-import { Main } from 'Layouts/MainView/Main';
+import { Main } from 'Layouts/Main';
 
 const inputs: Input[] = [
   { title: 'Имя пользователя', name: 'username', type: 'text' },
@@ -17,7 +17,7 @@ export const SignIn = () => {
   const [, setUser] = useAtom(userAtom);
   const navigate = useNavigate();
 
-  const onSubmit = (values: SignInUp) => {
+  const onSubmit = (values: ISignIn) => {
     // setUser({ id: 0, is_admin: true, is_active: true, email: '', username: 'admin' });
     // navigate(HOME);
 

@@ -4,11 +4,20 @@ export interface ReactChildrenProps {
   children?: ReactNode;
 }
 
-export interface SignInUp {
+export interface IResetPass {
+  email: string;
+  password: string;
+}
+
+export interface ISignIn {
+  username: string;
+  password: string;
+}
+
+export interface ISignUp {
   username: string;
   email?: string;
   password: string;
-  confirmPassword?: string;
 }
 
 export interface TestResponse {
@@ -17,6 +26,7 @@ export interface TestResponse {
   id: number;
   modified_at: null | Date;
   published: boolean;
+  duration: number;
   title: string;
   questions: QuestionResponse[];
 }
@@ -92,6 +102,7 @@ export interface NewTestDataType {
   id?: number;
   published: boolean;
   title: string;
+  duration: number;
   questions: QuestionResponse[];
 }
 

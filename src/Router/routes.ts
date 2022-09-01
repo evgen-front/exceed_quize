@@ -4,6 +4,7 @@ export const HOME = '/';
 export const PROFILE = '/profile';
 export const SINGIN = '/signin';
 export const SIGNUP = '/signup';
+export const RESET = '/reset';
 export const SESSION = '/session/:testId';
 export const COMPLETED = '/completed';
 

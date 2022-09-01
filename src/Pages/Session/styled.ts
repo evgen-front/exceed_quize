@@ -30,3 +30,19 @@ export const AnswerItem = styled.div<AnswerItemProps>`
   &:hover {
   }
 `;
+
+export const Timer = styled.div`
+  width: 90px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  gap: 8px;
+  background: ${colors.SILVERSPRINGS};
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  color: ${colors.SECONDARY};
+`;

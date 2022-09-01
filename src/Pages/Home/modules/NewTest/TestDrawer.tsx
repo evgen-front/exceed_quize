@@ -18,7 +18,8 @@ import {
   TestResponse,
 } from 'types';
 import { testInDrawerType } from '../TestList';
-import { RiArrowLeftLine } from 'react-icons/ri';
+import { RiArrowLeftSLine } from 'react-icons/ri';
+import { StyledSelect } from 'components/Input/styled';
 
 interface DrawerProps {
   isVisible: boolean;
@@ -29,6 +30,7 @@ interface DrawerProps {
 const initialTestState = {
   published: false,
   title: '',
+  duration: 300,
   questions: [],
 };
 
@@ -114,14 +116,14 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
     <Drawer open={isVisible} onClose={onClose}>
       <DrawerHeader>
         <BackButton onClick={onClose}>
-          <RiArrowLeftLine />
+          <RiArrowLeftSLine />
         </BackButton>
         <p>{testData.isCreating ? 'Создание Quiz' : 'Редактирование Quiz'}</p>
       </DrawerHeader>
       <DrawerContent>
-        <Box width='100%'>
+        <Box>
           <Text fontSize='16px' fontWeight='500'>
-            Название теста
+            Название
           </Text>
           <Space height={12} />
           <Input
@@ -137,12 +139,28 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
           />
           <Space height={28} />
         </Box>
-        <Box
-          display='flex'
-          justifyContent='space-between'
-          alignItems='center'
-          width='100%'
-        >
+        <Box>
+          <Text fontSize='16px' fontWeight='500'>
+            Длительность
+          </Text>
+          <Space height={12} />
+          <StyledSelect
+            name='select'
+            defaultValue={currentTest.duration}
+            onChange={(e) =>
+              setCurrentTest((prevState) => ({
+                ...prevState,
+                duration: Number(e.target.value),
+              }))
+            }
+          >
+            <option value='180'>3 минуты</option>
+            <option value='300'>5 минут</option>
+            <option value='600'>10 минут</option>
+          </StyledSelect>
+          <Space height={28} />
+        </Box>
+        <Box display='flex' justifyContent='space-between' alignItems='center'>
           <Text fontSize='16px' fontWeight='500'>
             Опубликован
           </Text>
@@ -160,9 +178,9 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
         <Text color={colors.GREY} fontSize='16px' fontWeight={500}>
           {questionAmount}
         </Text>
-        <Space height={33.5} />
         {!!currentTest.questions.length && (
-          <Box width='100%' flex='1 1 auto' style={{ overflow: 'auto' }}>
+          <Box flex='1 1 auto' overflow='auto' minHeight={130}>
+            <Space height={33.5} />
             {currentTest.questions.map((question, index) => (
               <QuestionListItem
                 key={question.id}

@@ -6,7 +6,7 @@ import { AuthService } from 'api/services/AuthService';
 import { HOME } from 'Router/routes';
 import IconExit from 'public/icons/logout-box-r-fill.svg';
 import { colors } from 'consts';
-import { Main } from 'Layouts/MainView/Main';
+import { Main } from 'Layouts/Main';
 import { useBoolean } from 'hooks/useBoolean';
 import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 import { StyledImg } from './styled';
