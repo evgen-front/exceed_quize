@@ -2,8 +2,6 @@ import { AuthService } from 'api/services/AuthService';
 import { UpdatedUsers } from 'types';
 
 export const makeModeratorsAction = (updatedUsers: UpdatedUsers) => {
-  console.log(updatedUsers);
-
   for (const keys in updatedUsers) {
     const userList = updatedUsers[keys as 'setTrue' | 'setFalse'];
     const keyType = keys === 'setTrue';
