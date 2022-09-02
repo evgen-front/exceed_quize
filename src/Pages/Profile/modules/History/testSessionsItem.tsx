@@ -1,7 +1,6 @@
 import { SessionService } from 'api/services/SessionService';
 import { Box, Text } from 'components';
-import { colors } from 'consts';
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 import { useQuery } from 'react-query';
 import { TestResponse } from 'types';
 

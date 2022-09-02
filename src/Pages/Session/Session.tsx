@@ -141,6 +141,11 @@ export const Session = () => {
               height={240}
               src={`${API_URL}/tests/${testId}/questions/${currentQuestion.id}/images/`}
               alt='question_image'
+              onError={({ currentTarget }) => {
+                currentTarget.onerror = null; // prevents looping
+                currentTarget.src =
+                  'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAEALAAAAAABAAEAAAICTAEAOw==';
+              }}
             />
           </Box>
           <Box display='flex' flexDirection='column' style={{ gap: 20 }}>

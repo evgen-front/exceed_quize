@@ -82,8 +82,8 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
       createTest({ currentTest });
     } else {
       updateTest({ test_id: currentTest.id!, currentTest });
+      onClose();
     }
-    onClose();
   }, [testData, createTest, updateTest, onClose, currentTest]);
 
   const handleOpenSubDrawer = useCallback(
