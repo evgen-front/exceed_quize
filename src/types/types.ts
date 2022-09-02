@@ -50,6 +50,7 @@ export interface User {
   is_active: boolean;
   email: string;
   is_admin: boolean;
+  is_moderator: boolean;
 }
 
 export interface Question {
@@ -114,8 +115,13 @@ export interface NewTestDataType {
   questions: QuestionResponse[];
 }
 
-export interface questionsSubdrawerType {
+export interface QuestionsSubdrawerType {
   isCreating: boolean;
   index: number | null;
   data: QuestionResponse | null;
+}
+
+export interface UpdatedUsers {
+  setTrue: number[];
+  setFalse: number[];
 }

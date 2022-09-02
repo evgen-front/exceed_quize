@@ -75,7 +75,7 @@ export const TestsList: FC = memo(() => {
           : 'Нет тестов'}
       </Box>
 
-      {user?.is_admin && (
+      {(user?.is_admin || user?.is_moderator) && (
         <Box position='fixed' bottom='95px' right='25px'>
           <AddButton onClick={() => handleOpenDrawer()} />
         </Box>

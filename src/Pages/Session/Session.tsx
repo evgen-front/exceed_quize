@@ -1,5 +1,5 @@
 import { useCallback, useState } from 'react';
-import { useParams, Navigate, useLocation, NavLink, useNavigate } from 'react-router-dom';
+import { useParams, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 
 import { Box, Button, Space, Text } from 'components';

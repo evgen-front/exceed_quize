@@ -14,7 +14,7 @@ import { colors } from 'consts';
 import {
   NewTestDataType,
   QuestionResponse,
-  questionsSubdrawerType,
+  QuestionsSubdrawerType,
   TestResponse,
 } from 'types';
 import { testInDrawerType } from '../TestList';
@@ -46,7 +46,7 @@ export const TestDrawer: FC<DrawerProps> = memo(({ isVisible, onClose, testData 
   const [currentTest, setCurrentTest] = useState<TestResponse | NewTestDataType>(
     initialTestState
   );
-  const [questionSubdrawer, setQuestionSubdrawer] = useState<questionsSubdrawerType>(
+  const [questionSubdrawer, setQuestionSubdrawer] = useState<QuestionsSubdrawerType>(
     initialStateQuestionSubdrawer
   );
   const queryClient = useQueryClient();

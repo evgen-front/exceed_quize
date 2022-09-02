@@ -10,10 +10,12 @@ import { Main } from 'Layouts/Main';
 import { useBoolean } from 'hooks/useBoolean';
 import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 import { StyledImg } from './styled';
+import { RightsTransfer } from './modules';
 
 export const Profile = () => {
   const [isExitModalOpen, { setTrue: openExitModal, setFalse: closeExitModal }] =
     useBoolean();
+  const [isRightsOpen, { setTrue: openRights, setFalse: closeRights }] = useBoolean();
   const [user, setUser] = useAtom(userAtom);
   const _navigate = useNavigate();
 
@@ -31,7 +33,7 @@ export const Profile = () => {
           height='100%'
           display='flex'
           flexDirection='column'
-          justifyContent='end'
+          justifyContent='space-between'
         >
           <Box
             position='absolute'
@@ -59,20 +61,36 @@ export const Profile = () => {
                 </Text>
               </Box>
             </Card>
-            {/* <Space height={32} /> */}
-            {/* {user?.is_admin && <Button view='primary'>Права администратора</Button>} */}
           </Box>
-          <Space height={320} />
-
-          <Button view='danger' onClick={openExitModal}>
-            <Box display='flex' alignItems='center' justifyContent='center' width='100%'>
-              <StyledImg src={IconExit} alt='icon' />
-              <Space width={6} />
-              Выйти
-            </Box>
-          </Button>
+          <Box>
+            <Space height={320} />
+            {user?.is_admin && (
+              <>
+                <Button view='primary' onClick={openRights}>
+                  Права администратора
+                </Button>
+                <Space height={32} />
+              </>
+            )}
+          </Box>
+          <Box>
+            <Button view='danger' onClick={openExitModal}>
+              <Box
+                display='flex'
+                alignItems='center'
+                justifyContent='center'
+                width='100%'
+              >
+                <StyledImg src={IconExit} alt='icon' />
+                <Space width={6} />
+                Выйти
+              </Box>
+            </Button>
+          </Box>
         </Box>
       </Main>
+
+      <RightsTransfer isOpen={isRightsOpen} close={closeRights} />
 
       <AtentionModal
         isVisible={isExitModalOpen}

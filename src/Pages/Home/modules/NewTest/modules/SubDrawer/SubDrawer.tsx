@@ -12,7 +12,7 @@ import { useMutation, useQueryClient } from 'react-query';
 import { useDropzone } from 'react-dropzone';
 
 import { Box, Button, Drawer, Input, QuestionImage, Space, Text } from 'components';
-import { Answer, AnswerDrawer, Question, questionsSubdrawerType } from 'types';
+import { Answer, AnswerDrawer, Question, QuestionsSubdrawerType } from 'types';
 import { useAnswers } from 'hooks';
 import { API_URL } from 'api';
 
@@ -32,7 +32,7 @@ import {
 interface SubDrawerProps {
   open: boolean;
   onClose: () => void;
-  questionData: questionsSubdrawerType;
+  questionData: QuestionsSubdrawerType;
   testId: number;
 }
 

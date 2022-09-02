@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   static async makeModerators(users: number[], value: boolean): Promise<void> {
-    return $api.put(`/make_moderators/${value}/`, { users });
+    return $api.put(`/make_moderators/${value}/`, users);
   }
 
   static async getAllUsers(): Promise<AxiosResponse<UserResponse[]>> {

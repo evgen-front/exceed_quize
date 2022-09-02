@@ -1,5 +1,5 @@
 import { FC, memo, useMemo } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from 'react-query';
 import { useAtom } from 'jotai';
 
@@ -58,7 +58,7 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {user?.is_admin && (
+          {(user?.is_admin || user?.is_moderator) && (
             <>
               <Box width={20} height={24} ml={15} color={colors.GREY}>
                 <Icon src={test.published ? EyeIcon : EyeCloseIcon} alt='visible' />
