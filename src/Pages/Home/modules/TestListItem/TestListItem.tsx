@@ -58,7 +58,7 @@ export const TestListItem: FC<TestListItemProps> = memo(({ test, openDrawer }) =
           <Text fontSize='20px' fontWeight={700}>
             {test.title}
           </Text>
-          {(user?.is_admin || user?.is_moderator) && (
+          {(user?.is_admin || user?.is_moderator) && test.holder_id === user.id && (
             <>
               <Box width={20} height={24} ml={15} color={colors.GREY}>
                 <Icon src={test.published ? EyeIcon : EyeCloseIcon} alt='visible' />
