@@ -10,12 +10,13 @@ import { Main } from 'Layouts/Main';
 import { useBoolean } from 'hooks/useBoolean';
 import { AtentionModal } from 'Pages/Home/modules/TestListItem/utils/AtentionModal';
 import { StyledImg } from './styled';
-import { RightsTransfer } from './modules';
+import { History, RightsTransfer } from './modules';
 
 export const Profile = () => {
   const [isExitModalOpen, { setTrue: openExitModal, setFalse: closeExitModal }] =
     useBoolean();
   const [isRightsOpen, { setTrue: openRights, setFalse: closeRights }] = useBoolean();
+  const [isHistoryOpen, { setTrue: openHistory, setFalse: closeHistory }] = useBoolean();
   const [user, setUser] = useAtom(userAtom);
   const _navigate = useNavigate();
 
@@ -72,6 +73,10 @@ export const Profile = () => {
                 <Space height={32} />
               </>
             )}
+            <Button view='primary' onClick={openHistory}>
+              История тестов
+            </Button>
+            <Space height={32} />
           </Box>
           <Box>
             <Button view='danger' onClick={openExitModal}>
@@ -91,6 +96,7 @@ export const Profile = () => {
       </Main>
 
       <RightsTransfer isOpen={isRightsOpen} close={closeRights} />
+      <History isOpen={isHistoryOpen} close={closeHistory} />
 
       <AtentionModal
         isVisible={isExitModalOpen}

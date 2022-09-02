@@ -18,7 +18,7 @@ export class SessionService {
     return $api.get<ResultItem[]>(`/sessions/${session_id}/user_answers/`);
   }
 
-  static async getSessions(test_id: number): Promise<AxiosResponse> {
-    return $api.get(`/tests/${test_id}/sessions/`);
+  static async getSessions(test_id: number): Promise<AxiosResponse<NewSession[]>> {
+    return $api.get<NewSession[]>(`/tests/${test_id}/sessions/`);
   }
 }
